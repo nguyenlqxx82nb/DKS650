@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 600 600" style="enable-background:new 0 0 600 600;" xml:space="preserve">
+<style type="text/css">
+	.st0{clip-path:url(#SVGID_2_);}
+	.st1{fill:#FFFFFF;}
+	.st2{fill:#D40008;}
+	.st3{fill:#002858;}
+</style>
+<g>
+	<g>
+		<defs>
+			<path id="SVGID_1_" d="M567.4,600H32.6C14.7,600,0,585.3,0,567.4V32.6C0,14.7,14.7,0,32.6,0h534.8C585.3,0,600,14.7,600,32.6
+				v534.8C600,585.3,585.3,600,567.4,600z"/>
+		</defs>
+		<clipPath id="SVGID_2_">
+			<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+		</clipPath>
+		<g class="st0">
+			<rect x="-300" class="st1" width="1200" height="600"/>
+			<polyline class="st2" points="900,240 360,240 360,0 240,0 240,240 -300,240 -300,360 240,360 240,600 360,600 360,360 900,360 
+							"/>
+			<path class="st2" d="M500.1,399.9h89.5L900,555.3V600 M99.9,200.1H10.6L-300,44.7V0L99.9,200.1z M99.9,399.9h89.5L-210.5,600
+				H-300L99.9,399.9z M500.1,200.1h-89.5L810.5,0H900L500.1,200.1z"/>
+			<path class="st3" d="M-300,399.9v132.9l265.8-132.9 M900,399.9v132.9L634.2,399.9L900,399.9L900,399.9z M-300,200.1V67
+				l265.8,132.9H-300V200.1z M900,200.1V67L634.2,199.9H900V200.1z M200.1,600V417.1L-165.8,600H200.1z M399.9,600V417.1L765.8,600
+				H399.9z M200.1,0v182.9L-165.8,0H200.1z M399.9,0v182.9L765.8,0H399.9z"/>
+		</g>
+	</g>
+</g>
+</svg>
