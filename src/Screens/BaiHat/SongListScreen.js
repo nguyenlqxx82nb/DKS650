@@ -40,6 +40,8 @@ export default class SongListScreen extends BaseScreen {
             title:(this.props.title != null)?this.props.title:"",
             avatar : ""
         }
+
+        this.MAX_SCROLL_HEIGHT = 115;
     }
     componentWillMount() {
         // selected song changed
@@ -74,11 +76,12 @@ export default class SongListScreen extends BaseScreen {
     }
     _onSearch = (value) =>{
        // this._term = value;
-       // console.warn("_onSearch = "+value);
+        //console.warn("_onSearch = "+value);
         this._songList.searchData(value);
         this._musicOnline.setTerm(value);
     }
     _onSearchChange = (value) =>{
+       // console.warn("_onSearchChange = "+value);
         this._songList.searchData(value);
         this._musicOnline.setTerm(value);
     }
@@ -111,7 +114,10 @@ export default class SongListScreen extends BaseScreen {
     }
     clear = () =>{
         this._songList.clear();
-        //this._searchInput.clear();
+        this._searchHeader.clear();
+    }
+    scrollExtendComponent = (top) =>{
+        this._musicOnline.setTopValue(top);
     }
     renderContentView = () => {
         const { singerName, singerId,songType,title } = this.state;
@@ -124,7 +130,7 @@ export default class SongListScreen extends BaseScreen {
         }
         return (
             <View style={{ flex: 1,width:'100%' }}>
-                <Animated.View style={styles.headerContainer}>
+                <Animated.View style={[styles.headerContainer,{ transform: [{ translateY: this._scrollY }]}]}>
                     <Header 
                         ref = {ref=>(this._searchHeader = ref)}
                         onBack = {this._onBack}
@@ -146,14 +152,15 @@ export default class SongListScreen extends BaseScreen {
                     onOpenOnline = {()=>{
                         //this._searchInput.blur();
                     }} />
-
-                <View style={[{ flex: 1, marginTop:65,borderTopWidth: 0.5,borderColor: '#00ECBC'},songContainer]}>
-                    <SongListView 
-                        ref={ref=>(this._songList = ref)} 
-                        listType = {this.listType} 
-                        actor ={singerName} 
-                        songType = {songType}
-                     />
+                <View style={{marginTop:50,flex:1}}>
+                <SongListView 
+                    ref={ref=>(this._songList = ref)} 
+                    listType = {this.listType} 
+                    actor ={singerName} 
+                    songType = {songType}
+                    onScroll = {this._handleListViewScroll} 
+                    top={this.MAX_SCROLL_HEIGHT}
+                />
                 </View>
             </View>
         );
@@ -170,6 +177,7 @@ const styles = StyleSheet.create({
         backgroundColor :GLOBALS.COLORS.HEADER,
         width:"100%",
         top:0,
+        position:"absolute",
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 0.2,

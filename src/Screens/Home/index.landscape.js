@@ -1,5 +1,5 @@
 import React from "react";
-import { StatusBar,StyleSheet,View,TextInput } from "react-native";
+import { StatusBar,StyleSheet,View,Platform,UIManager } from "react-native";
 
 // screens
 import Footer from '../Footer/footer.landscape.js';
@@ -29,11 +29,15 @@ export default class Landscape extends React.Component {
         super(props);
         //console.ignoredYellowBox = true;
         //console.disableYellowBox = true;
-        console.disableYellowBox = ['Warning: Stateless'];
+        console.ignoredYellowBox = ['Warning:']; // = ['Warning: Stateless'];
         GLOBALS.INFO.VERSION = GLOBALS.BOX_VERSION.S650;
         GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.HTTP;
-       // GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.SQLITE;
+        //GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.SQLITE;
         GLOBALS.LANDSCAPE = true;
+
+        if(Platform.OS == 'android'){
+            UIManager.setLayoutAnimationEnabledExperimental(true);
+        }
     }
 
     componentDidMount() {
@@ -207,8 +211,22 @@ export default class Landscape extends React.Component {
     render() {
         return (
             <View style={{ flex: 1}}>
-                
-                 <SecondScreen 
+                <HomeScreen 
+                        zIndex={1}  
+                        opacity= {1} maxZindex ={1} 
+                        onOpenSearch={this._onOpenSearch}
+                        onOpenSinger = {this._onOpenSinger}
+                        onOpenTheloai = {this._onOpenTheloai}
+                        onOpenSong = {this._onOpenSong}
+                        onOpenHotSong = {this._onOpenHotSong}
+                        onOnlineScreen = {this._onOnlineScreen}
+                        onOpenMenu = {() =>{
+                            //this.props.navigation.openDrawer();        
+                        }}
+                        ref={ref => (this._homeScreen = ref)} 
+                        bottom={60}
+                    />  
+                 {/* <SecondScreen 
                     bottom = {0}
                     opacity= {0} 
                     maxZindex ={11} 
@@ -219,21 +237,6 @@ export default class Landscape extends React.Component {
                     }} 
                     ref={ref => (this._secondScreen = ref)} />
 
-                <SingOptionOverlay 
-                    opacity={0} 
-                    maxZindex={10} 
-                    ref={ref => (this._singOverlay = ref)} 
-                    onClose ={this._onSingOverlayClose}
-                />
-                <SongListScreen 
-                    ref = {ref => (this._singerSong = ref)} 
-                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
-                    maxZindex = {6}
-                    listType={GLOBALS.SONG_LIST_TYPE.SINGER}
-                    onBack = {() => {
-                        this._singerSong.hide();}} 
-                    bottom={60}
-                        />
 
                 <OnlineScreen  opacity= {0} maxZindex ={2} 
                     transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
@@ -317,7 +320,7 @@ export default class Landscape extends React.Component {
                     onBack = {() => {
                         this._adminScreen.hide();
                     }}
-                />
+                /> */}
 
                 
                 <SingerScreen 
@@ -329,23 +332,22 @@ export default class Landscape extends React.Component {
                         ref={ref => (this._singerScreen = ref)}
                         bottom={60}
                     />
-                
 
-                <HomeScreen 
-                        //zIndex={1}  
-                       // opacity= {1} maxZindex ={1} 
-                        onOpenSearch={this._onOpenSearch}
-                        onOpenSinger = {this._onOpenSinger}
-                        onOpenTheloai = {this._onOpenTheloai}
-                        onOpenSong = {this._onOpenSong}
-                        onOpenHotSong = {this._onOpenHotSong}
-                        onOnlineScreen = {this._onOnlineScreen}
-                        onOpenMenu = {() =>{
-                            //this.props.navigation.openDrawer();        
-                        }}
-                        ref={ref => (this._homeScreen = ref)} 
-                        //bottom={60}
-                    />  
+                <SongListScreen 
+                    ref = {ref => (this._singerSong = ref)} 
+                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
+                    maxZindex = {6}
+                    listType={GLOBALS.SONG_LIST_TYPE.SINGER}
+                    onBack = {() => {
+                        this._singerSong.hide();}} 
+                    bottom={60}
+                        />
+
+                <SingOptionOverlay 
+                    opacity={0} 
+                    maxZindex={10} 
+                    ref={ref => (this._singOverlay = ref)} 
+                    onClose ={this._onSingOverlayClose} />
 
                 <Footer ref={ref => (this._footer = ref)} maxZindex ={8} 
                     onSelectedSong={this._onOpenSelectedSong} />

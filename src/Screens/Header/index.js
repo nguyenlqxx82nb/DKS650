@@ -1,27 +1,16 @@
 import React from "react";
 import { View, 
     StyleSheet, 
-    LayoutAnimation,
-    Platform, 
-    UIManager } from "react-native";
+    Easing,
+    Animated,
+    Platform} from "react-native";
 import IconRippe from '../../Components/IconRippe.js'
 import GLOBALS from "../../DataManagers/Globals.js";
 import PropTypes from 'prop-types';
 import Utils from '../../Utils/Utils';
 import SearchInput from '../../Views/SearchInput';
 
-var CustomLayoutSpring = {
-    duration: 200,
-    create: {
-      type: LayoutAnimation.Types.spring,
-      property: LayoutAnimation.Properties.scaleXY,
-      springDamping: 0.6,
-    },
-    update: {
-      type: LayoutAnimation.Types.spring,
-      springDamping: 0.6,
-    },
-  };
+//const AnimatedView = Animated.createAnimatedComponent(View);
 export default class Header extends React.Component {
     static propTypes = {
         onBack: PropTypes.func,
@@ -34,10 +23,9 @@ export default class Header extends React.Component {
     constructor(props) {
         super(props);
         this.isSearchVisible = false;
-        UIManager.setLayoutAnimationEnabledExperimental(true);
         this.fullSearch = false;
-        this.state = {
-        }
+        this._searchWidth = new Animated.Value(350);
+        this._opacity = new Animated.Value(1);
     }
     // getSearchValue = () =>{
     //     return this._searchInput.getValue();
@@ -54,33 +42,64 @@ export default class Header extends React.Component {
         if(this.fullSearch)
             return;
 
-        LayoutAnimation.configureNext(CustomLayoutSpring);
-
+        //LayoutAnimation.configureNext(CustomLayoutSpring);
+       // this.state.searchWidth.setValue(800);
         this.fullSearch = true;
-        this.setState({});
+        //this.setState({});
+        Animated.parallel([
+            Animated.timing(this._opacity,{
+                toValue: 0,
+                easing: Easing.bezier(0.0, 0.0, 0.2, 1),
+                //useNativeDriver: Platform.OS === 'android',
+                //duration: 150,
+            }),
+            Animated.timing(this._searchWidth,{
+                toValue: Utils.Width()-30,
+                //useNativeDriver: Platform.OS === 'android',
+               // duration: 200,
+               easing: Easing.bezier(0.0, 0.0, 0.2, 1),
+            })
+        ]).start();
+        
     }
     searchShow = () =>{
         return this.isSearchVisible;
+    }
+    clear = () =>{
+        this._searchInput.clear();
     }
     hideSearchInput = () =>{
         if(!this.fullSearch)
             return;
 
-        LayoutAnimation.configureNext(CustomLayoutSpring,()=>{
-            console.warn("hideSearchInput");
-        });
         this.fullSearch = false;
-        this.setState({});
+
+        Animated.parallel([
+            Animated.timing(this._opacity,{
+                toValue: 1,
+                //useNativeDriver: Platform.OS === 'android',
+                //duration: 250,
+                easing: Easing.bezier(0.0, 0.0, 0.2, 1),
+            }),
+            Animated.timing(this._searchWidth,{
+                toValue: 350,
+                //useNativeDriver: Platform.OS === 'android',
+                //duration: 150,
+                easing: Easing.bezier(0.0, 0.0, 0.2, 1),
+            })
+        ]).start();
     }
     render() {
         const {onSearch,onSearchChange} = this.props
-        var searchWidth = Utils.Width() - 20;
-        if(!this.fullSearch){
-            searchWidth = (Utils.Width() - 20)*0.6;
-        }
+        // var searchWidth = Utils.Width() - 20;
+        // if(!this.fullSearch){
+        //     searchWidth = (Utils.Width() - 20)*0.6;
+        // }
         return (
             <View style={styles.container}>
-                <View style={{ width: 40, height: 40, marginLeft: 0 }}>
+                
+                <Animated.View 
+                    style={{ width: 40, height: 40, marginLeft: 0, opacity:this._opacity }}>
                     <IconRippe vector={true} name="back" size={20} color="#fff"
                         onPress={()=>{
                             if(this.props.onBack != null){
@@ -89,14 +108,16 @@ export default class Header extends React.Component {
                             }
                         }}
                     />
-                </View>
-                <View
+                </Animated.View>
+                
+                <Animated.View
                     ref = {ref =>(this._centerView = ref)}
                     style={{flex:1,justifyContent:"center",alignItems:"flex-start",
-                             opacity: 1}}>
+                             opacity:this._opacity}}>
                     {this.props.center}
-                </View>
-                <View 
+                </Animated.View>
+
+                <Animated.View
                     ref = {ref => (this._inputSearchView = ref)}
                     style={{
                         zIndex:2,
@@ -104,22 +125,23 @@ export default class Header extends React.Component {
                         right : 0,
                         //top:0,
                         height:40,
-                        width: searchWidth,
-                        marginRight:10,
-                        marginLeft:10,
+                        width: this._searchWidth,
+                        marginRight:15,
+                        marginLeft:15,
                         justifyContent:"center",
                         backgroundColor :GLOBALS.COLORS.HEADER,
                     }}>
                     <SearchInput 
                         style={{marginRight:0}} 
-                        onSearch={()=>{
+                        onSearch={(value)=>{
                             if(onSearch != null){
-                                onSearch();
+                                onSearch(value);
                             }
                         }}
-                        onSearchChange = {() =>{
+                        onSearchChange = {(value) =>{
+                            //console.error("value 0 "+value);
                             if(onSearchChange != null){
-                                onSearchChange();
+                                onSearchChange(value);
                             }
                         }}
                         ref={ref=>(this._searchInput = ref)}  
@@ -130,7 +152,7 @@ export default class Header extends React.Component {
                             this.hideSearchInput();
                         }}
                     />
-                </View>
+                </Animated.View>
             </View>
         );
     }

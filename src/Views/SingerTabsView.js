@@ -12,7 +12,8 @@ export default class SingerTabsView extends React.Component {
     static propTypes = {
         lanTabs: PropTypes.array.isRequired,
         onChangeTab : PropTypes.func,
-        onScroll : PropTypes.func
+        onScroll : PropTypes.func,
+        top: PropTypes.number,
     };
     // static defaultProps = {
     //     //number: PropTypes.number.isRequired,
@@ -119,6 +120,7 @@ export default class SingerTabsView extends React.Component {
                                     lan={lan} 
                                     ref={ref => (this._tabs[index] = ref)}
                                     onScroll = {this._handleScroll}
+                                    top={this.props.top}
                                     />
                             </View>) ;
                     })}
@@ -130,7 +132,6 @@ export default class SingerTabsView extends React.Component {
 const styles = StyleSheet.create({
     tabContent: {
         flex: 1,
-        //marginTop: 40,
         borderTopWidth: 0.5,
         borderColor: '#00ECBC',
     },

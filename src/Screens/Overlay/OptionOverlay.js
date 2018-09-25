@@ -72,7 +72,8 @@ export default class OptionOverlay extends React.Component {
         this._isVisible = true;
         this._container.setNativeProps({
             style: {
-                zIndex: maxZindex
+                zIndex: maxZindex,
+                width: Utils.Width()
             }
         });
         if(this.overlayType != GLOBALS.SING_OVERLAY.KEYBROARD){
@@ -112,7 +113,8 @@ export default class OptionOverlay extends React.Component {
         ]).start(function onComplete() {
             container.setNativeProps({
                 style: {
-                    zIndex: 0
+                    zIndex: 0,
+                    width:0
                 }
             });
         });
@@ -135,9 +137,10 @@ export default class OptionOverlay extends React.Component {
 
         return (
         <View style={[{position:"absolute",
-                        width: Utils.Width(),
+                        width: 0,
                         top:0,
-                        height: screenHeight,opacity:1,zIndex:0 },top]}
+                        height: screenHeight,
+                        opacity:1,zIndex:0 },top]}
                ref={ref => (this._container = ref)}>
 
             <TouchableWithoutFeedback  style={styles.overlayContainer} 

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Dimensions,Text,View } from "react-native";
+import { StyleSheet, Dimensions,Text,View,ScrollView} from "react-native";
 import PropTypes from 'prop-types';
 import ListItem from '../Components/ListItem.js';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
@@ -17,7 +17,9 @@ export default class SongListView extends React.Component {
         lan: PropTypes.string,
         actor : PropTypes.string,
         songType : PropTypes.number,
-        listType : PropTypes.number
+        listType : PropTypes.number,
+        top: PropTypes.number,
+        onScroll : PropTypes.func
         //onOptionOverlayOpen: PropTypes.func,
         //onBack: PropTypes.func,
         //duration : PropTypes.number
@@ -42,7 +44,7 @@ export default class SongListView extends React.Component {
     _loading = false;
     _loaded = false;
     _hasData = true;
-    _pageCount = 30;
+    _pageCount = 15;
     _searchTerm = "";
     _hasChanged = false;
 
@@ -73,7 +75,7 @@ export default class SongListView extends React.Component {
             (type, dim) => {
                 switch (type) {
                     case "FULL":
-                        dim.width = (width-30)/2 - 1;
+                        dim.width = width-31;
                         dim.height = 65;
                         break;
                     default:
@@ -371,20 +373,40 @@ export default class SongListView extends React.Component {
                     >
                     <View style={{
                         flex: 1, flexDirection: "row", justifyContent: "center",alignItems:"center"}}>
-                        <View  style={{ flex:1,justifyContent: "center"}}>
-                            <Text numberOfLines={1} style={[styles.songText, {color: singColor,fontSize:19,marginLeft:10,fontFamily:GLOBALS.FONT.BOLD }]}>
-                                    {name  + singPrefix}
-                            </Text>
-                            <Text style={[styles.singerText, {color: singerColor,fontSize:16, marginLeft:10,fontFamily:GLOBALS.FONT.MEDIUM}]}>
-                                {singerName}
-                            </Text>
+                        <View  style={{ flex:1, flexDirection:"row"}}>
+                            <View style={{ flex:1, justifyContent:"center",alignItems:"flex-start", paddingLeft:15}}>
+                                <Text numberOfLines={1} style={[styles.songText, {color: singColor }]}>
+                                        {name  + singPrefix}
+                                </Text>
+                            </View>
+                            
+                            <View style={{ width:"25%", justifyContent:"center",alignItems:"flex-start"}}>
+                                <Text numberOfLines={1} style={[styles.singerText, {color: singerColor,}]}>
+                                    {singerName}
+                                </Text>
+                            </View>
+                            { hasOptionButton &&
+                            <View style={{  width:"20%",flexDirection:"row", justifyContent:"flex-end",alignItems:"center"}}>
+                                <View style={{width:40,height:40}}>
+                                    <IconRippe vector={true} name="download" size={20} />
+                                </View>
+                                <View style={{width:40,height:40}}>
+                                    <IconRippe vector={true} name="singerOpt" size={20} />
+                                </View>
+                                <View style={{height:40,width:40}}>
+                                    <IconRippe vector={true} name="play2" size={20} 
+                                        //onPress={this._playNow}
+                                    />
+                                </View>
+                                <View style={{height:40,width:40}}>
+                                    <IconRippe vector={true} name="uutien" size={20} 
+                                        //onPress={this._priority}
+                                    />
+                                </View>
+                            </View> }
                         </View>
                         
-                        { hasOptionButton &&
-                            <View style={{ width: 40, height: 40 }}>
-                                <IconRippe vector={true} name="tuychon2" size={20} 
-                                    onPress={this._showOptOverlay.bind(this,id,overlayType,actor)} />
-                            </View> }
+                        
                     </View>
                 </ListItem>
             </View>
@@ -397,7 +419,7 @@ export default class SongListView extends React.Component {
                     style={{ flex: 1,marginLeft:15,marginRight:15 }}
                     //contentContainerStyle={{ margin: 3 }}
                     showsHorizontalScrollIndicator={false}
-                    //showsVerticalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
                     onEndReached={this._onEndReached}
                     dataProvider={this.state.dataProvider}
                     layoutProvider={(GLOBALS.LANDSCAPE)?this._layoutProvider2:this._layoutProvider}
@@ -405,10 +427,28 @@ export default class SongListView extends React.Component {
                     renderFooter={this._renderFooter}
                     extendedState={this.state.dataProvider} 
                     renderAheadOffset = {1000}
+                    externalScrollView={this.renderScroll}
+                    onScroll = {(rawEvent, offsetX, offsetY)=>{
+                        if(this.props.onScroll != null){
+                            this.props.onScroll(offsetY);
+                        }
+                    }}
                     />
                 <IndicatorView ref={ref => (this._indicator = ref)}/>
             </View>
 
+        );
+    }
+    renderScroll = (props) => {
+        return (
+            <ScrollView
+        // ref="refs"
+            {...props}
+            scrollEventThrottle={16}
+            contentContainerStyle={{
+                paddingTop: this.props.top 
+            }}
+            />
         );
     }
 }
@@ -435,25 +475,28 @@ const styles = StyleSheet.create({
         marginLeft:5,
         marginRight:5,
         height: 55,
-        borderWidth: 1,
+        borderWidth: 0,
         borderColor: '#B3DADF',
         borderRadius: 5,
-        backgroundColor:"#3D4B84"
-        // justifyContent:"center",
-        // alignItems:"center"
+        backgroundColor:"#3D4B84",
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        elevation: 2,
     },
 
     songText: {
         color: "#fff",
-        fontFamily:GLOBALS.FONT.MEDIUM,
-        fontSize: 18, 
         lineHeight: 25, 
+        fontSize:20,
+        fontFamily:GLOBALS.FONT.BOLD
     },
 
     singerText:{
         color: "#fff",
         fontFamily:GLOBALS.FONT.REGULAR,
-        fontSize: 13
+        fontSize:17, 
+        fontFamily:GLOBALS.FONT.MEDIUM
     },
 
     indicator: {

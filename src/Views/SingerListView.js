@@ -18,7 +18,8 @@ let { height, width } = Dimensions.get('window');
 export default class SingerListView extends React.Component {
     static propTypes = {
         lan: PropTypes.string,
-        onScroll : PropTypes.func
+        onScroll : PropTypes.func,
+        top : PropTypes.number,
     };
     static defaultProps = {
         lan : 'vn',
@@ -282,7 +283,7 @@ export default class SingerListView extends React.Component {
             {...props}
             scrollEventThrottle={16}
             contentContainerStyle={{
-                paddingTop: 130 
+                paddingTop: this.props.top 
             }}
             />
         );

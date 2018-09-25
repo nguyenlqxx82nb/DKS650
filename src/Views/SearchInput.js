@@ -91,6 +91,7 @@ export default class SearchInput extends React.Component {
     }
     clear = ()=>{
         this.setValue("");
+        this.setState({showRemoveBtn:false});
     }
     setValue = (value)=>{
         this._searchInput.setNativeProps({ text: value });
@@ -146,7 +147,7 @@ const styles = StyleSheet.create({
         alignItems: "center", 
         justifyContent: "center",
         marginRight:10,
-        borderRadius: 5,
+        borderRadius: 16,
         backgroundColor: "#565BAC", 
         height: 32, 
         paddingRight: 3,

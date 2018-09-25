@@ -12,7 +12,7 @@ import Utils from '../../Utils/Utils';
 import TuKhoaHot from '../../Views/TukhoaHot';
 
 const logo = require("../../../assets/logo.png");
-export default class HomeScreen extends React.Component {
+export default class HomeScreen extends ScreenBase {
     static propTypes = {
         onOpenSearch: PropTypes.func,
         onOpenSinger : PropTypes.func,
@@ -29,13 +29,13 @@ export default class HomeScreen extends React.Component {
     componentDidMount() {
         //console.warn(" componentWillMount HomeScreen");
     }
-    render = () => {
+    renderContentView = () => {
         const { onOpenSearch,onOpenSinger } = this.props;
         var width1 = (Utils.Width()-80)*0.68/(0.68*2+1) - 6;
         var width2 = (Utils.Width()-80)/(0.68*2+1) - 6;
         var width3 = (width2 - 6)/2;
         return (
-            <View style={{ flex: 1,width:"100%",backgroundColor:"blue"}}>
+            <View style={{ flex: 1,width:"100%"}}>
                 <View style={styles.headerContainer}>
                     <View style={{ width: 40, height: 40, marginLeft: 5 }}>
                             <IconRippe vector={true} name="menu" size={20} color="#fff"

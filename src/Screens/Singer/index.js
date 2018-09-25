@@ -12,9 +12,6 @@ import MusicOnline from '../../Views/MusicOnlineButton'
 
 export default class SingerScreen extends BaseScreen {
     _sex = GLOBALS.SINGER_SEX.ALL;
-    MAX_SCROLL_HEIGHT = 130;
-    _offsetY = 0;
-    _headerTopY = 0;
 
     static propTypes = {
         onOptionOverlayOpen: PropTypes.func,
@@ -22,9 +19,6 @@ export default class SingerScreen extends BaseScreen {
     };
     constructor(props) {
         super(props);
-        this.state = {
-            scrollY : new Animated.Value(0),
-        }
     }
     componentWillMount() {
         this._listenerSingerSongEvent = EventRegister.addEventListener('FilterSinger', (data) => {
@@ -73,51 +67,16 @@ export default class SingerScreen extends BaseScreen {
     _showOptOverlay = () =>{
         EventRegister.emit('ShowOptOverlay', {overlayType:GLOBALS.SING_OVERLAY.SINGER,data:{height:250}});
     }
-    _handleListViewScroll = (offsetY) => {
-        //console.warn("offset = "+offset);
-        if(offsetY > this.MAX_SCROLL_HEIGHT){
-            if(this._offsetY <= offsetY){
-                if(this._headerTopY > -this.MAX_SCROLL_HEIGHT){
-                    var delta = offsetY - this._offsetY;
-                    this._headerTopY = Math.max(this._headerTopY - delta,-this.MAX_SCROLL_HEIGHT);
-                    this._headerTopY = (this._headerTopY > 0)?0:this._headerTopY;
-
-                    this.state.scrollY.setValue(this._headerTopY);
-                    
-                    this._singerTabs.setScrollTabTop(-this.MAX_SCROLL_HEIGHT);
-                    this._musicOnline.setTopValue(-this.MAX_SCROLL_HEIGHT);
-                }
-            }
-            else{
-                if(this._headerTopY < 0){
-                    this._headerTopY = 0;
-                    Animated.timing(this.state.scrollY,{toValue:0,duration:250}).start();
-                }
-            }
-        }
-        else{
-            if(this._offsetY > this.MAX_SCROLL_HEIGHT){
-                var delta = offsetY - this._offsetY;
-                this._headerTopY = Math.max(this._headerTopY - delta,-this.MAX_SCROLL_HEIGHT);
-            }
-            else{
-                this._headerTopY =  Math.max(-offsetY,-this.MAX_SCROLL_HEIGHT);
-            }
-
-            //this._headerTopY = (this._headerTopY > 0)?0:this._headerTopY;
-            this._headerTopY = Math.min(-offsetY,this._headerTopY);
-
-            this.state.scrollY.setValue(this._headerTopY);
-            this._singerTabs.setScrollTabTop(this._headerTopY);
-            this._musicOnline.setTopValue(this._headerTopY);
-        }
-
-        this._offsetY = offsetY;
+    
+    scrollExtendComponent = (top) =>{
+        this._singerTabs.setScrollTabTop(top);
+        this._musicOnline.setTopValue(top);
     }
+
     renderContentView = () => {
         return (
             <View style={{ flex: 1 }}>
-                <Animated.View style={[styles.headerContainer, { transform: [{ translateY: this.state.scrollY }]}]}>
+                <Animated.View style={[styles.headerContainer, { transform: [{ translateY: this._scrollY }]}]}>
                     <View style={{ width: 40, height: 40 }}>
                         <IconRippe vector={true} name="back" size={20} color="#fff"
                             onPress={this._onBack} />
@@ -146,7 +105,9 @@ export default class SingerScreen extends BaseScreen {
                         lanTabs={['vn','en','cn','ja','kr']} 
                         ref={ref => (this._singerTabs = ref)} 
                         onChangeTab = {this._onChangeTab}
-                        onScroll = {this._handleListViewScroll} />
+                        onScroll = {this._handleListViewScroll} 
+                        top={this.MAX_SCROLL_HEIGHT}/>
+
                 <MusicOnline 
                     style = {{top:80}}
                     ref={ref =>(this._musicOnline = ref)}

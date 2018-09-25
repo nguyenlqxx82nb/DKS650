@@ -13,10 +13,10 @@ import Portrail from "./src/Screens/index.js";
 //import Portrail from "./src/Test/tabview"
 //import Portrail from "./src/Test/FaceBookTest"
 //import Portrail from "./src/Test/tab2"
-//import Landscape from "./src/Screens/Home/index.landscape"
-import Landscape from "./src/Screens/index.landscape.js"
+import Landscape from "./src/Test/menuDrawer"
+//import Landscape from "./src/Screens/index.landscape.js"
 //import Landscape from "./src/Test/layout";
-//import Landscape from "./src/Test/drawer2";
+//import Landscape from "./src/Test/Animate/index";
 import Orientation from 'react-native-orientation';
 // import ScrollScreen from "./src/Test/scroll";
 // import ScrollSwagger from './src/Test/ScrollSwagger'

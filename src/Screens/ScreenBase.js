@@ -28,6 +28,10 @@ class BaseScreen extends React.Component {
         type : GLOBALS.SCREEN_TYPE.BOTTOM
     };
     _songTabs = null;
+    MAX_SCROLL_HEIGHT = 130;
+    _offsetY = 0;
+    _headerTopY = 0;
+
     constructor(props) {
         super(props);
 
@@ -45,6 +49,8 @@ class BaseScreen extends React.Component {
         this._isVisible = false;
         this._processing = false;
         this._maxIndex = this.props.maxZindex;
+
+        this._scrollY = new Animated.Value(0);
     }
     show = () => {
         if(this._processing)
@@ -186,6 +192,50 @@ class BaseScreen extends React.Component {
         this._hideCompleted();
     }
     _hideCompleted = () =>{}
+
+    _handleListViewScroll = (offsetY) => {
+        //console.warn("offset = "+offset);
+        if(offsetY > this.MAX_SCROLL_HEIGHT){
+            if(this._offsetY <= offsetY){
+                if(this._headerTopY > -this.MAX_SCROLL_HEIGHT){
+                    var delta = offsetY - this._offsetY;
+                    this._headerTopY = Math.max(this._headerTopY - delta,-this.MAX_SCROLL_HEIGHT);
+                    this._headerTopY = (this._headerTopY > 0)?0:this._headerTopY;
+
+                    this._scrollY.setValue(this._headerTopY);
+                    
+                    this.scrollExtendComponent(-this.MAX_SCROLL_HEIGHT);
+                }
+            }
+            else{
+                if(this._headerTopY < 0){
+                    this._headerTopY = 0;
+                    Animated.timing(this._scrollY,{toValue:0,duration:250}).start();
+                }
+            }
+        }
+        else{
+            if(this._offsetY > this.MAX_SCROLL_HEIGHT){
+                var delta = offsetY - this._offsetY;
+                this._headerTopY = Math.max(this._headerTopY - delta,-this.MAX_SCROLL_HEIGHT);
+            }
+            else{
+                this._headerTopY =  Math.max(-offsetY,-this.MAX_SCROLL_HEIGHT);
+            }
+
+            //this._headerTopY = (this._headerTopY > 0)?0:this._headerTopY;
+            this._headerTopY = Math.min(-offsetY,this._headerTopY);
+
+            this._scrollY.setValue(this._headerTopY);
+            this.scrollExtendComponent(this._headerTopY);
+        }
+
+        this._offsetY = offsetY;
+    }
+
+    scrollExtendComponent = (top) =>{
+
+    }
 
     renderContentView = () => {
         return (<View></View>);
