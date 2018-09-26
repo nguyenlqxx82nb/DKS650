@@ -152,7 +152,7 @@ export default class SongListScreen extends BaseScreen {
                     onOpenOnline = {()=>{
                         //this._searchInput.blur();
                     }} />
-                <View style={{marginTop:50,flex:1}}>
+
                 <SongListView 
                     ref={ref=>(this._songList = ref)} 
                     listType = {this.listType} 
@@ -161,7 +161,6 @@ export default class SongListScreen extends BaseScreen {
                     onScroll = {this._handleListViewScroll} 
                     top={this.MAX_SCROLL_HEIGHT}
                 />
-                </View>
             </View>
         );
     }
@@ -182,6 +181,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 0.2,
         elevation: 2,
+        zIndex:3,
     },
     title: {
         fontSize: 20,

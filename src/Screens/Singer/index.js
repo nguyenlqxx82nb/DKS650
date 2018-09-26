@@ -8,11 +8,12 @@ import { EventRegister  } from 'react-native-event-listeners';
 import SingerTabsView from '../../Views/SingerTabsView.js';
 import SearchInput from '../../Views/SearchInput.js';
 import SongListScreen from '../BaiHat/SongListScreen.js';
-import MusicOnline from '../../Views/MusicOnlineButton'
+import MusicOnline from '../../Views/MusicOnlineButton';
+import Header2 from '../Header/header2';
 
 export default class SingerScreen extends BaseScreen {
     _sex = GLOBALS.SINGER_SEX.ALL;
-
+    _searchValue = "";
     static propTypes = {
         onOptionOverlayOpen: PropTypes.func,
         onBack: PropTypes.func,
@@ -23,7 +24,7 @@ export default class SingerScreen extends BaseScreen {
     componentWillMount() {
         this._listenerSingerSongEvent = EventRegister.addEventListener('FilterSinger', (data) => {
             if(this._isVisible){
-                this._singerTabs.searchData(this._searchInput.getValue(),data.sex);
+                this._singerTabs.searchData(this._searchValue,data.sex);
             }
         });
     }
@@ -32,37 +33,41 @@ export default class SingerScreen extends BaseScreen {
     }
     _onBack = () => {
         const { onBack } = this.props;
-        this._searchInput.blur();
         if (onBack) {
             onBack();
         }
     }
     _showCompleted = () =>{
         //console.warn("_showCompleted");
-        this._singerTabs.loadData(this._searchInput.getValue(),this._sex);
+        this._singerTabs.loadData(this._searchValue,this._sex);
     }
 
     focusSearchInput = () =>{
-        this._searchInput.focus();
     }
     _onChangeTab = (page) =>{
         if(this._isVisible){
-            this._singerTabs.loadData(this._searchInput.getValue(),this._sex);
+            this._singerTabs.loadData(this._searchValue,this._sex);
             this._handleListViewScroll(this._singerTabs.getCurrentScrollOffset());
 
             if(this._offsetY > this.MAX_SCROLL_HEIGHT){
                 this._headerTopY = 0;
-                Animated.timing(this.state.scrollY,{toValue:0,duration:250}).start();
+                Animated.timing(this._scrollY,{toValue:0,duration:250}).start();
             }
         }
     }
     _onSearch =(value)=> {
-        this._singerTabs.searchData(value,this._sex);
-        this._musicOnline.setTerm(value);
+        if(this._searchValue != value){
+            this._searchValue = value;
+            this._singerTabs.searchData(value,this._sex);
+            this._musicOnline.setTerm(value);
+        }
     }
     _onSearchChange = (value)=>{
-        this._singerTabs.searchData(value,this._sex);
-        this._musicOnline.setTerm(value);
+        if(this._searchValue != value){
+            this._searchValue = value;
+            this._singerTabs.searchData(value,this._sex);
+            this._musicOnline.setTerm(value);
+        }
     }
     _showOptOverlay = () =>{
         EventRegister.emit('ShowOptOverlay', {overlayType:GLOBALS.SING_OVERLAY.SINGER,data:{height:250}});
@@ -77,7 +82,17 @@ export default class SingerScreen extends BaseScreen {
         return (
             <View style={{ flex: 1 }}>
                 <Animated.View style={[styles.headerContainer, { transform: [{ translateY: this._scrollY }]}]}>
-                    <View style={{ width: 40, height: 40 }}>
+                    <Header2
+                        ref={ref=>(this._header = ref)}
+                        right={<View style={{ width: 40, height: 40}}>
+                                    <IconRippe vector={true} name="tuychon2" size={20} color="#fff"
+                                        onPress={this._showOptOverlay} />
+                                </View>}
+                        onSearch={this._onSearch}
+                        onSearchChange = {this._onSearchChange}
+                        onBack = {this._onBack}
+                    />
+                    {/* <View style={{ width: 40, height: 40 }}>
                         <IconRippe vector={true} name="back" size={20} color="#fff"
                             onPress={this._onBack} />
                     </View>
@@ -90,19 +105,14 @@ export default class SingerScreen extends BaseScreen {
                                 onSearch={this._onSearch}
                                 onSearchChange = {this._onSearchChange}  />      
                         </View>
-                    </View>
-                    
-                    <View style={{ width: 40, height: 40}}>
-                        <IconRippe vector={true} name="tuychon2" size={20} color="#fff"
-                            onPress={this._showOptOverlay} />
-                    </View>
+                    </View> */}
                 </Animated.View>
 
                 {/* <View style={{ flex: 1}}>
                     
                 </View> */}
                 <SingerTabsView 
-                        lanTabs={['vn','en','cn','ja','kr']} 
+                        lanTabs={['hot','vn','en','cn','ja','kr']} 
                         ref={ref => (this._singerTabs = ref)} 
                         onChangeTab = {this._onChangeTab}
                         onScroll = {this._handleListViewScroll} 
@@ -110,10 +120,7 @@ export default class SingerScreen extends BaseScreen {
 
                 <MusicOnline 
                     style = {{top:80}}
-                    ref={ref =>(this._musicOnline = ref)}
-                    onOpenOnline = {()=>{
-                        this._searchInput.blur();
-                    }} />
+                    ref={ref =>(this._musicOnline = ref)} />
             </View>
         );
     }
@@ -121,9 +128,6 @@ export default class SingerScreen extends BaseScreen {
 
 const styles = StyleSheet.create({
     headerContainer: {
-        flexDirection: "row",
-        alignItems: "center", 
-        justifyContent: "center",
        // marginTop: GLOBALS.STATUS_BAR_HEIGHT, 
         height: 40,
         backgroundColor:GLOBALS.COLORS.HEADER,

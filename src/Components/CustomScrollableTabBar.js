@@ -35,6 +35,7 @@ const CustomScrollableTabBar = createReactClass({
     onScroll: PropTypes.func,
     isTabRound : PropTypes.bool,
     rippleColor : PropTypes.string,
+    tabWidth : PropTypes.number
   },
 
   getDefaultProps() {
@@ -49,7 +50,8 @@ const CustomScrollableTabBar = createReactClass({
       tabContainerStyle:{},
       underlineStyle: {},
       isTabRound : false,
-      rippleColor : '#ccc'
+      rippleColor : '#ccc',
+      tabWidth: 0
     };
   },
 
@@ -121,7 +123,7 @@ const CustomScrollableTabBar = createReactClass({
   updateTabUnderline(position, pageOffset, tabCount) {
     const lineLeft = this._tabsMeasurements[position].left;
     const lineRight = this._tabsMeasurements[position].right;
-
+    //console.warn("updateTabUnderline = "+position+", left = "+lineLeft);
     if (position < tabCount - 1) {
       const nextTabLeft = this._tabsMeasurements[position + 1].left;
       const nextTabRight = this._tabsMeasurements[position + 1].right;
@@ -138,11 +140,15 @@ const CustomScrollableTabBar = createReactClass({
   },
 
   renderTab(name, page, isTabActive, onPressHandler, onLayoutHandler) {
-    const { activeTextColor, inactiveTextColor, textStyle,isTabRound,rippleColor, tabContainerStyle } = this.props;
-    const textColor = isTabActive ? activeTextColor : inactiveTextColor;
+    const { activeTextColor, inactiveTextColor, textStyle,isTabRound,rippleColor, tabContainerStyle,tabWidth } = this.props;
+    const textColor =  inactiveTextColor;//isTabActive ? activeTextColor : inactiveTextColor;
     //const fontWeight = 'normal';//isTabActive ? 'bold' : 'normal';
     const bgColor = isTabActive ? {backgroundColor : activeTextColor}: {};
-    //console.warn("renderTab name = "+name+" , active color = "+textColor);
+    var _width = {};
+    if(tabWidth > 0){
+      _width = {width:tabWidth};
+    }
+    //console.warn("width = "+_width.width);
     if(!isTabRound){
       return <Button
         key={`${name}_${page}`}
@@ -152,8 +158,9 @@ const CustomScrollableTabBar = createReactClass({
         onPress={() => onPressHandler(page)}
         onLayout={onLayoutHandler}
         rippleColor = {rippleColor}
+        style={[styles.tabContainerStyle,tabContainerStyle,_width]}
       >
-        <View style={[styles.tab, this.props.tabStyle, ]}>
+        <View style={[styles.tab, this.props.tabStyle ]}>
           <Text style={[textStyle,{color: textColor, }, ]}>
             {name}
           </Text>
@@ -169,7 +176,7 @@ const CustomScrollableTabBar = createReactClass({
         onLayout={(event) =>{
           this.measureTab(page,event);
         }}
-        style={[styles.tabContainerStyle,tabContainerStyle,bgColor]}>
+        style={[styles.tabContainerStyle,tabContainerStyle,_width]}>
           <Button
             onPress={() => onPressHandler(page)}
             rippleRound = {true}
@@ -191,6 +198,11 @@ const CustomScrollableTabBar = createReactClass({
     //console.warn("measureTab page = "+page +" , x = "+x+" , width = "+width+" , h = "+height);
     this._tabsMeasurements[page] = {left: x, right: x + width, width, height, };
     this.updateView({value: this.props.scrollValue._value, });
+
+    if(page == this.props.activeTab){
+      this.state._leftTabUnderline.setValue(x);  
+    }
+    
   },
 
   render() {
@@ -203,7 +215,7 @@ const CustomScrollableTabBar = createReactClass({
 
     const dynamicTabUnderline = {
       left: this.state._leftTabUnderline,
-      width:this.state._widthTabUnderline,
+      width:(this.props.tabWidth >0)?this.props.tabWidth : this.state._widthTabUnderline
     };
 
     return <Animated.View
@@ -226,12 +238,12 @@ const CustomScrollableTabBar = createReactClass({
           ref={'tabContainer'}
           onLayout={this.onTabContainerLayout}
         >
+          <Animated.View style={[tabUnderlineStyle, dynamicTabUnderline, this.props.underlineStyle,]} />
           {this.props.tabs.map((name, page) => {
             const isTabActive = this.props.activeTab === page;
             const renderTab = this.props.renderTab || this.renderTab;
             return renderTab(name, page, isTabActive, this.props.goToPage, this.measureTab.bind(this, page));
           })}
-          <Animated.View style={[tabUnderlineStyle, dynamicTabUnderline, this.props.underlineStyle,]} />
         </View>
       </ScrollView>
     </Animated.View>;
@@ -264,17 +276,17 @@ module.exports = CustomScrollableTabBar;
 
 const styles = StyleSheet.create({
   tab: {
-    height: 40,
+    //height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingLeft: 10,
-    paddingRight: 10,
+    // paddingLeft: 10,
+    // paddingRight: 10,
   },
   container: {
-    height: 40,
+    //height: 40,
     width:"100%",
     position:"absolute",
-    top:40,
+   // top:40,
     zIndex:10
     
   },

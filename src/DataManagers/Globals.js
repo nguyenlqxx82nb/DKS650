@@ -103,6 +103,7 @@ export default {
     },
 
     LANGUAGE_NAME: {
+        'hot': "HOT",
         'vn': "VIỆT NAM",
         'en': "ENGLISH",
         'cn': "CHINESE",

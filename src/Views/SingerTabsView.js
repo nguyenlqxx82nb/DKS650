@@ -6,6 +6,7 @@ import CustomScrollableTabBar from '../Components/CustomScrollableTabBar.js'
 import GLOBALS from '../DataManagers/Globals.js';
 import { EventRegister  } from 'react-native-event-listeners';
 import SingerListView from './SingerListView.js';
+import Globals from "../DataManagers/Globals.js";
 
 
 export default class SingerTabsView extends React.Component {
@@ -50,10 +51,10 @@ export default class SingerTabsView extends React.Component {
     _onChangeTab = (page) => {
         this._currPage = page.i;
         if(this.props.onChangeTab != null){
-            this.props.onChangeTab(page.i);
+            setTimeout(()=>{
+                this.props.onChangeTab(page.i);
+            },50);
         }
-
-        // console.warn("test "+this._scrollTab.test())
     }
 
     loadData = (term,sex) =>{
@@ -105,11 +106,15 @@ export default class SingerTabsView extends React.Component {
                         renderTabBar={() => 
                         <CustomScrollableTabBar
                             ref = {ref=>{this._scrollTab = ref}}
-                            underlineStyle={{ backgroundColor: "#fff" }}
+                            underlineStyle={{ backgroundColor: "#0ECAB1", height:30,bottom:5, borderRadius:15 }}
                             activeTextColor={"#0ECAB1"}
                             inactiveTextColor={"#fff"}
-                            textStyle={{ fontSize: 14, color: "#fff", fontFamily:"SF-Pro-Text-Bold" }}
-                            style={{ borderWidth: 0 }}
+                            textStyle={{ fontSize: 14, color: "#fff", fontFamily:Globals.FONT.BOLD }}
+                            style={{ borderWidth: 0, }}
+                            isTabRound = {true}
+                            tabContainerStyle = {{height:30,borderRadius:10, marginLeft:10}}
+                            style ={{height:40,top:40}}
+                            tabWidth={110}
                         />}
                     >
                     {this.props.lanTabs.map((lan, index) => {
