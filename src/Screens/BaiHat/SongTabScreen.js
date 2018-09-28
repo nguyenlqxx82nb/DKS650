@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Alert, TextInput,View } from "react-native";
+import { StyleSheet, Alert,Animated, View } from "react-native";
 import BaseScreen from "../ScreenBase.js"
 import PropTypes from 'prop-types';
 import IconRippe from '../../Components/IconRippe.js'
@@ -8,6 +8,7 @@ import { EventRegister  } from 'react-native-event-listeners';
 import SongTabsView from '../../Views/SongTabsView.js';
 import SearchInput from '../../Views/SearchInput.js';
 import MusicOnline from '../../Views/MusicOnlineButton.js';
+import Header2 from '../Header/header2';
 
 const lans = [
     GLOBALS.LANGUAGE_KEY.vn,
@@ -44,6 +45,7 @@ export default class SongTabScreen extends BaseScreen {
         hasOnlineButton : PropTypes.bool,
         tabType: PropTypes.number
     };
+    _searchTerm = "";
     constructor(props) {
         super(props);
 
@@ -51,78 +53,100 @@ export default class SongTabScreen extends BaseScreen {
         this._hasOnlineButton = (this.props.hasOnlineButton != null)?this.props.hasOnlineButton: true;
         this.tabType = (this.props.tabType != null)?this.props.tabType:GLOBALS.SONG_TAB.LANGUAGE;
 
+        this.MAX_SCROLL_HEIGHT = 135;
         //console.warn("listType = "+this._listType+" , "+this.props.listType);
     }
     _onBack = () => {
         const { onBack } = this.props;
-        this._searchInput.blur();
         if (onBack) {
             onBack();
         }
     }
     _showCompleted = () =>{
         this._songTabs.setVisible(true);
-        this._songTabs.loadData(this._searchInput.getValue());
+        this._songTabs.loadData(this._searchTerm);
     }
     _hideCompleted = ()=>{
         this._songTabs.setVisible(false);
     }
     focusSearchInput = () =>{
-        this._searchInput.focus();
+        this._header.focus();
     }
     _onChangeTab = (page) =>{
         if(this._isVisible){
             //console.warn("_onChangeTab");
-            this._songTabs.loadData(this._searchInput.getValue());
+            this._songTabs.loadData(this._searchTerm);
+            this._handleListViewScroll(this._singerTabs.getCurrentScrollOffset());
+    
+            if(this._offsetY > this.MAX_SCROLL_HEIGHT){
+                this._headerTopY = 0;
+                Animated.timing(this._scrollY,{toValue:0,duration:250}).start();
+            }
         }
     }
     _onSearch =(value)=> {
-        this._songTabs.searchData(value);
-        if(this._musicOnline != null)
-            this._musicOnline.setTerm(value);
+        this._search(value);
+    }
+    _onSearchChange = (value)=>{
+        this._search(value);
+    }
+    _search = (value)=>{
+        if(this._searchTerm != value){
+            this._searchTerm = value;
+            this._songTabs.searchData(value);
+            if(this._musicOnline != null)
+                this._musicOnline.setTerm(value);
+        }
     }
     loadData = () =>{
         this._songTabs.refreshData();
     }
-    renderContentView = () => {
-        var top = (this._hasOnlineButton)?(GLOBALS.LANDSCAPE?50:40):0;
-        
-        return (
-            <View style={{ flex: 1 }}>
-                <View style={styles.headerContainer}>
-                    <View style={{ width: 40, height: 40, marginLeft: 0 }}>
-                        <IconRippe vector={true} name="back" size={20} color="#fff"
-                            onPress={this._onBack}
-                        />
-                    </View>
-                    <View style={{flex:1,justifyContent:"center",alignItems:"center"}} > 
-                        <View style={{width:"80%",height:40,justifyContent:"center",alignItems:"center"}}>
-                            <SearchInput 
-                                ref={ref=>(this._searchInput = ref)} 
-                                onSearchChange={this._onSearch}
-                                onSearch={this._onSearch} /> 
-                        </View>
-                    </View>
-                </View>
-
-                <View style={{ flex: 1}}>
+    scrollExtendComponent = (top) =>{
+        this._songTabs.setScrollTabTop(top);
+        this._musicOnline.setTopValue(top);
+    }
+    renderContent = () =>{
+        if(!this.props.preLoad || this._allowLoad){
+            return (
+                <View style={{flex:1}}>
                     <SongTabsView 
                         tabs={(this.tabType == GLOBALS.SONG_TAB.LANGUAGE)?lans:song_types} 
                         ref={ref => (this._songTabs = ref)} 
                         songListType = {this._listType}
                         onChangeTab = {this._onChangeTab} 
                         tabType = {this.tabType}
-                        top={top}/>
+                        onScroll = {this._handleListViewScroll} 
+                        top={this.MAX_SCROLL_HEIGHT}/>
+                    { 
+                        this._hasOnlineButton && 
+                        <MusicOnline 
+                            ref={ref =>(this._musicOnline = ref)}
+                            style = {{top:85}}
+                            onOpenOnline = {()=>{
+                                this._searchInput.blur();
+                            }}
+                        />
+                    }
                 </View>
-                { 
-                    this._hasOnlineButton && 
-                    <MusicOnline 
-                        ref={ref =>(this._musicOnline = ref)}
-                        onOpenOnline = {()=>{
-                            this._searchInput.blur();
-                        }}
+            )
+        }
+    }
+
+    renderContentView = () => {
+        var top = (this._hasOnlineButton)?(GLOBALS.LANDSCAPE?50:40):0;
+        
+        return (
+            <View style={{ flex: 1 }}>
+                <Animated.View style={[styles.headerContainer, { transform: [{ translateY: this._scrollY }]}]}>
+                    <Header2
+                        ref={ref=>(this._header = ref)}
+                        h = {40}
+                        onSearch={this._onSearch}
+                        onSearchChange = {this._onSearchChange}
+                        onBack = {this._onBack}
                     />
-                }
+                </Animated.View>
+                {this.renderContent()}
             </View>
         );
     }
@@ -130,13 +154,11 @@ export default class SongTabScreen extends BaseScreen {
 
 const styles = StyleSheet.create({
     headerContainer: {
-        justifyContent: "center",
-        flexDirection: "row",
-        alignItems: "center",
-        //marginTop: GLOBALS.STATUS_BAR_HEIGHT,
         height: 40,
-        overflow: "hidden",
-        backgroundColor:GLOBALS.COLORS.HEADER
+        position:"absolute",
+        top:0,
+        zIndex:2,
+        width: "100%",
     },
     tabView: {
         flex: 1,

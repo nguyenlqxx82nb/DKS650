@@ -59,8 +59,9 @@ export default class HomeScreen extends ScreenBase {
                                 onPress={onOpenSearch} />
                     </View>
                 </View>
-                <TuKhoaHot />
-
+                <View style={{height: 40,width:"100%"}}>
+                   <TuKhoaHot />
+                </View>
                 <View style={{ flex: 1, paddingLeft: 50, paddingRight: 50,paddingTop:40,paddingBottom:40}}>
                     <Grid>
                         <Row>

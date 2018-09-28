@@ -181,6 +181,7 @@ const CustomScrollableTabBar = createReactClass({
             onPress={() => onPressHandler(page)}
             rippleRound = {true}
             rippleColor = {rippleColor}
+            style={[_width]}
           >
             <View style={[styles.tab, this.props.tabStyle, ]}>
               <Text style={[textStyle,{color: "#fff", }, ]}>

@@ -26,7 +26,7 @@ export default class TuKhoaHot extends React.Component {
     }
     render() {
         return (
-            <View style={{ height: 40, justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+            <View style={{ flex:1, justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
                 {/* <Text style={styles.titleHot}>TỪ KHÓA HOT</Text> */}
                 <ScrollView
                     horizontal={true}

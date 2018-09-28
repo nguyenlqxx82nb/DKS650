@@ -77,7 +77,25 @@ export default class SingerScreen extends BaseScreen {
         this._singerTabs.setScrollTabTop(top);
         this._musicOnline.setTopValue(top);
     }
+    renderContent = () =>{
+        if(!this.props.preLoad || this._allowLoad){
+            return (
+                <View style={{flex:1}}>
+                    <SingerTabsView 
+                        lanTabs={['hot','vn','en','cn','ja','kr']} 
+                        ref={ref => (this._singerTabs = ref)} 
+                        onChangeTab = {this._onChangeTab}
+                        onScroll = {this._handleListViewScroll} 
+                        top={this.MAX_SCROLL_HEIGHT}/>
 
+                    <MusicOnline 
+                        style = {{top:85}}
+                        ref={ref =>(this._musicOnline = ref)} />
+                </View>
+            )
+        }
+           // return this.renderContentView();
+    }
     renderContentView = () => {
         return (
             <View style={{ flex: 1 }}>
@@ -88,39 +106,15 @@ export default class SingerScreen extends BaseScreen {
                                     <IconRippe vector={true} name="tuychon2" size={20} color="#fff"
                                         onPress={this._showOptOverlay} />
                                 </View>}
+                        h = {40}
                         onSearch={this._onSearch}
                         onSearchChange = {this._onSearchChange}
                         onBack = {this._onBack}
                     />
-                    {/* <View style={{ width: 40, height: 40 }}>
-                        <IconRippe vector={true} name="back" size={20} color="#fff"
-                            onPress={this._onBack} />
-                    </View>
-                    <View style={{flex:1,justifyContent:"center",alignItems:"center"}} > 
-                        <View 
-                            style={{width:"80%",height:40,justifyContent:"center",alignItems:"center"}}>
-                            <SearchInput 
-                                ref={ref=>(this._searchInput = ref)}
-                                style = {{marginRight:0}}    
-                                onSearch={this._onSearch}
-                                onSearchChange = {this._onSearchChange}  />      
-                        </View>
-                    </View> */}
                 </Animated.View>
 
-                {/* <View style={{ flex: 1}}>
-                    
-                </View> */}
-                <SingerTabsView 
-                        lanTabs={['hot','vn','en','cn','ja','kr']} 
-                        ref={ref => (this._singerTabs = ref)} 
-                        onChangeTab = {this._onChangeTab}
-                        onScroll = {this._handleListViewScroll} 
-                        top={this.MAX_SCROLL_HEIGHT}/>
-
-                <MusicOnline 
-                    style = {{top:80}}
-                    ref={ref =>(this._musicOnline = ref)} />
+                {this.renderContent()}
+                
             </View>
         );
     }
@@ -128,17 +122,11 @@ export default class SingerScreen extends BaseScreen {
 
 const styles = StyleSheet.create({
     headerContainer: {
-       // marginTop: GLOBALS.STATUS_BAR_HEIGHT, 
         height: 40,
-        backgroundColor:GLOBALS.COLORS.HEADER,
         position:"absolute",
         top:0,
         zIndex:2,
         width: "100%",
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.2,
-        elevation: 2,
     },
     title: {
         fontSize: 28,

@@ -16,6 +16,7 @@ export default class Header extends React.Component {
         onBack: PropTypes.func,
         onSearch: PropTypes.func,
         onSearchChange : PropTypes.func,
+        h: PropTypes.number
     };
 
     static defaultProps = {};
@@ -49,15 +50,15 @@ export default class Header extends React.Component {
         Animated.parallel([
             Animated.timing(this._opacity,{
                 toValue: 0,
-                easing: Easing.bezier(0.0, 0.0, 0.2, 1),
+                //easing: Easing.bezier(0.0, 0.0, 0.2, 1),
                 //useNativeDriver: Platform.OS === 'android',
-                //duration: 150,
+                duration: 100,
             }),
             Animated.timing(this._searchWidth,{
-                toValue: Utils.Width()-30,
+                toValue: Utils.Width()-20,
                 //useNativeDriver: Platform.OS === 'android',
-               // duration: 200,
-               easing: Easing.bezier(0.0, 0.0, 0.2, 1),
+                duration: 100,
+               //easing: Easing.bezier(0.0, 0.0, 0.2, 1),
             })
         ]).start();
         
@@ -78,25 +79,25 @@ export default class Header extends React.Component {
             Animated.timing(this._opacity,{
                 toValue: 1,
                 //useNativeDriver: Platform.OS === 'android',
-                //duration: 250,
-                easing: Easing.bezier(0.0, 0.0, 0.2, 1),
+                duration: 100,
+                //easing: Easing.bezier(0.0, 0.0, 0.2, 1),
             }),
             Animated.timing(this._searchWidth,{
                 toValue: 350,
                 //useNativeDriver: Platform.OS === 'android',
-                //duration: 150,
-                easing: Easing.bezier(0.0, 0.0, 0.2, 1),
+                duration: 100,
+                //easing: Easing.bezier(0.0, 0.0, 0.2, 1),
             })
         ]).start();
     }
     render() {
-        const {onSearch,onSearchChange} = this.props
+        const {onSearch,onSearchChange,h} = this.props
         // var searchWidth = Utils.Width() - 20;
         // if(!this.fullSearch){
         //     searchWidth = (Utils.Width() - 20)*0.6;
         // }
         return (
-            <View style={styles.container}>
+            <View style={[styles.container,{height:h}]}>
                 
                 <Animated.View 
                     style={{ width: 40, height: 40, marginLeft: 0, opacity:this._opacity }}>
@@ -124,14 +125,14 @@ export default class Header extends React.Component {
                         position: 'absolute',
                         right : 0,
                         //top:0,
-                        height:40,
+                        height:h,
                         width: this._searchWidth,
-                        marginRight:15,
-                        marginLeft:15,
+                        marginRight:10,
+                        marginLeft:10,
                         justifyContent:"center",
-                        backgroundColor :GLOBALS.COLORS.HEADER,
                     }}>
                     <SearchInput 
+                        h={h}
                         style={{marginRight:0}} 
                         onSearch={(value)=>{
                             if(onSearch != null){
@@ -163,8 +164,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center", 
         justifyContent: "center",
-        flex:1,
         width:'100%',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.2,
+        elevation: 5,
+        backgroundColor :GLOBALS.COLORS.HEADER,
     },
 
    

@@ -30,7 +30,7 @@ export default class SQLiteMagager {
             if(type == 'type') query += ' and type =' + type_val;
             else if(type=='new') query +=' and id in(select id from newsong)';
             else if(type=='hot') query +=' and id in(select id from topsong)';
-            else if(type=='lang') query +=' and language=' +type_val;
+            //else if(type=='lang') query +=' and language=' +type_val;
             else if(type=='star') query +=' and Actor =\'' +type_val + '\'';
         }
 		

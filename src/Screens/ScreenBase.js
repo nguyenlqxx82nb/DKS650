@@ -14,7 +14,8 @@ class BaseScreen extends React.Component {
         posY : PropTypes.number,
         transition : PropTypes.number,
         bottom :  PropTypes.number,
-        type: PropTypes.number
+        type: PropTypes.number,
+        preLoad : PropTypes.bool
     };
      
     static defaultProps = {
@@ -25,12 +26,14 @@ class BaseScreen extends React.Component {
         posY : Utils.Height(),
         transition : GLOBALS.TRANSITION.FADE,
         bottom : 115,
-        type : GLOBALS.SCREEN_TYPE.BOTTOM
+        type : GLOBALS.SCREEN_TYPE.BOTTOM,
+        preLoad : true
     };
     _songTabs = null;
-    MAX_SCROLL_HEIGHT = 130;
+    MAX_SCROLL_HEIGHT = 135;
     _offsetY = 0;
     _headerTopY = 0;
+    _allowLoad = false
 
     constructor(props) {
         super(props);
@@ -59,6 +62,7 @@ class BaseScreen extends React.Component {
             this.hide();
             return;
         }
+        
         this._processing = true;
 
         let container = this._container;
@@ -66,7 +70,12 @@ class BaseScreen extends React.Component {
         var that = this;
         var zindex = Math.min(this._maxIndex,maxZindex);
         this._isVisible = true;
-        
+        if(this.props.preLoad && !this._allowLoad){
+            setTimeout(()=>{
+                this._allowLoad = true;
+                this.setState({});
+            },20);
+        }
         if(transition == GLOBALS.TRANSITION.FADE){
             Animated.timing(this.animate.opacity, {
                 toValue: 1,
@@ -79,7 +88,7 @@ class BaseScreen extends React.Component {
                         zIndex: zindex
                     }
                 });
-    
+                
                 that.showCompleted();
             });
         }
@@ -184,6 +193,7 @@ class BaseScreen extends React.Component {
 
     showCompleted = () =>{
         this._processing = false;
+        
         this._showCompleted();
     }
     _showCompleted = () =>{}
@@ -274,10 +284,8 @@ class BaseScreen extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: "center",
-        alignItems: "center",
         position:"absolute",
-        width: Utils.Width()
+        width: "100%"
     }
 })
 

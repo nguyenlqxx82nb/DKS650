@@ -15,7 +15,8 @@ export default class SongTabsView extends React.Component {
         onChangeTab : PropTypes.func,
         songType : PropTypes.number,
         songListType : PropTypes.number,
-        top : PropTypes.number
+        top : PropTypes.number,
+        onScroll : PropTypes.number,
     };
     static defaultProps = {
         songType : GLOBALS.SONG_TYPE.ALL,
@@ -61,7 +62,9 @@ export default class SongTabsView extends React.Component {
     _onChangeTab = (page) => {
         this._currPage = page.i;
         if(this.props.onChangeTab != null){
-            this.props.onChangeTab(page.i);
+            setTimeout(()=>{
+                this.props.onChangeTab(page.i);
+            },150)
         }
     }
 
@@ -88,41 +91,27 @@ export default class SongTabsView extends React.Component {
         this._tabs[this._currPage].refreshData("");
     }
 
-    renderTabs = () =>{
-        var tabContent = {};
-        if(GLOBALS.LANDSCAPE){
-            tabContent ={
-                borderTopWidth: 0
-            }
-        }
-
-        if(this.props.tabType == GLOBALS.SONG_TAB.LANGUAGE){
-            this.props.tabs.map((lan, index) => {
-                return (
-                    <View key={index} style={[styles.tabContent,tabContent,{marginTop:this.props.top}]} tabLabel={GLOBALS.LANGUAGE_NAME[lan]}>
-                        <SongListView 
-                            listType = {this.props.songListType}
-                            lan={lan} 
-                            songType={this.props.songType} 
-                            ref={ref => (this._tabs[index] = ref)} />
-                    </View>) ;
-            })
-        }
-        else if(this.props.tabType == GLOBALS.SONG_TAB.SONG_TYPE){
-            this.props.tabs.map((type, index) => {
-                return (
-                    <View key={index} 
-                          style={[styles.tabContent,tabContent,{marginTop:this.props.top}]} 
-                          tabLabel={GLOBALS.SONG_TYPE_NAME[type]}>
-                        <SongListView 
-                            listType = {this.props.songListType}
-                            songType={GLOBALS.SONG_TYPE[type]} 
-                            ref={ref => (this._tabs[index] = ref)} />
-                    </View>) ;
-            })
+    _handleScroll = (offsetY) =>{
+        const {onScroll} = this.props;
+        if(onScroll != null){
+            onScroll(offsetY);
         }
     }
-    
+
+    setScrollTabTop = (value)=>{
+        //console.warn("setScrollTabTop 0 = "+value);
+        this._scrollTab.setScrollTabTop(value);
+    }
+
+    setScrollTop = (value) => {
+       // console.warn("setScrollTop = "+value)
+        this._tabs[this._currPage].setScrollTop(value);
+    }
+
+    getCurrentScrollOffset= () =>{
+        return this._tabs[this._currPage].getCurrentScrollOffset();
+    }
+
     render() {
         var tabContent = {};
         if(GLOBALS.LANDSCAPE){
@@ -134,30 +123,37 @@ export default class SongTabsView extends React.Component {
         return (
             <ScrollableTabView
                         style={{ marginTop: 0, }}
-                        
                         initialPage={0}
                         onChangeTab = {this._onChangeTab}
                         renderTabBar={() => 
                         <CustomScrollableTabBar
-                            //backgroundColor = {"red"}
-                            isTabRound={true}
-                            tabContainerStyle={{borderRadius:15, height:30,  borderWidth:1, borderColor:"#fff",marginLeft:5}}
-                            tabsContainerStyle={{marginLeft:20}}
-                            underlineStyle={{ height: 0 }}
+                            ref = {ref=>{this._scrollTab = ref}}
+                            underlineStyle={{ backgroundColor: "#0ECAB1", height:30,bottom:5, borderRadius:15 }}
                             activeTextColor={"#0ECAB1"}
                             inactiveTextColor={"#fff"}
-                            textStyle={{ fontSize: 12, color: "#fff", fontFamily:GLOBALS.FONT.BOLD,paddingLeft: 15, paddingRight: 15, }}
-                            style={{ borderWidth: 0}}
+                            textStyle={{ fontSize: 14, color: "#fff", fontFamily:GLOBALS.FONT.BOLD }}
+                            style={{ borderWidth: 0, }}
+                            isTabRound = {true}
+                            tabContainerStyle = {{height:30,borderRadius:15, marginLeft:5}}
+                            style ={{height:40,top:43}}
+                            tabWidth={110}
                         />}
                     >
                     {(this.props.tabType == GLOBALS.SONG_TAB.LANGUAGE)&& this.props.tabs.map((lan, index) => {
                         return (
-                            <View key={index} style={[styles.tabContent,tabContent,{marginTop:this.props.top}]} tabLabel={GLOBALS.LANGUAGE_NAME[lan]}>
+                            <View key={index} style={[styles.tabContent,tabContent]} 
+                                tabLabel={GLOBALS.LANGUAGE_NAME[lan]}>
                                 <SongListView 
                                     listType = {this.props.songListType}
                                     lan={lan} 
                                     songType={this.props.songType} 
-                                    ref={ref => (this._tabs[index] = ref)} />
+                                    ref={ref => (this._tabs[index] = ref)}
+                                    onScroll = {(value)=>{
+                                        if(this.props.onScroll != null)
+                                            this.props.onScroll(value);  
+                                    }}
+                                    top={this.props.top}
+                                    />
                             </View>) ;
                     })}
 
@@ -165,12 +161,18 @@ export default class SongTabsView extends React.Component {
                      this.props.tabs.map((type, index) => {
                         return (
                             <View key={index} 
-                                  style={[styles.tabContent,tabContent,{marginTop:this.props.top}]} 
+                                  style={[styles.tabContent]} 
                                   tabLabel={GLOBALS.SONG_TYPE_NAME[type]}>
                                 <SongListView 
                                     listType = {this.props.songListType}
                                     songType={GLOBALS.SONG_TYPE[type]} 
-                                    ref={ref => (this._tabs[index] = ref)} />
+                                    ref={ref => (this._tabs[index] = ref)}
+                                    onScroll = {(value)=>{
+                                        if(this.props.onScroll != null)
+                                            this.props.onScroll(value);  
+                                    }}
+                                    top={this.props.top}
+                                    />
                             </View>) ;
                     })}
                     </ScrollableTabView>
@@ -181,7 +183,7 @@ export default class SongTabsView extends React.Component {
 const styles = StyleSheet.create({
     tabContent: {
         flex: 1,
-        borderTopWidth: 0.5,
-        borderColor: '#00ECBC',
+        // borderTopWidth: 0.5,
+        // borderColor: '#00ECBC',
     },
 })

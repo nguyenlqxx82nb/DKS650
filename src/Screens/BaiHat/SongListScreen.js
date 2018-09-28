@@ -26,7 +26,7 @@ export default class SongListScreen extends BaseScreen {
     //     // songType: GLOBALS.SONG_TYPE.ALL,
     //     listType: GLOBALS.SONG_LIST_TYPE.ALL,
     // }
-
+    _songList = null
     constructor(props) {
         super(props);
 
@@ -41,12 +41,12 @@ export default class SongListScreen extends BaseScreen {
             avatar : ""
         }
 
-        this.MAX_SCROLL_HEIGHT = 115;
+        this.MAX_SCROLL_HEIGHT = 110;
     }
     componentWillMount() {
         // selected song changed
         this._listenerSongUpdateEvent = EventRegister.addEventListener('SongUpdate', (data) => {
-            if(this._isVisible){
+            if(this._isVisible && this._songList != null){
                 this._songList.updateSong();
             }
             else{
@@ -77,16 +77,19 @@ export default class SongListScreen extends BaseScreen {
     _onSearch = (value) =>{
        // this._term = value;
         //console.warn("_onSearch = "+value);
-        this._songList.searchData(value);
-        this._musicOnline.setTerm(value);
+        this._serach(value);
     }
     _onSearchChange = (value) =>{
        // console.warn("_onSearchChange = "+value);
+        this._serach(value);
+    }
+    _serach = (value) => {
         this._songList.searchData(value);
         this._musicOnline.setTerm(value);
     }
     updateSinger = (name)=>{
-        if(name != this.state.name){
+        if(name != this.state.title){
+            this._allowLoad = true;
             this.setState({
                 singerName:name,
                 title: name
@@ -104,6 +107,7 @@ export default class SongListScreen extends BaseScreen {
     }
     updateSongType = (type,name)=>{
         if(type != this.state.songType){
+            this._allowLoad = true;
             this.setState({
                 songType:type,
                 title:name
@@ -113,14 +117,40 @@ export default class SongListScreen extends BaseScreen {
         }
     }
     clear = () =>{
-        this._songList.clear();
+        if(this._songList != null)
+            this._songList.clear();
+
         this._searchHeader.clear();
     }
     scrollExtendComponent = (top) =>{
         this._musicOnline.setTopValue(top);
     }
+    renderContent = () =>{
+        const {singerName,songType,} = this.state;
+        if(!this.props.preLoad || this._allowLoad){
+            return (
+                <View style={{flex:1}}>
+                    <MusicOnline style={{top:50}} 
+                        ref={ref =>(this._musicOnline = ref)}
+                        onOpenOnline = {()=>{
+                            //this._searchInput.blur();
+                        }} />
+
+                    <SongListView 
+                        ref={ref=>(this._songList = ref)} 
+                        listType = {this.listType} 
+                        actor ={singerName} 
+                        songType = {songType}
+                        onScroll = {this._handleListViewScroll} 
+                        top={this.MAX_SCROLL_HEIGHT}
+                    />
+                </View>
+            )
+        }
+    }
+
     renderContentView = () => {
-        const { singerName, singerId,songType,title } = this.state;
+        const {title } = this.state;
         var songContainer = {};
         if(GLOBALS.LANDSCAPE){
             songContainer = {
@@ -133,6 +163,7 @@ export default class SongListScreen extends BaseScreen {
                 <Animated.View style={[styles.headerContainer,{ transform: [{ translateY: this._scrollY }]}]}>
                     <Header 
                         ref = {ref=>(this._searchHeader = ref)}
+                        h={40}
                         onBack = {this._onBack}
                         onSearch = {this._onSearch}
                         onSearchChange = {this._onSearchChange}
@@ -146,21 +177,7 @@ export default class SongListScreen extends BaseScreen {
                         }
                     />
                 </Animated.View>
-
-                <MusicOnline style={{top:50}} 
-                    ref={ref =>(this._musicOnline = ref)}
-                    onOpenOnline = {()=>{
-                        //this._searchInput.blur();
-                    }} />
-
-                <SongListView 
-                    ref={ref=>(this._songList = ref)} 
-                    listType = {this.listType} 
-                    actor ={singerName} 
-                    songType = {songType}
-                    onScroll = {this._handleListViewScroll} 
-                    top={this.MAX_SCROLL_HEIGHT}
-                />
+                {this.renderContent()}
             </View>
         );
     }
@@ -173,14 +190,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         //marginTop: GLOBALS.STATUS_BAR_HEIGHT, 
         height: 40,
-        backgroundColor :GLOBALS.COLORS.HEADER,
         width:"100%",
         top:0,
         position:"absolute",
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.2,
-        elevation: 2,
         zIndex:3,
     },
     title: {
