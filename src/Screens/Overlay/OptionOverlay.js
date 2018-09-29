@@ -136,31 +136,32 @@ export default class OptionOverlay extends React.Component {
         const {opacityValue,yPos} = this.state;
 
         return (
-        <View style={[{position:"absolute",
-                        width: 0,
-                        top:0,
-                        height: screenHeight,
-                        opacity:1,zIndex:0 },top]}
-               ref={ref => (this._container = ref)}>
+            <View style={[{position:"absolute",
+                            width: 0,
+                            top:0,
+                            height: screenHeight,
+                            opacity:1,zIndex:0 },top]}
+                ref={ref => (this._container = ref)}>
 
-            <TouchableWithoutFeedback  style={styles.overlayContainer} 
-                onPress={this._onClose} >
-                <Animated.View 
-                    ref={ref => (this._overlay = ref)}
-                    style={{opacity:opacityValue,flex:1, backgroundColor: "#000"}} />
-            </TouchableWithoutFeedback>
-
-            <Animated.View  ref={ref => (this._panel = ref)}
-                    style={[styles.container,{height:this._data.height, transform:[{translateY: yPos}]}]}>
-                    {this.renderView()}
-                    <View style={{height:50,width:'100%', backgroundColor:"#444083"}}>
-                        <IconRippe vector={true} name={""}
-                            text={{content: "Hủy", layout: 1}} textStyle={styles.text}
-                            onPress = {this._onClose}
-                        />
-                    </View>
-            </Animated.View>
-        </View>
+                <TouchableWithoutFeedback  style={styles.overlayContainer} 
+                    onPress={this._onClose} >
+                    <Animated.View 
+                        ref={ref => (this._overlay = ref)}
+                        style={{opacity:opacityValue,flex:1, backgroundColor: "#000"}} />
+                </TouchableWithoutFeedback>
+                
+                <Animated.View  ref={ref => (this._panel = ref)}
+                        style={[styles.container,
+                                {height:this._data.height,bottom:GLOBALS.FOOTER_HEIGHT, transform:[{translateY: yPos}]}]}>
+                        {this.renderView()}
+                        {/* <View style={{height:50,width:'100%', backgroundColor:"#444083"}}>
+                            <IconRippe vector={true} name={""}
+                                text={{content: "Hủy", layout: 1}} textStyle={styles.text}
+                                onPress = {this._onClose}
+                            />
+                        </View> */}
+                </Animated.View>
+            </View>
         );
     }
 }

@@ -45,7 +45,12 @@ const styles = StyleSheet.create({
         alignItems: "center", 
         justifyContent: "center",
         width:'100%',
-        height:60
+        height:40,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.2,
+        elevation: 5,
+        backgroundColor :GLOBALS.COLORS.HEADER,
     },
     title: {
         fontSize: 20,
@@ -54,7 +59,7 @@ const styles = StyleSheet.create({
         marginLeft:10,
         color:"#fff",
        // flex:1,
-        fontFamily:GLOBALS.FONT.MEDIUM
+        fontFamily:GLOBALS.FONT.BOLD
     },
    
 })

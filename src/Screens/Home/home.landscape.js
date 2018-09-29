@@ -31,9 +31,9 @@ export default class HomeScreen extends ScreenBase {
     }
     renderContentView = () => {
         const { onOpenSearch,onOpenSinger } = this.props;
-        var width1 = (Utils.Width()-80)*0.68/(0.68*2+1) - 6;
+       // var width1 = (Utils.Width()-80)*0.68/(0.68*2+1) - 6;
         var width2 = (Utils.Width()-80)/(0.68*2+1) - 6;
-        var width3 = (width2 - 6)/2;
+        //var width3 = (width2 - 6)/2;
         return (
             <View style={{ flex: 1,width:"100%"}}>
                 <View style={styles.headerContainer}>
@@ -54,10 +54,10 @@ export default class HomeScreen extends ScreenBase {
                                 onPress={onOpenSearch} />
                     </View>
 
-                    <View style={{ width: 40, height: 40, marginRight: 5 }}>
+                    {/* <View style={{ width: 40, height: 40, marginRight: 5 }}>
                             <IconRippe vector={true} name="search" size={20} color="#fff"
                                 onPress={onOpenSearch} />
-                    </View>
+                    </View> */}
                 </View>
                 <View style={{height: 40,width:"100%"}}>
                    <TuKhoaHot />

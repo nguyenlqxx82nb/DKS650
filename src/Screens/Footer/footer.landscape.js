@@ -82,7 +82,7 @@ export default class FooterLanscape extends React.Component {
         EventRegister.emit('ShowOptOverlay',
             {
                 overlayType: GLOBALS.SING_OVERLAY.EMOJI,
-                data: { height: 220 }
+                data: { height: 120 }
             });
     }
     _openSongList = () => {
@@ -252,7 +252,8 @@ export default class FooterLanscape extends React.Component {
                         <Col size={1.2}>
                             <Row>
                                 <Col size={1} style={[styles.container_center]}>
-                                    <IconRippe status={status} vector={true} size={25} name="emoji" onPress={this._onEmojiPress} />
+                                    <IconRippe status={status} vector={true} size={25} name="emoji" 
+                                        onPress={this._onEmojiPress} />
                                 </Col>
                                 <Col size={1} style={[styles.container_center]}>
                                 <IconRippe status={status} vector={true} size={25} name="replay"

@@ -55,9 +55,9 @@ export default class Header extends React.Component {
                 duration: 100,
             }),
             Animated.timing(this._searchWidth,{
-                toValue: Utils.Width()-20,
+                toValue: Utils.Width()-30,
                 //useNativeDriver: Platform.OS === 'android',
-                duration: 100,
+                duration: 250,
                //easing: Easing.bezier(0.0, 0.0, 0.2, 1),
             })
         ]).start();
@@ -79,7 +79,7 @@ export default class Header extends React.Component {
             Animated.timing(this._opacity,{
                 toValue: 1,
                 //useNativeDriver: Platform.OS === 'android',
-                duration: 100,
+                duration: 150,
                 //easing: Easing.bezier(0.0, 0.0, 0.2, 1),
             }),
             Animated.timing(this._searchWidth,{
@@ -122,13 +122,13 @@ export default class Header extends React.Component {
                     ref = {ref => (this._inputSearchView = ref)}
                     style={{
                         zIndex:2,
-                        position: 'absolute',
-                        right : 0,
+                        // position: 'absolute',
+                        // right : 0,
                         //top:0,
                         height:h,
                         width: this._searchWidth,
-                        marginRight:10,
-                        marginLeft:10,
+                        marginRight:15,
+                        marginLeft:15,
                         justifyContent:"center",
                     }}>
                     <SearchInput 
@@ -151,6 +151,14 @@ export default class Header extends React.Component {
                         }}
                         onBlur={()=>{
                             this.hideSearchInput();
+                        }}
+                    />
+                </Animated.View>
+                <Animated.View 
+                    style={{ width: 40, height: 40, marginLeft: 0, opacity:this._opacity }}>
+                    <IconRippe vector={true} name="wifi" size={20} color="#fff"
+                        onPress={()=>{
+                            
                         }}
                     />
                 </Animated.View>

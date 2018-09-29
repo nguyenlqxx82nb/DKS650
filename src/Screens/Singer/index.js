@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Animated } from "react-native";
+import { StyleSheet, View, Animated,Text } from "react-native";
 import BaseScreen from "../ScreenBase.js"
 import PropTypes from 'prop-types';
 import IconRippe from '../../Components/IconRippe.js'
@@ -102,14 +102,30 @@ export default class SingerScreen extends BaseScreen {
                 <Animated.View style={[styles.headerContainer, { transform: [{ translateY: this._scrollY }]}]}>
                     <Header2
                         ref={ref=>(this._header = ref)}
-                        right={<View style={{ width: 40, height: 40}}>
-                                    <IconRippe vector={true} name="tuychon2" size={20} color="#fff"
-                                        onPress={this._showOptOverlay} />
-                                </View>}
+                        right={<View style={{flex:1,flexDirection:"row", justifyContent:"flex-end",alignItems:"center"}}>
+                                    <View style={{ width: 40, height: 40}}>
+                                        <IconRippe vector={true} name="all" size={20} color="#fff"
+                                            onPress={this._showOptOverlay} />
+                                    </View>
+                                    <View style={{ width: 40, height: 40}}>
+                                        <IconRippe vector={true} name="male" size={20} color="#fff"
+                                            onPress={this._showOptOverlay} />
+                                    </View>
+                                    <View style={{ width: 40, height: 40}}>
+                                        <IconRippe vector={true} name="famale" size={20} color="#fff"
+                                            onPress={this._showOptOverlay} />
+                                    </View>
+                                    <View style={{ width: 40, height: 40}}>
+                                        <IconRippe vector={true} name="nhomnhac" size={20} color="#fff"
+                                            onPress={this._showOptOverlay} />
+                                    </View>
+                                </View>
+                                }
                         h = {40}
                         onSearch={this._onSearch}
                         onSearchChange = {this._onSearchChange}
                         onBack = {this._onBack}
+                        left={<Text style={[styles.title]}>CA SỸ</Text>}
                     />
                 </Animated.View>
 
@@ -129,10 +145,11 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     title: {
-        fontSize: 28,
+        fontSize: 20,
         fontWeight: '300',
-        textAlign: 'center',
-        margin: 20,
+        marginLeft:5,
+        color:"#fff",
+        fontFamily:GLOBALS.FONT.BOLD
     },
     tabView: {
         flex: 1,

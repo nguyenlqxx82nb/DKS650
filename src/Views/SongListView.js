@@ -294,6 +294,9 @@ export default class SongListView extends React.Component {
                     actor:actor}
                 });
     }
+    getCurrentScrollOffset= () =>{
+        return this._listView.getCurrentScrollOffset();
+    }
     _renderFooter = () => {
         return (this._loading && this._loaded) ?
             <View style={{ height: 60, width: '100%', justifyContent: "center", alignContent: "center" }}>
@@ -416,6 +419,7 @@ export default class SongListView extends React.Component {
         return (
             <View style={{ flex: 1 }}>
                 <RecyclerListView
+                    ref={ref => (this._listView = ref)}
                     style={{ flex: 1,marginLeft:15,marginRight:15 }}
                     //contentContainerStyle={{ margin: 3 }}
                     showsHorizontalScrollIndicator={false}

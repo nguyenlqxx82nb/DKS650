@@ -31,8 +31,8 @@ export default class Landscape extends React.Component {
         console.disableYellowBox = true;
         //console.ignoredYellowBox = ['Warning:']; // = ['Warning: Stateless'];
         GLOBALS.INFO.VERSION = GLOBALS.BOX_VERSION.S650;
-        //GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.HTTP;
-        GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.SQLITE;
+        GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.HTTP;
+        //GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.SQLITE;
         GLOBALS.LANDSCAPE = true;
         // if(Platform.OS == 'android'){
         //     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -40,9 +40,6 @@ export default class Landscape extends React.Component {
     }
 
     componentDidMount() {
-        //console.warn("componentDidMount");
-       // this._currentScreen = this._homeScreen; 
-
         BTElib.checkConnectToWifiBox();
         BTElib.syncPlaybackQueue();
         BTElib.syncPlaybackInfo();
@@ -158,16 +155,17 @@ export default class Landscape extends React.Component {
     }
     _showOverlay= (data)=>{
         this._singOverlay.updateView(data.overlayType,data.data);
-        this._footer.hide();
+        if(data.overlayType == GLOBALS.SING_OVERLAY.KEYBROARD)
+            this._footer.hide();
         this._singOverlay.show();
     }
     _onOpenSearch = () => {
-        this._searchScreen.show();
+        this._songScreen.show();
         setTimeout(()=>{
-            this._searchScreen.focusSearchInput();
-        },500);
+            this._songScreen.focusSearchInput();
+        },600);
 
-        this._currentScreen = this._searchScreen;
+        this._currentScreen = this._songScreen;
     }
     _onOpenSinger = () =>{
         this._singerScreen.show();
@@ -226,19 +224,7 @@ export default class Landscape extends React.Component {
                     bottom={60}
                     preLoad={false}
                 />  
-                 {/* 
-
-
-                 */}
-
-                <SongTabScreen 
-                    opacity= {0} 
-                    maxZindex ={5} 
-                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
-                    duration={250}
-                    onBack={this._onBackHome} ref={ref => (this._searchScreen = ref)}
-                    bottom={60}
-                />
+                
                 <SingerScreen 
                         opacity= {1}
                         maxZindex ={2} 
@@ -248,17 +234,23 @@ export default class Landscape extends React.Component {
                         ref={ref => (this._singerScreen = ref)}
                         bottom={60}
                     />
-                
+                <OnlineScreen  opacity= {0} maxZindex ={2} 
+                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                    duration={250}
+                    onBack={this._onBackHome} 
+                    ref={ref => (this._onlineScreen = ref)} />
+                    
                 <SongTabScreen 
                     opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
                     onBack={this._onBackHome} ref={ref => (this._songScreen = ref)}
                     bottom={60}
+                    title={"BÀI HÁT"}
                 />
                 <SongListScreen opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
                     listType={GLOBALS.SONG_LIST_TYPE.HOT}
-                    title ={"Bài Hot"}
+                    title ={"BÀI HOT"}
                     onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
                     bottom={60}
                 />
@@ -269,6 +261,7 @@ export default class Landscape extends React.Component {
                     onBack={this._onBackHome} ref={ref => (this._theloaiScreen = ref)}
                     bottom={60}
                     tabType={GLOBALS.SONG_TAB.SONG_TYPE}
+                    title={"THỂ LOẠI"}
                 />
 
                 

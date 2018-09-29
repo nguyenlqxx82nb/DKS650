@@ -134,9 +134,9 @@ export default class SongTabsView extends React.Component {
                             textStyle={{ fontSize: 14, color: "#fff", fontFamily:GLOBALS.FONT.BOLD }}
                             style={{ borderWidth: 0, }}
                             isTabRound = {true}
-                            tabContainerStyle = {{height:30,borderRadius:15, marginLeft:5}}
+                            tabContainerStyle = {{height:30,borderRadius:15, marginLeft:10}}
                             style ={{height:40,top:43}}
-                            tabWidth={110}
+                            tabWidth={105}
                         />}
                     >
                     {(this.props.tabType == GLOBALS.SONG_TAB.LANGUAGE)&& this.props.tabs.map((lan, index) => {

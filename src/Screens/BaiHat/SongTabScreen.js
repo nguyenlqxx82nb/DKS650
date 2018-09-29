@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Alert,Animated, View } from "react-native";
+import { StyleSheet, Alert,Animated, View,Text } from "react-native";
 import BaseScreen from "../ScreenBase.js"
 import PropTypes from 'prop-types';
 import IconRippe from '../../Components/IconRippe.js'
@@ -43,7 +43,8 @@ export default class SongTabScreen extends BaseScreen {
         onBack: PropTypes.func,
         listType: PropTypes.number,
         hasOnlineButton : PropTypes.bool,
-        tabType: PropTypes.number
+        tabType: PropTypes.number,
+        title : PropTypes.string
     };
     _searchTerm = "";
     constructor(props) {
@@ -76,7 +77,7 @@ export default class SongTabScreen extends BaseScreen {
         if(this._isVisible){
             //console.warn("_onChangeTab");
             this._songTabs.loadData(this._searchTerm);
-            this._handleListViewScroll(this._singerTabs.getCurrentScrollOffset());
+            this._handleListViewScroll(this._songTabs.getCurrentScrollOffset());
     
             if(this._offsetY > this.MAX_SCROLL_HEIGHT){
                 this._headerTopY = 0;
@@ -123,7 +124,7 @@ export default class SongTabScreen extends BaseScreen {
                             ref={ref =>(this._musicOnline = ref)}
                             style = {{top:85}}
                             onOpenOnline = {()=>{
-                                this._searchInput.blur();
+                                //this._searchInput.blur();
                             }}
                         />
                     }
@@ -144,6 +145,7 @@ export default class SongTabScreen extends BaseScreen {
                         onSearch={this._onSearch}
                         onSearchChange = {this._onSearchChange}
                         onBack = {this._onBack}
+                        left={<Text style={[styles.title]}>{this.props.title}</Text>}
                     />
                 </Animated.View>
                 {this.renderContent()}
@@ -164,5 +166,12 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 10,
         backgroundColor: 'rgba(0,0,0,0.01)',
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: '300',
+        marginLeft:5,
+        color:"#fff",
+        fontFamily:GLOBALS.FONT.BOLD
     },
 })

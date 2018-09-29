@@ -43,7 +43,9 @@ export default class SearchInput extends React.Component {
     }
     focusSearch = (term)=>{
         this.setValue(term);
-        this.setState({showRemoveBtn:true});
+        if(term != "")
+            this.setState({showRemoveBtn:true});
+            
         this._searchInput.focus();
     }
     _handleTextFocus = () =>{

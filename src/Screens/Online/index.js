@@ -1,12 +1,12 @@
 import React from "react";
-import { StyleSheet, Text ,View} from "react-native";
+import { StyleSheet, Text ,View, Platform} from "react-native";
 import BaseScreen from "../ScreenBase.js"
 import PropTypes from 'prop-types';
 import IconRippe from '../../Components/IconRippe.js'
 import LinearGradient from 'react-native-linear-gradient';
 import GLOBALS from '../../DataManagers/Globals.js';
 import { EventRegister  } from 'react-native-event-listeners';
-import SongOnlineScreen from './SongOnlineScreen.js';
+import Header from '../Header/header1';
 
 export default class OnlineScreen extends BaseScreen {
     static propTypes = {
@@ -38,48 +38,77 @@ export default class OnlineScreen extends BaseScreen {
     renderContentView = () => {
         return (
             <View style={{ flex: 1 }}>
-                <View style={{ flex: 1 }}>
-                    <View style={styles.headerContainer}>
-                        <View style={{ width: 40, height: 40 , marginLeft:5}}>
-                            <IconRippe vector={true} name="back" size={20} color="#fff"
-                                onPress={this._onBack} />
-                        </View>
-                        <View style={{flex:1, justifyContent:"center",alignItems:"flex-start"}}>
-                            <Text style={[styles.title]}>Nhạc Online</Text></View> 
-                        {/* <View style={{ width: 40, height: 40, marginRight:5}}>
-                            <IconRippe vector={true} name="search" size={20} color="#fff" />
-                        </View> */}
-                    </View>
+                <Header
+                    title = {"NHẠC ONLINE"}
+                    onBack = {this._onBack}
+                />
+                {this.renderContent()}
+            </View> 
+        );
+    }
 
-                    <View style={{ flex: 1,margin:5,backgroundColor:"transparent", justifyContent:"center",alignItems:"center"}}>
-                        <View style={styles.onlineContainer}>
-                            <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#FF6565', '#FF4242', '#FF2C2C', '#FF0404']} style={[styles.button]}>
-                                <IconRippe vector={true} name="youtube3" size={100}
-                                    onPress = {()=>{
-                                        EventRegister.emit("ShowOnlineScreen",{type:GLOBALS.SONG_ONLINE.YOUTUBE});
-                                    }}
-                                />
-                            </LinearGradient>
-                        </View>
-                        <View style={styles.onlineContainer}>
-                            <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#FFB223', '#FF9E1D', '#FF8315', '#FF4903']} style={[styles.button]}>
-                                <IconRippe vector={true} name="soundcloud" size={190} 
-                                    onPress = {()=>{
-                                        EventRegister.emit("ShowOnlineScreen",{type:GLOBALS.SONG_ONLINE.SOUNDCLOUD});
-                                    }}
-                                />
-                            </LinearGradient>
-                        </View>
-                        <View style={styles.onlineContainer}>
-                            <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#69A5E5', '#5D9CE1', '#4B90DB', '#3783D4']} style={[styles.button]}>
-                                <IconRippe vector={true} name="mixcloud" size={190} 
-                                    onPress = {()=>{
-                                        EventRegister.emit("ShowOnlineScreen",{type:GLOBALS.SONG_ONLINE.MIXCLOUD});
-                                    }}
-                                />
-                            </LinearGradient>
-                        </View>
+    renderContent = () => {
+        if(!GLOBALS.LANDSCAPE)
+            return (
+                <View style={{ flex: 1,margin:5,backgroundColor:"transparent", justifyContent:"center",alignItems:"center"}}>
+                    <View style={styles.onlineContainer}>
+                        <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#FF6565', '#FF4242', '#FF2C2C', '#FF0404']} style={[styles.button]}>
+                            <IconRippe vector={true} name="youtube3" size={180}
+                                onPress = {()=>{
+                                    EventRegister.emit("ShowOnlineScreen",{type:GLOBALS.SONG_ONLINE.YOUTUBE});
+                                }}
+                            />
+                        </LinearGradient>
                     </View>
+                    <View style={styles.onlineContainer}>
+                        <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#FFB223', '#FF9E1D', '#FF8315', '#FF4903']} style={[styles.button]}>
+                            <IconRippe vector={true} name="soundcloud" size={190} 
+                                onPress = {()=>{
+                                    EventRegister.emit("ShowOnlineScreen",{type:GLOBALS.SONG_ONLINE.SOUNDCLOUD});
+                                }}
+                            />
+                        </LinearGradient>
+                    </View>
+                    <View style={styles.onlineContainer}>
+                        <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#69A5E5', '#5D9CE1', '#4B90DB', '#3783D4']} style={[styles.button]}>
+                            <IconRippe vector={true} name="mixcloud" size={190} 
+                                onPress = {()=>{
+                                    EventRegister.emit("ShowOnlineScreen",{type:GLOBALS.SONG_ONLINE.MIXCLOUD});
+                                }}
+                            />
+                        </LinearGradient>
+                    </View>
+                </View>
+            );
+    else
+        return (
+            <View style={{ flex: 1,margin:5,backgroundColor:"transparent", justifyContent:"center",alignItems:"center", flexDirection:"row"}}>
+                <View style={styles.onlineContainer1}>
+                    <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#FF6565', '#FF4242', '#FF2C2C', '#FF0404']} style={[styles.button]}>
+                        <IconRippe vector={true} name="youtube3" size={190}
+                            onPress = {()=>{
+                                EventRegister.emit("ShowOnlineScreen",{type:GLOBALS.SONG_ONLINE.YOUTUBE});
+                            }}
+                        />
+                    </LinearGradient>
+                </View>
+                <View style={styles.onlineContainer1}>
+                    <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#FFB223', '#FF9E1D', '#FF8315', '#FF4903']} style={[styles.button]}>
+                        <IconRippe vector={true} name="soundcloud" size={200} 
+                            onPress = {()=>{
+                                EventRegister.emit("ShowOnlineScreen",{type:GLOBALS.SONG_ONLINE.SOUNDCLOUD});
+                            }}
+                        />
+                    </LinearGradient>
+                </View>
+                <View style={styles.onlineContainer1}>
+                    <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#69A5E5', '#5D9CE1', '#4B90DB', '#3783D4']} style={[styles.button]}>
+                        <IconRippe vector={true} name="mixcloud" size={200} 
+                            onPress = {()=>{
+                                EventRegister.emit("ShowOnlineScreen",{type:GLOBALS.SONG_ONLINE.MIXCLOUD});
+                            }}
+                        />
+                    </LinearGradient>
                 </View>
             </View>
         );
@@ -117,6 +146,12 @@ const styles = StyleSheet.create({
         width:240,
         height:90,
          marginBottom:40
+    },
+
+    onlineContainer1 :{
+        width:210,
+        height:150,
+        marginLeft:20
     }
 
 })

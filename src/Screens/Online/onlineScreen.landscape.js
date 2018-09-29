@@ -27,6 +27,7 @@ export default class OnlineScreen extends BaseScreen {
         
         this.selectChannel = this.selectChannel.bind(this);
         this.MAX_SCROLL_HEIGHT = 145;
+        this._scroll2 = new Animated.Value(0);
     }
     // componentWillMount() {
     //     // selected song changed
@@ -111,8 +112,8 @@ export default class OnlineScreen extends BaseScreen {
 
     selectChannel(channel) {
         this._term = channel;
-        this._a.setValue(this._term);
-        this._b.searchData(this._term);
+        //this._a.setValue(this._term);
+        this._header.focusSearch(this._term);
     }
 
     renderContentView = () => {
@@ -142,9 +143,9 @@ export default class OnlineScreen extends BaseScreen {
                         onScroll={this._handleListViewScroll}
                         onlineType={this.props.type}
                         top={this.MAX_SCROLL_HEIGHT} />
-
                     <Animated.View 
-                        style={{ height: 40, position: "absolute", top: 45, width: "100%" }}
+                        style={{ height: 40, position: "absolute", top: 45, width: "100%",
+                                transform: [{ translateY: this._scroll2}] }}
                         ref={ref=>(this._a = ref)}
                         >
                         <TuKhoaHot
@@ -152,7 +153,8 @@ export default class OnlineScreen extends BaseScreen {
                         />
                     </Animated.View>
                     <Animated.View 
-                        style={{ height: 50, position: "absolute", top: 95, width: "100%" }}
+                        style={{ height: 50, position: "absolute", top: 85, width: "100%",
+                        transform: [{ translateY: this._scroll2}] }}
                         ref={ref=>(this._b = ref)}
                         >
                         <ChannelList
@@ -165,11 +167,9 @@ export default class OnlineScreen extends BaseScreen {
         // return this.renderContentView();
     }
     scrollExtendComponent = (top) =>{
-        this._a.setScrollTabTop(top);
-        this._b.setTopValue(top);
+        this._scroll2.setValue(top);
     }
 }
-
 
 const styles = StyleSheet.create({
     headerContainer: {

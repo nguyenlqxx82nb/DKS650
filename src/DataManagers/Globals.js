@@ -162,8 +162,8 @@ export default {
 
     SONG_TYPE_NAME: {
         "ALL":"ALL",
-        "DJ": "DJ",
-        "TRE": "N",
+        "DJ": "REMIX",
+        "TRE": "NHẠC TRẺ",
         "VANG": "NHẠC VÀNG",
         "DO": "NHẠC ĐỎ",
         "SONGCA": "SONG CA",
@@ -332,7 +332,7 @@ export default {
     SONG_TAB:{
         LANGUAGE : 1,
         SONG_TYPE:2
-    }
+    },
 
-    
+    FOOTER_HEIGHT:60
 };

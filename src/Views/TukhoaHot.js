@@ -29,11 +29,13 @@ export default class TuKhoaHot extends React.Component {
             <View style={{ flex:1, justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
                 {/* <Text style={styles.titleHot}>TỪ KHÓA HOT</Text> */}
                 <ScrollView
+                    style={{height:40}}
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
                     // style={{ marginLeft: 20 }}
                     contentContainerStyle ={{
-                        paddingLeft:15
+                        paddingLeft:15,
+                        alignItems:"center"
                     }}
                 >
                 {
@@ -73,13 +75,18 @@ const styles = StyleSheet.create({
     },
 
     containerItemHot: {
-        height: 40,
+        height: 36,
         borderWidth: 0,
         borderColor: "#fff",
-        borderRadius: 20,
+        borderRadius: 16,
         alignItems: "center",
         justifyContent: "center",
-        marginLeft: 10
+        marginLeft: 15,
+        // backgroundColor:"#3D4B84",
+        // shadowColor: '#000',
+        // shadowOffset: { width: 0, height: 2 },
+        // shadowOpacity: 0.2,
+        // elevation: 2,
     },
 
     listItemHot: {
@@ -87,8 +94,8 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: "center",
         justifyContent: "center",
-        paddingLeft: 10,
-        paddingRight: 10,
+        paddingLeft: 15,
+        paddingRight: 15,
     },
 
     titleHotItem: {
