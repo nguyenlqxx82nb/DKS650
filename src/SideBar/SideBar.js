@@ -49,20 +49,20 @@ const datas = [
         color:"#00ECBC",
         screenType: GLOBALS.SECOND_SCREEN.SECURE
     },
-    {
-        title:"Khởi động lại",
-        icon:"restart",
-        event:"Restart",
-        color:"#0093FF",
-        screenType: GLOBALS.SECOND_SCREEN.NONE
-    },
-    {
-        title:"Tắt máy",
-        icon:"shutdown",
-        event:"Shutdown",
-        color:"#FF2626",
-        screenType: GLOBALS.SECOND_SCREEN.NONE
-    },
+    // {
+    //     title:"Khởi động lại",
+    //     icon:"restart",
+    //     event:"Restart",
+    //     color:"#0093FF",
+    //     screenType: GLOBALS.SECOND_SCREEN.NONE
+    // },
+    // {
+    //     title:"Tắt máy",
+    //     icon:"shutdown",
+    //     event:"Shutdown",
+    //     color:"#FF2626",
+    //     screenType: GLOBALS.SECOND_SCREEN.NONE
+    // },
 ];
 export default class SideBar extends React.Component
 {
@@ -78,10 +78,13 @@ export default class SideBar extends React.Component
         return(
             <ListItem 
                 onPress ={()=>{
-                    this.props.navigation.closeDrawer(); 
+                    setTimeout(()=>{
+                        EventRegister.emit("CloseDrawer",{}); 
+                    },10); 
+                    
                     setTimeout(()=>{
                         EventRegister.emit(event,{type:screenType});
-                    },10); 
+                    },20); 
                 }}
                 style={{height:60,width:"100%"}}>
                 <View style={{flex:1, marginLeft:25,marginRight:10,justifyContent:"center",alignItems:"center",flexDirection:"row"}}>

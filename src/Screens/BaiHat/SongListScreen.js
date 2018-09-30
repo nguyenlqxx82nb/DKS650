@@ -116,6 +116,9 @@ export default class SongListScreen extends BaseScreen {
             this.clear();
         }
     }
+    loadData = () =>{
+        this._songList.loadData("");
+    }
     clear = () =>{
         if(this._songList != null)
             this._songList.clear();

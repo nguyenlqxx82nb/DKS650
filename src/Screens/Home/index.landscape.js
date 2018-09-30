@@ -170,7 +170,6 @@ export default class Landscape extends React.Component {
     _onOpenSinger = () =>{
         this._singerScreen.show();
         this._currentScreen = this._singerScreen;
-        //console.warn("Landscape width = "+Utils.Width()+" , Height = "+Utils.Height());
     }
     _onOpenSong = () =>{
         this._songScreen.show();
@@ -192,7 +191,6 @@ export default class Landscape extends React.Component {
        // this._currentScreen.hide();
         this._selectedSong.show();
     }
-   
     _onBackHome = ()=>{
         this._currentScreen.hide();
         this._currentScreen = this._homeScreen; 
@@ -218,7 +216,7 @@ export default class Landscape extends React.Component {
                     onOpenHotSong = {this._onOpenHotSong}
                     onOnlineScreen = {this._onOnlineScreen}
                     onOpenMenu = {() =>{
-                        //this.props.navigation.openDrawer();        
+                        EventRegister.emit("OpenDrawer",{});     
                     }}
                     ref={ref => (this._homeScreen = ref)} 
                     bottom={60}
@@ -265,10 +263,12 @@ export default class Landscape extends React.Component {
                 />
 
                 
-                <SelectedSong maxZindex ={7} transition = {GLOBALS.TRANSITION.SLIDE_TOP}
+                {/* <SelectedSong 
+                    maxZindex ={7} 
+                    transition = {GLOBALS.TRANSITION.SLIDE_TOP}
                     onBack={this._onCloseSelectedSong} ref={ref => (this._selectedSong = ref)}
                     bottom={60}
-                />
+                /> */}
 
                 <SongListScreen 
                     ref = {ref => (this._singerSong = ref)} 
@@ -325,7 +325,9 @@ export default class Landscape extends React.Component {
                     onBack={()=>{
                         this._secondScreen.hide();
                     }} 
-                    ref={ref => (this._secondScreen = ref)} />
+                    ref={ref => (this._secondScreen = ref)} 
+                    preLoad = {false}
+                    />
                     
                 <AdminScreen 
                     ref = {ref => (this._adminScreen = ref)} 

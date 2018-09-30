@@ -25,7 +25,7 @@ class BaseScreen extends React.Component {
         posX : Utils.Width(),
         posY : Utils.Height(),
         transition : GLOBALS.TRANSITION.FADE,
-        bottom : 115,
+        bottom : GLOBALS.FOOTER_HEIGHT,
         type : GLOBALS.SCREEN_TYPE.BOTTOM,
         preLoad : true
     };
@@ -248,7 +248,7 @@ class BaseScreen extends React.Component {
     }
 
     renderContentView = () => {
-        return (<View></View>);
+        return (<View style={{width:200,height:200,backgroundColor:"red"}}></View>);
     }
 
     render() {

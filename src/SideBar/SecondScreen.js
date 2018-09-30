@@ -7,7 +7,7 @@ import { Grid, Col , Row} from "react-native-easy-grid";
 import GLOBALS from '../DataManagers/Globals.js';
 import Ngonngu from '../SideBar/Ngonngu';
 import Secure from '../SideBar/Secure';
-import SongTabScreen from '../Screens/BaiHat/SongTabScreen';
+import SongListScreen from '../Screens/BaiHat/SongListScreen';
 
 import { EventRegister  } from 'react-native-event-listeners';
 
@@ -19,9 +19,7 @@ export default class SecondScreen extends BaseScreen {
     constructor(props) {
         super(props);
 
-        this.state = {
-            type : GLOBALS.SECOND_SCREEN.NONE
-        }
+        this._type = GLOBALS.SECOND_SCREEN.NONE;
     }
     
     _onBack = () => {
@@ -31,67 +29,122 @@ export default class SecondScreen extends BaseScreen {
         }
     }
     _showCompleted = () =>{
-        const {type} = this.state;
-       // console.warn("_showCompleted = "+type);
-        if(type == GLOBALS.SECOND_SCREEN.UNDOWNLOAD)
-        {
-            this._undownloadScreen._showCompleted();
-        }
-        else if(type == GLOBALS.SECOND_SCREEN.DOWNLOADING){
-            this._undownloadScreen._showCompleted();
-        }
+        this.loadData();
     }
 
     open = (type) => {
+        this._type = type;
         if(this._isVisible){
-            this.hide(()=>{
-                this.setState({type:GLOBALS.SECOND_SCREEN.NONE});
-                this.setState({type:type});
-                this.show();
-            });
+            this.setState({});
+            this.loadData();
         }
         else{
-            //console.warn("open = "+type);
-            this.setState({type:GLOBALS.SECOND_SCREEN.NONE});
-            this.setState({type:type});
+           // console.warn("open = "+type);
+            //this.setState({type:GLOBALS.SECOND_SCREEN.NONE});
+            this.setState({});
             this.show();
         }
-        
     }
-    
+
+    loadData = () =>{
+        if(this._type == GLOBALS.SECOND_SCREEN.UNDOWNLOAD)
+        {
+            //this.setState({});
+            this._undownloadScreen.loadData();
+        }
+        else if(this._type == GLOBALS.SECOND_SCREEN.DOWNLOADING){
+            this._downloadScreen.loadData();
+        }
+    }
+
+    // renderContentView = () => {
+    //     return (<View style={{width:200,height:200,backgroundColor:"red"}}></View>);
+    // }
     renderContentView = () => {
-        const {type} = this.state;
-        //console.warn("renderContentView = "+type);
-        if(type == GLOBALS.SECOND_SCREEN.NGONNGU){
-            this._maxIndex = 11;
+        if(this._type == GLOBALS.SECOND_SCREEN.UNDOWNLOAD){
+            //console.warn("renderContentView UNDOWNLOAD "+this._type);
+            return(
+                <SongListScreen 
+                    opacity= {1} 
+                    maxZindex ={5} 
+                    //transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                    duration={250}
+                    listType={GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD}
+                    title ={"BÀI CHƯA TẢI"}
+                    onBack={this._onBack}
+                    ref = {ref =>(this._undownloadScreen=ref)}
+                    preLoad = {false}
+                    //onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
+                    //bottom={60}
+                />);
+        }
+        else if(this._type == GLOBALS.SECOND_SCREEN.NGONNGU){
+            //this._maxIndex = 11;
             return <Ngonngu onBack = {this._onBack} />
         }
-        else if(type == GLOBALS.SECOND_SCREEN.SECURE){
-            this._maxIndex = 11;
+        else if(this._type == GLOBALS.SECOND_SCREEN.SECURE){
+           // this._maxIndex = 11;
             return <Secure onBack = {this._onBack}  />
         }
-        else if(type == GLOBALS.SECOND_SCREEN.UNDOWNLOAD){
-            //console.warn("renderContentView UNDOWNLOAD = "+type);
-            this._maxIndex = 6;
-            return <SongTabScreen 
-                        //hasOnlineButton={false}
-                        listType= {GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD}
-                        opacity= {1} 
-                        maxZindex ={1} 
-                        onBack={this._onBack} 
-                        ref={ref => (this._undownloadScreen = ref)} />
+        else if(this._type == GLOBALS.SECOND_SCREEN.DOWNLOADING){
+            //return <Secure onBack = {this._onBack}  />
+            return(
+                <View key={1}>
+                <SongListScreen 
+                    opacity= {1} 
+                    maxZindex ={5} 
+                    //transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                    duration={250}
+                    listType={GLOBALS.SONG_LIST_TYPE.DOWNLOADING}
+                    title ={"BÀI ĐANG TẢI"}
+                    onBack={this._onBack}
+                    ref = {ref =>(this._downloadScreen=ref)}
+                    preLoad = {false}
+                    //onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
+                    //bottom={60}
+                />
+            </View>);
         }
-        else if(type == GLOBALS.SECOND_SCREEN.DOWNLOADING){
-            //console.warn("renderContentView DOWNLOADING = "+type);
-            this._maxIndex = 6;
-            return <SongTabScreen 
-                       // hasOnlineButton={false}
-                        listType= {GLOBALS.SONG_LIST_TYPE.DOWNLOADING}
-                        opacity= {1} 
-                        maxZindex ={1} 
-                        onBack={this._onBack} 
-                        ref={ref => (this._downloadingScreen = ref)} />
+        else{
+            console.warn("renderContentView "+this._type);
+            <View style={{width:200,height:200,backgroundColor:"blue"}}></View>
         }
+        // if(this._type == GLOBALS.SECOND_SCREEN.NGONNGU){
+        //     this._maxIndex = 11;
+        //     return <Ngonngu onBack = {this._onBack} />
+        // }
+        // else if(this._type == GLOBALS.SECOND_SCREEN.SECURE){
+        //     this._maxIndex = 11;
+        //     return <Secure onBack = {this._onBack}  />
+        // }
+        // else if(this._type == GLOBALS.SECOND_SCREEN.UNDOWNLOAD){
+        //     console.warn("renderContentView UNDOWNLOAD = "+this._type);
+        //     this._maxIndex = 6;
+        //     return 
+        //         (<SongListScreen 
+        //             opacity= {1} 
+        //             maxZindex ={5} 
+        //             //transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+        //             duration={250}
+        //             listType={GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD}
+        //             title ={"BÀI CHƯA TẢI"}
+        //             onBack={this._onBack}
+        //             ref = {ref =>(this._undownloadScreen=ref)}
+        //         />)
+        // }
+        // else if(this._type == GLOBALS.SECOND_SCREEN.DOWNLOADING){
+        //     this._maxIndex = 6;
+        //     return 
+        //         <SongListScreen 
+        //             opacity= {1} 
+        //             maxZindex ={5} 
+        //             duration={250}
+        //             listType={GLOBALS.SONG_LIST_TYPE.DOWNLOADING}
+        //             title ={"BÀI ĐANG TẢI"}
+        //             onBack={this._onBack}
+        //             ref = {ref =>(this._downloadScreen=ref)}
+        //         />
+        // }
     }
 }
 
