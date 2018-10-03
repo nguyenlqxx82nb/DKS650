@@ -88,9 +88,8 @@ export default class PassInput extends React.Component {
             }
         }
         return (
-            <View style={{height: 60,width:294}}>
-                <View style={{flex:1,backgroundColor:"transparent",padding:2}}>
-                    <TextInput
+            <View style={{flex : 1}}>
+                <TextInput
                         secureTextEntry = {true}
                         ref = {ref => (this._passInput = ref)}
                         underlineColorAndroid={'transparent'}
@@ -101,7 +100,6 @@ export default class PassInput extends React.Component {
                         onChangeText={this._handleTextChanged}
                         value={this.state.value}
                     />
-                </View>
                 {this._renderIcon()}
             </View>
         );
@@ -123,6 +121,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         elevation: 2,
-        zIndex:0
+        zIndex:0,
+        padding:0
     },
 })

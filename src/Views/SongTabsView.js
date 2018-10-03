@@ -40,7 +40,8 @@ export default class SongTabsView extends React.Component {
         });
 
         this._listenerDownloadSongEvent = EventRegister.addEventListener('SongDownloadUpdate', () => {
-            if(this.props.songListType == GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD){
+            if(this.props.songListType == GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD
+                || this.props.songListType == GLOBALS.SONG_LIST_TYPE.DOWNLOADING){
                 if(this._isVisible)
                     this._tabs[this._currPage].updateDownloadSong();
             }

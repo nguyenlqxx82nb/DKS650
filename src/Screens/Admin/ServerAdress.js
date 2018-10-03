@@ -27,8 +27,8 @@ export default class ServerScreen extends React.Component
         this._text1.blur();
     }
     render() {
-        return(
-            <View style={{flex:1,margin:15,justifyContent:"flex-start",alignItems:"center"}} >
+       return(
+            <View style={[{flex:1,margin:20,justifyContent:"flex-start",alignItems:"center"}]} >
                 <InputAdmin 
                     //ref = {ref = (this._input = ref)}
                     ref = {ref => (this._text1 = ref)}

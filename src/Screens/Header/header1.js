@@ -8,18 +8,20 @@ export default class Header extends React.Component {
     static propTypes = {
         onBack: PropTypes.func,
         style : Text.propTypes.style,
+        back : PropTypes.bool
     };
     static defaultProps = {
-        style : {}
+        style : {},
+        back : true
     };
     constructor(props) {
         super(props);
     }
     render() {
-        const {title} = this.props;
+        const {title,back} = this.props;
         return (
             <View style={[styles.container,this.props.style]}>
-                <View style={{ width: 40, height: 40, marginLeft: 0 }}>
+                {back && <View style={{ width: 40, height: 40, marginLeft: 0 }}>
                     <IconRippe vector={true} name="back" size={20} color="#fff"
                         onPress={()=>{
                             if(this.props.onBack != null){
@@ -28,7 +30,8 @@ export default class Header extends React.Component {
                             }
                         }}
                     />
-                </View>
+                </View>}
+                
                 <View
                     ref = {ref =>(this._centerView = ref)}
                     style={{flex:1,justifyContent:"center",alignItems:"flex-start"}}>

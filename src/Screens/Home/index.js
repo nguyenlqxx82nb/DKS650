@@ -35,7 +35,7 @@ export default class Taisao extends React.Component {
     componentDidMount() {
         //console.ignoredYellowBox = true;
         //console.disableYellowBox = true;
-        BTElib.checkConnectToWifiBox();
+        BTElib.checkConnectToBox();
         BTElib.syncPlaybackQueue();
         BTElib.syncPlaybackInfo();
         BTElib.syncDownloadQueue();

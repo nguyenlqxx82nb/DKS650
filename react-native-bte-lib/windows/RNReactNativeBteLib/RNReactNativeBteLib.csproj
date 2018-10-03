@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{49736ED0-A53D-11E8-8457-DDE66CC98A9C}</ProjectGuid>
+    <ProjectGuid>{1A3919F0-C660-11E8-ABF0-9DD5683DB94F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>React.Native.Bte.Lib</RootNamespace>

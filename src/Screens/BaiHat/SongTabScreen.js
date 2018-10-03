@@ -55,7 +55,6 @@ export default class SongTabScreen extends BaseScreen {
         this.tabType = (this.props.tabType != null)?this.props.tabType:GLOBALS.SONG_TAB.LANGUAGE;
 
         this.MAX_SCROLL_HEIGHT = 135;
-        //console.warn("listType = "+this._listType+" , "+this.props.listType);
     }
     _onBack = () => {
         const { onBack } = this.props;

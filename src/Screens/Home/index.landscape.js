@@ -40,7 +40,7 @@ export default class Landscape extends React.Component {
     }
 
     componentDidMount() {
-        BTElib.checkConnectToWifiBox();
+        BTElib.checkConnectToBox();
         BTElib.syncPlaybackQueue();
         BTElib.syncPlaybackInfo();
         BTElib.syncDownloadQueue();

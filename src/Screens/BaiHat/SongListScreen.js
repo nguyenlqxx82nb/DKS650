@@ -53,9 +53,16 @@ export default class SongListScreen extends BaseScreen {
                 this.songChanged = true;
             }
         });
+
+        this._listenerDownloadSongEvent = EventRegister.addEventListener('SongDownloadUpdate', () => {
+            if(this._isVisible && this._songList != null){
+                this._songList.updateDownloadSong();
+            }
+        });
     }
     componentWillUnmount() {
         EventRegister.removeEventListener(this._listenerSongUpdateEvent);
+        EventRegister.removeEventListener(this._listenerDownloadSongEvent);
     }
     _onBack = () => {
         const { onBack } = this.props;
@@ -117,6 +124,7 @@ export default class SongListScreen extends BaseScreen {
         }
     }
     loadData = () =>{
+        this.setVisible(true);
         this._songList.loadData("");
     }
     clear = () =>{

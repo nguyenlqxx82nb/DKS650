@@ -1,5 +1,6 @@
 package com.bte.libs;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -17,6 +18,7 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
@@ -72,8 +74,17 @@ public class MyModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void checkConnectToWifiBox(){
-        checkConnectToBox();
+    public void checkConnectToBox(){
+        ConnectivityManager manager = (ConnectivityManager) mReactContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netinfo = manager.getActiveNetworkInfo();
+        if (netinfo != null && netinfo.isConnected() && netinfo.isAvailable()
+                && netinfo.getType() == ConnectivityManager.TYPE_WIFI) {
+            Tools.checkWifiStatus(mReactContext);
+        } else {
+            WritableMap params = Arguments.createMap();
+            params.putBoolean("isConnected",false);
+            sendEvent("ConnectToBox",params);
+        }
     }
 
     @ReactMethod
@@ -112,8 +123,11 @@ public class MyModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void stbset1(int cmd,String url,Callback callback){
-        Tools.stbset1(cmd,url,callback);
+    public void fetchSongs(String type, int type_val , String actor , String sort ,
+                           int temp, String kwd , String ids,
+                           int start, int pagesize,Callback callback){
+        WritableArray songs = MySQConnector.fetchSongs(type,type_val,actor,sort,temp,kwd,ids,start,pagesize);
+        callback.invoke(songs);
     }
 
     private void sendEvent(String eventName, @Nullable WritableMap params) {
@@ -139,17 +153,5 @@ public class MyModule extends ReactContextBaseJavaModule {
         },filter);
     }
 
-    private void checkConnectToBox(){
-        ConnectivityManager manager = (ConnectivityManager) mReactContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netinfo = manager.getActiveNetworkInfo();
-        if (netinfo != null && netinfo.isConnected() && netinfo.isAvailable()
-                && netinfo.getType() == ConnectivityManager.TYPE_WIFI) {
-            Tools.checkWifiStatus(mReactContext);
-        } else {
-            WritableMap params = Arguments.createMap();
-            params.putBoolean("isConnected",false);
-            sendEvent("ConnectToBox",params);
-        }
-    }
 
 }

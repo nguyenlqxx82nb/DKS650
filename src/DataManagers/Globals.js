@@ -24,7 +24,18 @@ export default {
         NORMAL: 'NORMAL',
         SELECTED: 'SELECTED',
         NO_DOWNLOADED: 'NO_DOWNLOADED',
-        DOWNLOADING: 'DOWNLOADING'
+        DOWNLOADING: 'DOWNLOADING',
+    },
+
+    SONG_ACTION: {
+        PLAY : 1,
+        PRIORITY : 2,
+        SINGER : 3,
+        DOWNLOAD: 4,
+        ADD_AUTO:5,
+        REMOVE_AUTO:6,
+        REMOVE_SELECT:7,
+        SELECT : 8
     },
     
     SONG_MENU_TYPE:{

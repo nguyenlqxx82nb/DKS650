@@ -3,6 +3,7 @@ import {Text,StyleSheet,TextInput, View} from "react-native";
 import InputAdmin from "./InputAdmin";
 import ButtonAdmin from "./ButtonAdmin";
 import { EventRegister } from 'react-native-event-listeners'
+import Globals from "../../DataManagers/Globals";
 
 export default class ChuchayScreen extends React.Component
 {
@@ -29,7 +30,7 @@ export default class ChuchayScreen extends React.Component
     }
     render() {
         return(
-            <View style={{flex:1,margin:15,justifyContent:"flex-start",alignItems:"center"}} >
+            <View style={[{flex:1,margin:20,justifyContent:"flex-start",alignItems:"center"}]} >
                 <InputAdmin 
                     //ref = {ref = (this._input = ref)}
                     ref = {ref => (this._text1 = ref)}

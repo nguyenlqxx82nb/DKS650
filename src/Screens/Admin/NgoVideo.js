@@ -25,7 +25,7 @@ export default class NgoVideoScreen extends React.Component
     }
     render() {
         return(
-            <View style={{flex:1,margin:15,justifyContent:"flex-start",alignItems:"center"}} >
+            <View style={[{flex:1,margin:20,justifyContent:"flex-start",alignItems:"center"}]} >
                 <View style={{height:60,width:'100%',marginTop:5}}>
                     <IconRippe vector={true} name={""} 
                               text={{content:"1080i", layout: 1}} 

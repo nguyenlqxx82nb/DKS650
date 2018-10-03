@@ -24,6 +24,7 @@ export default class AutoScreen extends React.Component
                <SongListView 
                         ref={ref=>(this._songList = ref)} 
                         listType = {GLOBALS.SONG_LIST_TYPE.AUTO} 
+                        top={20}
                      />
 
             </View>

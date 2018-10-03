@@ -180,18 +180,95 @@ public class Tools {
     }
 
     public static void checkWifiStatus(final ReactContext reactContext) {
+//        new Thread(new Runnable() {
+//            public void run() {
+//                Socket socket = null;
+//                try {
+//                    socket = new Socket();
+//                    SocketAddress socketAddress = new InetSocketAddress(Constants.HOST_IP, Constants.HOST_PORT);
+//                    socket.connect(socketAddress, 3000);
+//                    WritableMap params = Arguments.createMap();
+//                    params.putBoolean("isConnected",true);
+//                    SendEvent(reactContext,params,"ConnectToBox");
+//                    Global.isWifiConnected = true;
+//                } catch (Exception e) {
+//                    WritableMap params = Arguments.createMap();
+//                    params.putBoolean("isConnected",false);
+//                    SendEvent(reactContext,params,"ConnectToBox");
+//                    Global.isWifiConnected = false;
+//                } finally {
+//                    try {
+//                        socket.close();
+//                    } catch (Exception e) {
+//                        // e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }).start();
         new Thread(new Runnable() {
             public void run() {
+                // while (Global.isAppRunning) {
                 Socket socket = null;
+                OutputStream writes = null;
                 try {
                     socket = new Socket();
                     SocketAddress socketAddress = new InetSocketAddress(Constants.HOST_IP, Constants.HOST_PORT);
-                    socket.connect(socketAddress, 3000);
+                    socket.connect(socketAddress, Constants.TIME_OUT);
+                    writes = socket.getOutputStream();
+                    byte[] buff = new byte[2048];
+                    buff[3] = 0x28;
+                    writes.write(buff);
+                    writes.flush();
+
+                    InputStream inputStream = socket.getInputStream();// ������������������socket��������
+                    byte[] bytes = new byte[1024];
+                    inputStream.read(bytes);
+
+                    byte[] serverIpByte = new byte[1020];
+                    System.arraycopy(bytes, 4, serverIpByte, 0, 1020);
+                    String serverIpString = new String(serverIpByte);
+
+                    if (serverIpString.trim().equals("192.168.1.1")) {
+                        Socket socket2 = null;
+                        try {
+                            socket = new Socket();
+                            SocketAddress socketAddress2 = new InetSocketAddress(serverIpString, Constants.HOST_PORT);
+                            socket2.connect(socketAddress, 3000);
+                            Global.serverIp = serverIpString.trim();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Global.serverIp = "0";
+
+                        } finally {
+                            try {
+                                socket2.close();
+                            } catch (Exception e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                        }
+                    } else {
+                        Global.serverIp = serverIpString.trim();
+                    }
+                    //Log.e("Global.serverIp","Global.serverIp 0 = "+Global.serverIp);
+                    //XLog.d("----------------------> get server id =" + Global.serverIp);
+                    if(!Global.serverIp.contains("192.168"))
+                        Global.serverIp = "192.168.10.1";
+                    //Log.e("Global.serverIp","Global.serverIp = "+Global.serverIp);
+                    // break;
+                    Constants.ADMIN_API = "http://" + Global.serverIp + ":8989/tablet?cmd=";
+                    Global.url = "jdbc:mysql://" +  Global.serverIp+ ":3306/skymedia_vod";
+                    Constants.SONGDATABASEURL = "http://" +  Global.serverIp + ":2012/songbook.db";
+                    Constants.SINGER_IMAGE_RESOURCE_PATH = "http://" + Global.serverIp  + ":2012/Ktv/singer_picture/";
+
                     WritableMap params = Arguments.createMap();
                     params.putBoolean("isConnected",true);
                     SendEvent(reactContext,params,"ConnectToBox");
                     Global.isWifiConnected = true;
                 } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    // e.printStackTrace();
+                    //XLog.e(" get server id error :" + e.getMessage());
                     WritableMap params = Arguments.createMap();
                     params.putBoolean("isConnected",false);
                     SendEvent(reactContext,params,"ConnectToBox");
@@ -200,10 +277,18 @@ public class Tools {
                     try {
                         socket.close();
                     } catch (Exception e) {
-                        // e.printStackTrace();
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
                     }
                 }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
+            // }
         }).start();
     }
 
@@ -511,7 +596,7 @@ public class Tools {
                 OutputStream writes = null;
                 int returnflag=1;
 
-                try {
+                    try {
                     socket = new Socket();
                     SocketAddress socketAddress = new InetSocketAddress(Constants.HOST_IP, Constants.HOST_PORT);
                     socket.connect(socketAddress, 3000);
@@ -855,9 +940,9 @@ public class Tools {
 
     public static String getUrl(String singerName) {
         String singerNameUnicodeString = Tools.encode(singerName);
-        String urlStr;
-        urlStr = "http://" + Constants.HOST_IP + ":2012/Ktv/singer_picture/";
-        urlStr = urlStr + singerNameUnicodeString + ".jpg";
+        String urlStr = "";
+        //urlStr = "http://" + Constants.HOST_IP + ":2012/Ktv/singer_picture/";
+        urlStr = Constants.SINGER_IMAGE_RESOURCE_PATH + singerNameUnicodeString + ".jpg";
         return  urlStr;
     }
 

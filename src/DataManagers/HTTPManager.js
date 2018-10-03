@@ -43,7 +43,7 @@ export default class HTTPManager {
         else if(listType == GLOBALS.SONG_LIST_TYPE.hot){
             query += "&type=hot";
         }
-        else if(lan != GLOBALS.LANGUAGE_KEY.ALL){
+        else if(lan != GLOBALS.LANGUAGE_KEY.all){
             query += "&type=lang&type_val="+GLOBALS.LANGUAGE[lan];
         }
         else if(actor != ""){

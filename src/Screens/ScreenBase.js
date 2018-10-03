@@ -10,24 +10,26 @@ class BaseScreen extends React.Component {
         duration: PropTypes.number,
         opacity: PropTypes.number,
         maxZindex: PropTypes.number,
-        posX : PropTypes.number,
-        posY : PropTypes.number,
+        sizeX : PropTypes.number,
+        sizeY : PropTypes.number,
         transition : PropTypes.number,
         bottom :  PropTypes.number,
         type: PropTypes.number,
-        preLoad : PropTypes.bool
+        preLoad : PropTypes.bool,
+        startTrans : PropTypes.number
     };
      
     static defaultProps = {
-        duration: 250,
+        duration: 200,
         opacity: 1,
         maxZindex: 1,
-        posX : Utils.Width(),
-        posY : Utils.Height(),
+        sizeX : Utils.Width(),
+        sizeY : Utils.Height(),
         transition : GLOBALS.TRANSITION.FADE,
         bottom : GLOBALS.FOOTER_HEIGHT,
         type : GLOBALS.SCREEN_TYPE.BOTTOM,
-        preLoad : true
+        preLoad : true,
+        startTrans : 100
     };
     _songTabs = null;
     MAX_SCROLL_HEIGHT = 135;
@@ -40,8 +42,8 @@ class BaseScreen extends React.Component {
 
         const {transition} = this.props;
         var opacity = (transition == GLOBALS.TRANSITION.FADE)?this.props.opacity:1;
-        var posX = (transition == GLOBALS.TRANSITION.SLIDE_LEFT)?this.props.posX:0;
-        var posY = (transition == GLOBALS.TRANSITION.SLIDE_TOP)?this.props.posY:0;
+        var posX = (transition == GLOBALS.TRANSITION.SLIDE_LEFT)?this.props.sizeX:0;
+        var posY = (transition == GLOBALS.TRANSITION.SLIDE_TOP)?this.props.sizeY:0;
 
         this.animate = {
             opacity: new Animated.Value(opacity),
@@ -49,11 +51,14 @@ class BaseScreen extends React.Component {
             posY : new Animated.Value(posY),
         };
 
-        this._isVisible = false;
+        this._isVisible = false;//(this.props.preLoad)?false:true;
         this._processing = false;
         this._maxIndex = this.props.maxZindex;
 
         this._scrollY = new Animated.Value(0);
+    }
+    setVisible = (isVisible) =>{
+        this._isVisible = isVisible;
     }
     show = () => {
         if(this._processing)
@@ -66,7 +71,7 @@ class BaseScreen extends React.Component {
         this._processing = true;
 
         let container = this._container;
-        const {maxZindex,transition,duration} = this.props;
+        const {maxZindex,transition,duration,startTrans} = this.props;
         var that = this;
         var zindex = Math.min(this._maxIndex,maxZindex);
         this._isVisible = true;
@@ -96,7 +101,8 @@ class BaseScreen extends React.Component {
             container.setNativeProps({
                 style: Utils.zIndexWorkaround(zindex)
             });
-            //console.warn("show = "+zindex);
+            this.animate.posX.setValue(startTrans);
+            this.animate.opacity.setValue(1);
             Animated.timing(this.animate.posX, {
                 toValue: 0,
                 useNativeDriver: Platform.OS === 'android',
@@ -134,7 +140,7 @@ class BaseScreen extends React.Component {
         this._processing = true;
 
         let container = this._container;
-        const {maxZindex,transition,duration} = this.props;
+        const {maxZindex,transition,duration,startTrans,sizeX,sizeY} = this.props;
         var that = this;
         this._isVisible = false;
         if(transition == GLOBALS.TRANSITION.FADE){
@@ -159,13 +165,22 @@ class BaseScreen extends React.Component {
             container.setNativeProps({
                 style: Utils.zIndexWorkaround(0)
             });
-
-            Animated.timing(this.animate.posX, {
-                toValue: Utils.Width(),
-                useNativeDriver: Platform.OS === 'android',
-                duration: duration,
-                easing: Easing.bezier(0.0, 0.0, 0.2, 1),
-            }).start(function onComplete() {
+            Animated.parallel([
+                Animated.timing(this.animate.posX, {
+                    toValue: startTrans,
+                    useNativeDriver: Platform.OS === 'android',
+                    duration: duration,
+                    easing: Easing.bezier(0.0, 0.0, 0.2, 1),
+                }),
+                Animated.timing(this.animate.opacity, {
+                    toValue: 0,
+                    useNativeDriver: Platform.OS === 'android',
+                    duration: duration,
+                    easing: Easing.bezier(0.0, 0.0, 0.2, 1),
+                })
+            ])
+            .start(function onComplete() {
+                that.animate.posX.setValue(sizeX);
                 that.hideCompleted();
                
                 if(callback != null)
@@ -190,7 +205,9 @@ class BaseScreen extends React.Component {
             });
         }
     }
-
+    setVisible = (isVisible)=>{
+        this._isVisible = isVisible;
+    }
     showCompleted = () =>{
         this._processing = false;
         
@@ -253,7 +270,7 @@ class BaseScreen extends React.Component {
 
     render() {
         const {opacity,posX,posY} = this.animate;
-        const { bottom,type , maxZindex} = this.props;
+        const { bottom,type , maxZindex,sizeX,sizeY} = this.props;
         var style = {};
         // if(type == GLOBALS.SCREEN_TYPE.BOTTOM){
         //     style.top = 0;
@@ -262,7 +279,9 @@ class BaseScreen extends React.Component {
         //     style.top = 0;
         // }
         style.top = 0;
-        style.height = Utils.Height() - GLOBALS.STATUS_BAR_HEIGHT;
+        style.height = sizeY - GLOBALS.STATUS_BAR_HEIGHT;
+        style.width = sizeX;
+
         return (
             <Animated.View
                 ref={ref => (this._container = ref)}
@@ -285,7 +304,7 @@ class BaseScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         position:"absolute",
-        width: "100%"
+        //width: "100%"
     }
 })
 

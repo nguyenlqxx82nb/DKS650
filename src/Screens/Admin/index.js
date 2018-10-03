@@ -17,6 +17,7 @@ import NgoVideo from './NgoVideo';
 import Auto from './Auto';
 
 import GLOBALS from "../../DataManagers/Globals";
+import Utils from "../../Utils/Utils";
 
 const datas = [
     {
@@ -114,6 +115,16 @@ export default class AdminScreen extends BaseScreen
           dataSource: ds.cloneWithRows(datas),
         };
     }
+    showSubContent = (title,element,isFull = false) =>{
+        this._subScreen.setContent(title,element,isFull); 
+        if(GLOBALS.LANDSCAPE)
+            this._subScreen.setVisible(false);
+        this._subScreen.show();
+    }
+    _showCompleted = () =>{
+        if(GLOBALS.LANDSCAPE)
+            this.showSubContent("Chữ chạy TV",<Chuchay />);
+    }
     renderRow =(item)=>{
         const {title,icon,color,event,screenType} =item;
         return(
@@ -121,36 +132,28 @@ export default class AdminScreen extends BaseScreen
                 onPress ={()=>{
                     switch(screenType){
                         case GLOBALS.ADMIN_SCREEN.CHU_CHAY:
-                            this._subScreen.setContent(title,<Chuchay />); 
-                            this._subScreen.show();
+                            this.showSubContent(title,<Chuchay />); 
                             break;
                         case GLOBALS.ADMIN_SCREEN.AUTO_PLAY:
-                            this._subScreen.setContent(title,<Auto />); 
-                            this._subScreen.show();
+                            this.showSubContent(title,<Auto />,true); 
                             break;
                         case GLOBALS.ADMIN_SCREEN.NGO_VIDEO:
-                            this._subScreen.setContent(title,<NgoVideo />); 
-                            this._subScreen.show();
+                            this.showSubContent(title,<NgoVideo />); 
                             break;
                         case GLOBALS.ADMIN_SCREEN.LAN:
-                            this._subScreen.setContent(title,<Lan />); 
-                            this._subScreen.show();
+                            this.showSubContent(title,<Lan />); 
                             break;
                         case GLOBALS.ADMIN_SCREEN.WLAN:
-                            this._subScreen.setContent(title,<Wlan />); 
-                            this._subScreen.show();
+                            this.showSubContent(title,<Wlan />); 
                             break;
                         case GLOBALS.ADMIN_SCREEN.WIFI:
-                            this._subScreen.setContent(title,<Wifi />); 
-                            this._subScreen.show();
+                            this.showSubContent(title,<Wifi />); 
                             break;
                         case GLOBALS.ADMIN_SCREEN.MAT_KHAU:
-                            this._subScreen.setContent(title,<Matkhau />); 
-                            this._subScreen.show();
+                            this.showSubContent(title,<Matkhau />); 
                             break;
                         case GLOBALS.ADMIN_SCREEN.SERVER:
-                            this._subScreen.setContent(title,<ServerAdmin />); 
-                            this._subScreen.show();
+                            this.showSubContent(title,<ServerAdmin />);
                             break;
                         default:
                             break;
@@ -169,42 +172,76 @@ export default class AdminScreen extends BaseScreen
         );
     }
     renderContentView = () => {
-        return(
-            <View style={{flex:1}} >
-                <Header 
-                    style={styles.header}
-                    title={"Cài đặt"} onBack={()=>{
-                    this.hide();
-                }} />
-
-                <View style={{flex:1}}>
-                    <ListView
-                        dataSource = {this.state.dataSource}
-                        contentContainerStyle = {{ marginTop: 0 }}
-                        renderRow={this.renderRow}
-                    /> 
+        if(GLOBALS.LANDSCAPE){
+            return(
+                <View style={{flex:1,flexDirection:"row"}} >
+                    <View style={styles.leftContainer}>
+                        <Header 
+                            style={styles.header}
+                            title={"CÀI ĐẶT"} onBack={()=>{
+                            this.hide();
+                        }} />
+        
+                        <View style={{flex:1}}>
+                            <ListView
+                                dataSource = {this.state.dataSource}
+                                contentContainerStyle = {{ marginTop: 0 }}
+                                renderRow={this.renderRow}
+                            /> 
+                        </View>
+                    </View>
+                    <View style={{flex:1}}>
+                        <SubScreen 
+                            ref = {ref => (this._subScreen = ref)} 
+                            transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
+                            sizeX={Utils.Width()*0.65}
+                            maxZindex = {1}
+                            onBack = {() => {
+                                this._subScreen.hide();
+                            }}
+                        />    
+                    </View>
                 </View>
-
-                <SubScreen 
-                    ref = {ref => (this._subScreen = ref)} 
-                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
-                    maxZindex = {1}
-                    bottom = {10}
-                    onBack = {() => {
-                        this._subScreen.hide();
-                    }}
-                />
-
-            </View>
-        );
+            );
+        }
+        else{
+            return(
+                <View style={{flex:1}} >
+                    <Header 
+                        style={styles.header}
+                        title={"CÀI ĐẶT"} onBack={()=>{
+                        this.hide();
+                    }} />
+    
+                    <View style={{flex:1}}>
+                        <ListView
+                            dataSource = {this.state.dataSource}
+                            contentContainerStyle = {{ marginTop: 0 }}
+                            renderRow={this.renderRow}
+                        /> 
+                    </View>
+    
+                    <SubScreen 
+                        ref = {ref => (this._subScreen = ref)} 
+                        transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
+                        maxZindex = {1}
+                        bottom = {10}
+                        onBack = {() => {
+                            this._subScreen.hide();
+                        }}
+                    />
+    
+                </View>
+            );
+        }
     }
 } 
 
 const styles = StyleSheet.create({
     header:{
         height:50,
-        borderBottomWidth: 0.5,
-        borderColor: '#00ECBC'
+        // borderBottomWidth: 0.5,
+        // borderColor: '#00ECBC'
     },
     listItem :{
         flex:1, 
@@ -224,5 +261,13 @@ const styles = StyleSheet.create({
         fontFamily:GLOBALS.FONT.MEDIUM,
         color:"#fff",
         marginLeft:10
+    },
+    leftContainer : {
+        width:"35%",
+        backgroundColor:"#3A3A72",
+        shadowColor: '#000',
+        shadowOffset: { width: 5, height: 0 },
+        shadowOpacity: 0.2,
+        elevation: 2,
     }
 })

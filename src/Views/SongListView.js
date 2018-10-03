@@ -26,7 +26,7 @@ export default class SongListView extends React.Component {
 
     };
     static defaultProps = {
-        lan : GLOBALS.LANGUAGE_KEY.ALL,
+        lan : GLOBALS.LANGUAGE_KEY.all,
         songType : GLOBALS.SONG_TYPE.ALL,
         listType: GLOBALS.SONG_LIST_TYPE.ALL,
         actor : ""
@@ -44,10 +44,10 @@ export default class SongListView extends React.Component {
     _loading = false;
     _loaded = false;
     _hasData = true;
-    _pageCount = 15;
+    _pageCount = 20;
     _searchTerm = "";
     _hasChanged = false;
-
+    _actionButtons = [];
     constructor(props) {
         super(props);
 
@@ -86,6 +86,7 @@ export default class SongListView extends React.Component {
         );
 
         this._loadData = this._loadData.bind(this);
+        this._actionButtons = this.generateSongActions();
     }
     
     componentWillMount() {
@@ -124,7 +125,7 @@ export default class SongListView extends React.Component {
     }
 
     updateDownloadSong = () =>{
-       // console.warn("updateDownloadSong");
+        //console.warn("updateDownloadSong");
         var newDatas = [];
         for(i = 0; i < this.state.datas.length; i++){
             var id = this.state.datas[i].id;
@@ -233,11 +234,6 @@ export default class SongListView extends React.Component {
             newDatas = datas;
         }
 
-        this.setState({
-            dataProvider: this.state.dataProvider.cloneWithRows(newDatas),
-            datas: newDatas
-        });
-
         if(this.props.listType !== GLOBALS.SONG_LIST_TYPE.SELECTED){
             if(datas.length <this._pageCount){
                 this._hasData = false;
@@ -254,9 +250,14 @@ export default class SongListView extends React.Component {
             this._loaded = true;
             this._hasData = false;
         }
+
+        this.setState({
+            dataProvider: this.state.dataProvider.cloneWithRows(newDatas),
+            datas: newDatas
+        });
     }
     _onPressSong = (id, status) => {
-        return;
+        //return;
         if(status == GLOBALS.SING_STATUS.NO_DOWNLOADED)
         {
             BoxControl.downloadSong(id,(errorCode)=>{
@@ -296,6 +297,21 @@ export default class SongListView extends React.Component {
     }
     getCurrentScrollOffset= () =>{
         return this._listView.getCurrentScrollOffset();
+    }
+    _handleActionSong=(type,id,actor)=>{
+        if(type == GLOBALS.SONG_ACTION.DOWNLOAD){
+            BoxControl.downloadSong(id,(errorCode)=>{
+            });
+        }
+        else if(type == GLOBALS.SONG_ACTION.PLAY){
+            BoxControl.playNow(id);
+        }
+        else if(type == GLOBALS.SONG_ACTION.PRIORITY){
+            BoxControl.priority(id);
+        }
+        else if(type == GLOBALS.SONG_ACTION.SINGER){
+            EventRegister.emit("OpenSingerSong",{name:actor});
+        }
     }
     _renderFooter = () => {
         return (this._loading && this._loaded) ?
@@ -364,8 +380,9 @@ export default class SongListView extends React.Component {
         else{
             singPrefix = (singPrefix != "") ? ("(" + singPrefix  + item.index  + ")") : "";
         }
-        var hasOptionButton = (status  == GLOBALS.SING_STATUS.NO_DOWNLOADED
-                                || status  == GLOBALS.SING_STATUS.DOWNLOADING)?false:true;
+        // var hasOptionButton = (status  == GLOBALS.SING_STATUS.NO_DOWNLOADED
+        //                         || status  == GLOBALS.SING_STATUS.DOWNLOADING)?false:true;
+        //var buttons = this.generateSongActions(status);
 
         return (
             <View style={styles.listItem2}>
@@ -377,44 +394,80 @@ export default class SongListView extends React.Component {
                     <View style={{
                         flex: 1, flexDirection: "row", justifyContent: "center",alignItems:"center"}}>
                         <View  style={{ flex:1, flexDirection:"row"}}>
-                            <View style={{ flex:1, justifyContent:"center",alignItems:"flex-start", paddingLeft:15}}>
-                                <Text numberOfLines={1} style={[styles.songText, {color: singColor }]}>
+                            <View style={{ flex:1, justifyContent:"center",alignItems:"flex-start", paddingLeft:15, paddingRight:10}}>
+                                <Text numberOfLines={2} style={[styles.songText, {color: singColor }]}>
                                         {name  + singPrefix}
                                 </Text>
                             </View>
                             
-                            <View style={{ width:"25%", justifyContent:"center",alignItems:"flex-start"}}>
-                                <Text numberOfLines={1} style={[styles.singerText, {color: singerColor,}]}>
+                            <View style={{ width:"25%", justifyContent:"center",alignItems:"flex-start", paddingRight:10}}>
+                                <Text numberOfLines={0} style={[styles.singerText, {color: singerColor,}]}>
                                     {singerName}
                                 </Text>
                             </View>
-                            { hasOptionButton &&
-                            <View style={{  width:"20%",flexDirection:"row", justifyContent:"flex-end",alignItems:"center"}}>
-                                <View style={{width:40,height:40}}>
-                                    <IconRippe vector={true} name="download" size={20} />
-                                </View>
-                                <View style={{width:40,height:40}}>
-                                    <IconRippe vector={true} name="singerOpt" size={20} />
-                                </View>
-                                <View style={{height:40,width:40}}>
-                                    <IconRippe vector={true} name="play2" size={20} 
-                                        //onPress={this._playNow}
-                                    />
-                                </View>
-                                <View style={{height:40,width:40}}>
-                                    <IconRippe vector={true} name="uutien" size={20} 
-                                        //onPress={this._priority}
-                                    />
-                                </View>
-                            </View> }
+                            <View style={{  width:"25%",flexDirection:"row", justifyContent:"flex-end",alignItems:"center",paddingRight:10}}>
+                                {this._actionButtons.map((button, index) => {
+                                   // console.warn("button type = "+button.type +" , index = "+index);
+                                    return (<View key={index} style={{width:40,height:40}}>
+                                                <IconRippe vector={true} name={button.icon} size={20}
+                                                    onPress={this._handleActionSong.bind(this,button.type,id,actor)}
+                                                />
+                                            </View>) ;
+                                    })}
+                            </View>
                         </View>
+                        
                         
                         
                     </View>
                 </ListItem>
             </View>
         );
-    };
+    }
+
+    generateSongActions = () =>{
+        var buttons = [];
+        const {listType} = this.props
+        if(listType == GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD){
+            buttons.push({
+                icon : "download",
+                type: GLOBALS.SONG_ACTION.DOWNLOAD
+            });
+        }
+        else if(listType == GLOBALS.SONG_LIST_TYPE.USB 
+                || listType == GLOBALS.SONG_LIST_TYPE.DOWNLOADING){
+            buttons = [];         
+        }
+        else if(listType == GLOBALS.SONG_LIST_TYPE.AUTO){
+            buttons.push({
+                icon : "closeMenu",
+                type: GLOBALS.SONG_ACTION.REMOVE_AUTO
+            });
+        }
+        else{
+            buttons.push({
+                icon : "play2",
+                type: GLOBALS.SONG_ACTION.PLAY
+            });
+            buttons.push({
+                icon : "uutien",
+                type: GLOBALS.SONG_ACTION.PRIORITY
+            });
+            if(listType != GLOBALS.SONG_LIST_TYPE.SINGER){
+                buttons.push({
+                    icon : "singerOpt",
+                    type: GLOBALS.SONG_ACTION.PLAY
+                });
+            }
+            buttons.push({
+                icon : "theloai",
+                type: GLOBALS.SONG_ACTION.ADD_AUTO
+            });
+        }
+        //console.warn("buttons length = "+buttons.length);
+        return buttons;
+    }
+
     render = () => {
         return (
             <View style={{ flex: 1 }}>

@@ -30,7 +30,7 @@ export default class MatkhauScreen extends React.Component
     }
     render() {
         return(
-            <View style={{flex:1,margin:15,justifyContent:"flex-start",alignItems:"center"}} >
+            <View style={[{flex:1,margin:20,justifyContent:"flex-start",alignItems:"center"}]} >
                 <InputAdmin 
                     //ref = {ref = (this._input = ref)}
                     ref = {ref => (this._text1 = ref)}

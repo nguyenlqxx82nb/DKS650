@@ -7,6 +7,7 @@ import GLOBALS from '../DataManagers/Globals.js';
 import PassInput from './PassInput';
 import Header from '../Screens/Header/header1';
 import {EventRegister} from 'react-native-event-listeners';
+import Utils from '../Utils/Utils';
 
 export default class Secure extends React.Component {
     static propTypes = {
@@ -27,122 +28,275 @@ export default class Secure extends React.Component {
         this._passInput.RemoveText();
     }
     render = () => {
-        return (
-            <View style={{flex:1}}>
-                <Header title={"Mật Khẩu"} onBack={()=>{this.props.onBack()}} />
+        var maxSize = Math.max(Utils.Width(),Utils.Height());
+        var inputSize = {};
+        var containerSize = {};
 
-                <View style={{ flex: 1,backgroundColor:"transparent",justifyContent:"center",alignItems:"center"}}>
-                    <Text style={styles.title}>NHẬP MẬT KHẨU</Text>
-                    <PassInput 
-                            ref = {ref=>(this._passInput = ref)}
-                            onSuccess = {()=>{
-                                setTimeout(()=>{
-                                    setTimeout(()=>{
-                                        this.props.onBack();
-                                    },250);
-                                    EventRegister.emit("OpenAdminScreen",{});   
-                                },200);
-                            }}
-                        />
+        if(!GLOBALS.LANDSCAPE){
+            if(maxSize < 800){
+                inputSize.width = 290;
+                inputSize.height = 60;
 
-                    <View style={styles.numberContainer}>
-                        <Grid >
-                            <Row size={1}>
-                                <Col size={1}>
-                                    <View style={styles.buttonContainer}>
-                                        <IconRippe name={""}
-                                            text={{content: "1", layout: 1}} textStyle={styles.textNumber}
-                                            onPress={this._handleAddNumber.bind(this,"1")} />
-                                    </View>
-                                </Col>
-                                <Col size={1}>
-                                    <View style={styles.buttonContainer}>
-                                        <IconRippe name={""}
-                                            text={{content: "2", layout: 1}} textStyle={styles.textNumber} 
-                                            onPress={this._handleAddNumber.bind(this,"2")} />
-                                    </View>
-                                </Col>
-                                <Col size={1}>
-                                    <View style={styles.buttonContainer}>
-                                        <IconRippe name={""}
-                                            text={{content: "3", layout: 1}} textStyle={styles.textNumber} 
-                                            onPress={this._handleAddNumber.bind(this,"3")} />
-                                    </View>
-                                </Col>
-                            </Row>
-                            <Row size={1}>
-                                <Col size={1}>
-                                    <View style={styles.buttonContainer}>
-                                        <IconRippe name={""}
-                                            text={{content: "4", layout: 1}} textStyle={styles.textNumber} 
-                                            onPress={this._handleAddNumber.bind(this,"4")} />
-                                    </View>
-                                </Col>
-                                <Col size={1}>
-                                    <View style={styles.buttonContainer}>
-                                        <IconRippe name={""}
-                                            text={{content: "5", layout: 1}} textStyle={styles.textNumber}
-                                            onPress={this._handleAddNumber.bind(this,"5")} />
-                                    </View>
-                                </Col>
-                                <Col size={1}>
-                                    <View style={styles.buttonContainer}>
-                                        <IconRippe name={""}
-                                            text={{content: "6", layout: 1}} textStyle={styles.textNumber} 
-                                            onPress={this._handleAddNumber.bind(this,"6")} />
-                                    </View>
-                                </Col>
-                            </Row>
-                            <Row size={1}>
-                                <Col size={1}>
-                                    <View style={styles.buttonContainer}>
-                                        <IconRippe name={""}
-                                            text={{content: "7", layout: 1}} textStyle={styles.textNumber} 
-                                            onPress={this._handleAddNumber.bind(this,"7")} />
-                                    </View>
-                                </Col>
-                                <Col size={1}>
-                                    <View style={styles.buttonContainer}>
-                                        <IconRippe name={""}
-                                            text={{content: "8", layout: 1}} textStyle={styles.textNumber}
-                                            onPress={this._handleAddNumber.bind(this,"8")}  />
-                                    </View>
-                                </Col>
-                                <Col size={1}>
-                                    <View style={styles.buttonContainer}>
-                                        <IconRippe name={""}
-                                            text={{content: "9", layout: 1}} textStyle={styles.textNumber} 
-                                            onPress={this._handleAddNumber.bind(this,"9")} />
-                                    </View>
-                                </Col>
-                            </Row>
-                            <Row size={1}>
-                                <Col size={1}>
-                                    <View style={styles.buttonContainer}>
-                                    
-                                    </View>
-                                </Col>
-                                <Col size={1}>
-                                    <View style={styles.buttonContainer}>
-                                        <IconRippe name={""}
-                                            text={{content: "0", layout: 1}} textStyle={styles.textNumber} 
-                                            onPress={this._handleAddNumber.bind(this,"9")}/>
-                                    </View>
-                                </Col>
-                                <Col size={1}>
-                                    <View style={styles.buttonContainer}>
-                                        <IconRippe name={""}
-                                            text={{content: "Xóa", layout: 1}} textStyle={styles.textNumber}
-                                            onPress={this._removeText}/>
-                                    </View>
-                                </Col>
-                            </Row>
-                        </Grid>
+                containerSize.width= 290;
+                containerSize.height=250;
+            }
+            else{
+                inputSize.width = 280;
+                inputSize.height = 45;
+
+                containerSize.width= 280;
+                containerSize.height=230;
+            }
+            
+            return (
+                <View style={{flex:1, marginBottom: GLOBALS.FOOTER_HEIGHT}}>
+                    <Header title={"Mật Khẩu"} onBack={()=>{this.props.onBack()}} />
+
+                    <View style={{ flex: 1,backgroundColor:"transparent",justifyContent:"center",alignItems:"center"}}>
+                        <Text style={styles.title}>NHẬP MẬT KHẨU</Text>
+                        <View style={inputSize}>
+                            <PassInput 
+                                    ref = {ref=>(this._passInput = ref)}
+                                    onSuccess = {()=>{
+                                        setTimeout(()=>{
+                                            setTimeout(()=>{
+                                                this.props.onBack();
+                                            },250);
+                                            EventRegister.emit("OpenAdminScreen",{});   
+                                        },200);
+                                    }}
+                                />
+                        </View>
+                        
+
+                        <View style={[styles.numberContainer,containerSize]}>
+                            <Grid >
+                                <Row size={1}>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "1", layout: 1}} textStyle={styles.textNumber}
+                                                onPress={this._handleAddNumber.bind(this,"1")} />
+                                        </View>
+                                    </Col>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "2", layout: 1}} textStyle={styles.textNumber} 
+                                                onPress={this._handleAddNumber.bind(this,"2")} />
+                                        </View>
+                                    </Col>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "3", layout: 1}} textStyle={styles.textNumber} 
+                                                onPress={this._handleAddNumber.bind(this,"3")} />
+                                        </View>
+                                    </Col>
+                                </Row>
+                                <Row size={1}>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "4", layout: 1}} textStyle={styles.textNumber} 
+                                                onPress={this._handleAddNumber.bind(this,"4")} />
+                                        </View>
+                                    </Col>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "5", layout: 1}} textStyle={styles.textNumber}
+                                                onPress={this._handleAddNumber.bind(this,"5")} />
+                                        </View>
+                                    </Col>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "6", layout: 1}} textStyle={styles.textNumber} 
+                                                onPress={this._handleAddNumber.bind(this,"6")} />
+                                        </View>
+                                    </Col>
+                                </Row>
+                                <Row size={1}>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "7", layout: 1}} textStyle={styles.textNumber} 
+                                                onPress={this._handleAddNumber.bind(this,"7")} />
+                                        </View>
+                                    </Col>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "8", layout: 1}} textStyle={styles.textNumber}
+                                                onPress={this._handleAddNumber.bind(this,"8")}  />
+                                        </View>
+                                    </Col>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "9", layout: 1}} textStyle={styles.textNumber} 
+                                                onPress={this._handleAddNumber.bind(this,"9")} />
+                                        </View>
+                                    </Col>
+                                </Row>
+                                <Row size={1}>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                        
+                                        </View>
+                                    </Col>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "0", layout: 1}} textStyle={styles.textNumber} 
+                                                onPress={this._handleAddNumber.bind(this,"9")}/>
+                                        </View>
+                                    </Col>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "Xóa", layout: 1}} textStyle={styles.textNumber}
+                                                onPress={this._removeText}/>
+                                        </View>
+                                    </Col>
+                                </Row>
+                            </Grid>
+                        </View>
                     </View>
                 </View>
-            </View>
+                
+            );
+        }
+        else{
             
-        );
+            inputSize.width = 280;
+            inputSize.height = 45;
+            
+            containerSize.width= 280;
+            containerSize.height=230;
+            
+            return (
+                <View style={{flex:1, marginBottom: GLOBALS.FOOTER_HEIGHT}}>
+                    <Header title={"Mật Khẩu"} onBack={()=>{this.props.onBack()}} />
+
+                    <View style={{ flex: 1,backgroundColor:"transparent",justifyContent:"center",alignItems:"center"}}>
+                        <Text style={styles.title}>NHẬP MẬT KHẨU</Text>
+                        <View style={inputSize}>
+                            <PassInput 
+                                    ref = {ref=>(this._passInput = ref)}
+                                    onSuccess = {()=>{
+                                        setTimeout(()=>{
+                                            setTimeout(()=>{
+                                                this.props.onBack();
+                                            },250);
+                                            EventRegister.emit("OpenAdminScreen",{});   
+                                        },200);
+                                    }}
+                                />
+                        </View>
+                        
+
+                        <View style={[styles.numberContainer,containerSize]}>
+                            <Grid >
+                                <Row size={1}>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "1", layout: 1}} textStyle={styles.textNumber}
+                                                onPress={this._handleAddNumber.bind(this,"1")} />
+                                        </View>
+                                    </Col>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "2", layout: 1}} textStyle={styles.textNumber} 
+                                                onPress={this._handleAddNumber.bind(this,"2")} />
+                                        </View>
+                                    </Col>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "3", layout: 1}} textStyle={styles.textNumber} 
+                                                onPress={this._handleAddNumber.bind(this,"3")} />
+                                        </View>
+                                    </Col>
+                                </Row>
+                                <Row size={1}>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "4", layout: 1}} textStyle={styles.textNumber} 
+                                                onPress={this._handleAddNumber.bind(this,"4")} />
+                                        </View>
+                                    </Col>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "5", layout: 1}} textStyle={styles.textNumber}
+                                                onPress={this._handleAddNumber.bind(this,"5")} />
+                                        </View>
+                                    </Col>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "6", layout: 1}} textStyle={styles.textNumber} 
+                                                onPress={this._handleAddNumber.bind(this,"6")} />
+                                        </View>
+                                    </Col>
+                                </Row>
+                                <Row size={1}>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "7", layout: 1}} textStyle={styles.textNumber} 
+                                                onPress={this._handleAddNumber.bind(this,"7")} />
+                                        </View>
+                                    </Col>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "8", layout: 1}} textStyle={styles.textNumber}
+                                                onPress={this._handleAddNumber.bind(this,"8")}  />
+                                        </View>
+                                    </Col>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "9", layout: 1}} textStyle={styles.textNumber} 
+                                                onPress={this._handleAddNumber.bind(this,"9")} />
+                                        </View>
+                                    </Col>
+                                </Row>
+                                <Row size={1}>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                        
+                                        </View>
+                                    </Col>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "0", layout: 1}} textStyle={styles.textNumber} 
+                                                onPress={this._handleAddNumber.bind(this,"9")}/>
+                                        </View>
+                                    </Col>
+                                    <Col size={1}>
+                                        <View style={styles.buttonContainer}>
+                                            <IconRippe name={""}
+                                                text={{content: "Xóa", layout: 1}} textStyle={styles.textNumber}
+                                                onPress={this._removeText}/>
+                                        </View>
+                                    </Col>
+                                </Row>
+                            </Grid>
+                        </View>
+                    </View>
+                </View>
+                
+            );
+        }
+        
     }
 }
 
@@ -166,10 +320,10 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     title: {
-        fontSize: 18,
+        fontSize: 20,
         //fontWeight: '300',
         color:"#fff",
-        fontFamily:GLOBALS.FONT.REGULAR,
+        fontFamily:GLOBALS.FONT.BOLD,
         marginBottom:15
     },
    

@@ -32,6 +32,11 @@ export default class SecondScreen extends BaseScreen {
         this.loadData();
     }
 
+    _hideCompleted = () =>{
+        this._type = GLOBALS.SECOND_SCREEN.NONE;
+        this.setState({});
+    }
+
     open = (type) => {
         this._type = type;
         if(this._isVisible){
@@ -89,8 +94,8 @@ export default class SecondScreen extends BaseScreen {
         else if(this._type == GLOBALS.SECOND_SCREEN.DOWNLOADING){
             //return <Secure onBack = {this._onBack}  />
             return(
-                <View key={1}>
                 <SongListScreen 
+                    key={1}
                     opacity= {1} 
                     maxZindex ={5} 
                     //transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
@@ -102,49 +107,12 @@ export default class SecondScreen extends BaseScreen {
                     preLoad = {false}
                     //onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
                     //bottom={60}
-                />
-            </View>);
+                />);
         }
         else{
-            console.warn("renderContentView "+this._type);
-            <View style={{width:200,height:200,backgroundColor:"blue"}}></View>
+            //console.warn("renderContentView "+this._type);
+            <View></View>
         }
-        // if(this._type == GLOBALS.SECOND_SCREEN.NGONNGU){
-        //     this._maxIndex = 11;
-        //     return <Ngonngu onBack = {this._onBack} />
-        // }
-        // else if(this._type == GLOBALS.SECOND_SCREEN.SECURE){
-        //     this._maxIndex = 11;
-        //     return <Secure onBack = {this._onBack}  />
-        // }
-        // else if(this._type == GLOBALS.SECOND_SCREEN.UNDOWNLOAD){
-        //     console.warn("renderContentView UNDOWNLOAD = "+this._type);
-        //     this._maxIndex = 6;
-        //     return 
-        //         (<SongListScreen 
-        //             opacity= {1} 
-        //             maxZindex ={5} 
-        //             //transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
-        //             duration={250}
-        //             listType={GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD}
-        //             title ={"BÀI CHƯA TẢI"}
-        //             onBack={this._onBack}
-        //             ref = {ref =>(this._undownloadScreen=ref)}
-        //         />)
-        // }
-        // else if(this._type == GLOBALS.SECOND_SCREEN.DOWNLOADING){
-        //     this._maxIndex = 6;
-        //     return 
-        //         <SongListScreen 
-        //             opacity= {1} 
-        //             maxZindex ={5} 
-        //             duration={250}
-        //             listType={GLOBALS.SONG_LIST_TYPE.DOWNLOADING}
-        //             title ={"BÀI ĐANG TẢI"}
-        //             onBack={this._onBack}
-        //             ref = {ref =>(this._downloadScreen=ref)}
-        //         />
-        // }
     }
 }
 
