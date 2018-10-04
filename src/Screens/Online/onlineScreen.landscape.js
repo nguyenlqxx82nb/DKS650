@@ -9,8 +9,7 @@ import SongOnlineListView from './SongOnlineListView.js';
 import CustomIcon from '../../Components/CustomIcon.js';
 import LinearGradient from 'react-native-linear-gradient';
 import Header2 from '../Header/header2';
-import SearchInput from '../../Views/SearchInput';
-import { Grid, Col, Row } from 'react-native-easy-grid';
+import Header4 from '../Header/header4';
 import TuKhoaHot from '../../Views/TukhoaHot';
 import ChannelList from '../../Views/channels';
 
@@ -26,7 +25,11 @@ export default class OnlineScreen extends BaseScreen {
         super(props);
         
         this.selectChannel = this.selectChannel.bind(this);
-        this.MAX_SCROLL_HEIGHT = 145;
+        if(GLOBALS.LANDSCAPE)
+            this.MAX_SCROLL_HEIGHT = 145;
+        else
+            this.MAX_SCROLL_HEIGHT = 150;
+
         this._scroll2 = new Animated.Value(0);
     }
     // componentWillMount() {
@@ -117,52 +120,101 @@ export default class OnlineScreen extends BaseScreen {
     }
 
     renderContentView = () => {
-        //const { maxZindex } = this.props;
-        return (
-            <View style={{ flex: 1, width: '100%' }}>
-                <Animated.View style={[styles.headerContainer, { transform: [{ translateY: this._scrollY }] }]}>
-                    <Header2
-                        ref={ref => (this._header = ref)}
-                        h={40}
-                        onSearch={this._onSearch}
-                        onSearchChange={this._onSearchChange}
-                        onBack={this._onBack}
-                        left={this._renderOnlineIcon()}
-                    />
-                </Animated.View>
-                {this.renderContent()}
-            </View>
-        );
+        if(GLOBALS.LANDSCAPE){
+            return (
+                <View style={{ flex: 1}}>
+                    <Animated.View style={[styles.headerContainer, { transform: [{ translateY: this._scrollY }] }]}>
+                        <Header2
+                            ref={ref => (this._header = ref)}
+                            h={40}
+                            onSearch={this._onSearch}
+                            onSearchChange={this._onSearchChange}
+                            onBack={this._onBack}
+                            left={this._renderOnlineIcon()}
+                        />
+                    </Animated.View>
+                    {this.renderContent()}
+                </View>
+            );
+        }
+        else{
+            return (
+                <View style={{ flex: 1}}>
+                    <Animated.View style={[styles.headerContainer, {height:45, transform: [{ translateY: this._scrollY }] }]}>
+                        <Header4
+                                ref={ref=>(this._header = ref)}
+                                onSearch={this._onSearch}
+                                onSearchChange = {this._onSearchChange}
+                                onBack = {this._onBack}
+                                left={this._renderOnlineIcon()}
+                            />
+                    </Animated.View>
+                    {this.renderContent()}
+                </View>
+            );
+        }
     }
     renderContent = () => {
         if (!this.props.preLoad || this._allowLoad) {
-            return (
-                <View style={{ flex: 1 }}>
-                    <SongOnlineListView
-                        ref={ref => (this._songList = ref)}
-                        onScroll={this._handleListViewScroll}
-                        onlineType={this.props.type}
-                        top={this.MAX_SCROLL_HEIGHT} />
-                    <Animated.View 
-                        style={{ height: 40, position: "absolute", top: 45, width: "100%",
-                                transform: [{ translateY: this._scroll2}] }}
-                        ref={ref=>(this._a = ref)}
-                        >
-                        <TuKhoaHot
-                            onSelectChannel={this.selectChannel}
-                        />
-                    </Animated.View>
-                    <Animated.View 
-                        style={{ height: 50, position: "absolute", top: 85, width: "100%",
-                        transform: [{ translateY: this._scroll2}] }}
-                        ref={ref=>(this._b = ref)}
-                        >
-                        <ChannelList
-                            onSelectChannel={this.selectChannel}
-                        />
-                    </Animated.View>
-                </View>
-            )
+            if(GLOBALS.LANDSCAPE){
+                return (
+                    <View style={{ flex: 1 }}>
+                        <SongOnlineListView
+                            ref={ref => (this._songList = ref)}
+                            onScroll={this._handleListViewScroll}
+                            onlineType={this.props.type}
+                            top={this.MAX_SCROLL_HEIGHT} />
+                        <Animated.View 
+                            style={{ height: 40, position: "absolute", top: 45, width: "100%",
+                                    transform: [{ translateY: this._scroll2}] }}
+                            ref={ref=>(this._a = ref)}
+                            >
+                            <TuKhoaHot
+                                onSelectChannel={this.selectChannel}
+                            />
+                        </Animated.View>
+                        <Animated.View 
+                            style={{ height: 50, position: "absolute", top: 85, width: "100%",
+                            transform: [{ translateY: this._scroll2}] }}
+                            ref={ref=>(this._b = ref)}
+                            >
+                            <ChannelList
+                                onSelectChannel={this.selectChannel}
+                            />
+                        </Animated.View>
+                    </View>
+                )
+            }
+            else{
+                return (
+                    <View style={{ flex: 1 }}>
+                        <SongOnlineListView
+                            ref={ref => (this._songList = ref)}
+                            onScroll={this._handleListViewScroll}
+                            onlineType={this.props.type}
+                            top={this.MAX_SCROLL_HEIGHT} />
+                        <Animated.View 
+                            style={{ height: 40, position: "absolute", top: 50, width: "100%",
+                                    transform: [{ translateY: this._scroll2}] }}
+                            ref={ref=>(this._a = ref)}
+                            >
+                            <TuKhoaHot
+                                onSelectChannel={this.selectChannel}
+                            />
+                        </Animated.View>
+                        <Animated.View 
+                            style={{ height: 50, position: "absolute", top: 90, width: "100%",
+                            transform: [{ translateY: this._scroll2}] }}
+                            ref={ref=>(this._b = ref)}
+                            >
+                            <ChannelList
+                                onSelectChannel={this.selectChannel}
+                            />
+                        </Animated.View>
+                    </View>
+                )
+            }
+            
         }
         // return this.renderContentView();
     }

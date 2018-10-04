@@ -10,7 +10,7 @@ import OnlineItem2 from './onlineItem.lanscape';
 import Utils from '../../Utils/Utils';
 import BoxControl from '../../DataManagers/BoxControl';
 
-let height = Utils.Width()*18/32 + 90;
+//let height = Utils.Width()*18/32 + 90;
 export default class SongOnlineListView extends React.Component {
     static propTypes = {
         onlineType: PropTypes.number,
@@ -42,43 +42,52 @@ export default class SongOnlineListView extends React.Component {
     constructor(props) {
         super(props);
 
-        this._layoutProvider = new LayoutProvider(
-            index => {
-                return "FULL";
-            },
-            (type, dim) => {
-                switch (type) {
-                    case "FULL":
-                        dim.width = Utils.Width();
-                        dim.height = height;
-                        break;
-                    default:
-                        dim.width = Utils.Width();
-                        dim.height = height;
+        if(!GLOBALS.LANDSCAPE){
+            this.width2 = Utils.Width();
+            this.height2 = this.width2*18/32 + 100;
+            this._layoutProvider = new LayoutProvider(
+                index => {
+                    return "FULL";
+                },
+                (type, dim) => {
+                    switch (type) {
+                        case "FULL":
+                            dim.width = Utils.Width();
+                            dim.height = this.height2;
+                            break;
+                        default:
+                            break;
+                            // dim.width = Utils.Width();
+                            // dim.height = height;
+                    }
                 }
-            }
-        );
+            );
+        }
+        else{
+            this.width2 = (Utils.Width()-32)/3;
+            this.height2 = this.width2*18/32 + 100;
+            //let height2 = Utils.Width()*18/32 + 90;
+        // console.warn("width2 = "+this.width2 +", height2 = "+this.height2);
+            this._layoutProvider2 = new LayoutProvider(
+                index => {
+                    return "FULL";
+                },
+                (type, dim) => {
+                    switch (type) {
+                        case "FULL":
+                            dim.width = this.width2;
+                            dim.height = this.height2;
+                            break;
+                        default:
+                            break;
+                            // dim.width = Utils.Width();
+                            // dim.height = height;
+                    }
+                }
+            );
+        }
 
-        this.width2 = (Utils.Width()-32)/3;
-        this.height2 = this.width2*18/32 + 100;
-        //let height2 = Utils.Width()*18/32 + 90;
-       // console.warn("width2 = "+this.width2 +", height2 = "+this.height2);
-        this._layoutProvider2 = new LayoutProvider(
-            index => {
-                return "FULL";
-            },
-            (type, dim) => {
-                switch (type) {
-                    case "FULL":
-                        dim.width = this.width2;
-                        dim.height = this.height2;
-                        break;
-                    default:
-                        dim.width = Utils.Width();
-                        dim.height = height;
-                }
-            }
-        );
+        
 
         this._loadData = this._loadData.bind(this);
     }
@@ -214,11 +223,18 @@ export default class SongOnlineListView extends React.Component {
         const {thumb,id,title,channelTitle} = item;
        // console.warn("title "+title +" , channelTitle = "+channelTitle);
         return (
-            <SongOnlineItem
+            <OnlineItem2  
+                width={this.width2}
+               // height = {this.height2}
+                height2 = {this.height2}
                 thumbnail={thumb} 
                 id ={id} title={title}
                 channel={channelTitle} 
-                height = {height} />
+                onPress = {()=>{
+                    console.warn("OnlineItem2 id = "+id);
+                    BoxControl.selectSong(id);
+                }}
+                />
         );
     };
 
@@ -233,7 +249,6 @@ export default class SongOnlineListView extends React.Component {
                 thumbnail={thumb} 
                 id ={id} title={title}
                 channel={channelTitle} 
-                height = {height} 
                 onPress = {()=>{
                     console.warn("OnlineItem2 id = "+id);
                     BoxControl.selectSong(id);
@@ -272,7 +287,7 @@ export default class SongOnlineListView extends React.Component {
                     onScroll = {this._handleScroll}
                     externalScrollView={this.renderScroll}
                     scrollThrottle = {16}
-                    renderAheadOffset = {1000}
+                    renderAheadOffset = {GLOBALS.LANDSCAPE? 1000: 250}
                     //extendedState={this.state.dataProvider} 
                     />
                 <IndicatorView ref={ref => (this._indicator = ref)}/>

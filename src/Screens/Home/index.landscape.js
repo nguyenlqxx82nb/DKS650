@@ -28,11 +28,13 @@ export default class Landscape extends React.Component {
     constructor(props) {
         super(props);
         //console.ignoredYellowBox = true;
-        console.disableYellowBox = true;
+        //console.disableYellowBox = true;
         //console.ignoredYellowBox = ['Warning:']; // = ['Warning: Stateless'];
         GLOBALS.INFO.VERSION = GLOBALS.BOX_VERSION.S650;
-        GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.HTTP;
+        //GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.HTTP;
         //GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.SQLITE;
+        GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.MYSQL;
+        
         GLOBALS.LANDSCAPE = true;
         // if(Platform.OS == 'android'){
         //     UIManager.setLayoutAnimationEnabledExperimental(true);

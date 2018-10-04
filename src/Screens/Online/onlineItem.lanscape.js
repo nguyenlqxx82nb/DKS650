@@ -18,7 +18,6 @@ export default class SongOnlineItem extends React.Component {
     channel: PropTypes.string,
     maxOpacity: PropTypes.number,
     onPress : PropTypes.func,
-    height : PropTypes.number,
     height2 : PropTypes.number,
     width: PropTypes.number
   }
@@ -74,13 +73,16 @@ export default class SongOnlineItem extends React.Component {
 //   }
   render() {
     //console.warn(" url = "+GLOBALS.SINGER_SEX[1]);
-    const {width,height2} = this.props;
+    const {width,height2,thumbnail} = this.props;
     var _h = height2 - 25;
     var imageHeight = width*18/32;
-   /// console.warn("_h = "+_h +" , - "+height2);
+    var container = {};
+    if(GLOBALS.LANDSCAPE)
+      container = {marginLeft:5, marginRight:5};
+
     return (
-      <View style={{flex:1,marginLeft:5, marginRight:5}}>
-          <View style={{width:this.props.width,height:height2, position:"absolute",top:0,zIndex:1}}>
+      <View style={[{flex:1},container]}>
+          <View style={{width:width,height:height2, position:"absolute",top:0,zIndex:1}}>
               <View
                   style={{
                       width:'100%',
@@ -90,7 +92,7 @@ export default class SongOnlineItem extends React.Component {
                           ref={ref => {this.imageRef = ref;}}
                           style={{flex: 1,}}
                           onLoad={this.handleOnLoad}
-                          source={{ uri: this.props.thumbnail }} />
+                          source={{ uri: thumbnail }} />
               </View>
               <View style={styles.textContainer}>
                   <Grid>
@@ -100,7 +102,7 @@ export default class SongOnlineItem extends React.Component {
                               <Text style={styles.textChannel} >{this.props.channel}</Text>
                           </Col>
                           <Col size={0.2} style={{justifyContent:"center",alignItems:"flex-end"}}>
-                              <CustomIcon name="play" color="#14DCC4" size={30} />
+                              
                           </Col>
                       </Row>
                   </Grid>
@@ -114,9 +116,20 @@ export default class SongOnlineItem extends React.Component {
                  <ListItem 
                     style={{width:this.props.width,height:_h}}
                     onPress = {this.onPressed}>
-                   
                  </ListItem> 
             
+          </View>
+
+          <View 
+           // onPress = {this.onPressed}
+            style={{width:70,height:70, position:"absolute",borderRadius:35
+                    ,bottom:30,right:0,zIndex:3}}>
+                 <ListItem
+                    rippleRound = {true} 
+                    style={{width:70,height:70,justifyContent:"center",alignItems:"center"}}
+                    onPress = {this.onPressed}>
+                    <CustomIcon name="play" color="#14DCC4" size={40} />
+                 </ListItem> 
           </View>
       </View>
     );

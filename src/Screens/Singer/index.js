@@ -10,6 +10,7 @@ import SearchInput from '../../Views/SearchInput.js';
 import SongListScreen from '../BaiHat/SongListScreen.js';
 import MusicOnline from '../../Views/MusicOnlineButton';
 import Header2 from '../Header/header2';
+import Header4 from '../Header/header4';
 
 export default class SingerScreen extends BaseScreen {
     _sex = GLOBALS.SINGER_SEX.ALL;
@@ -20,6 +21,9 @@ export default class SingerScreen extends BaseScreen {
     };
     constructor(props) {
         super(props);
+
+        if(!GLOBALS.LANDSCAPE)
+            this.MAX_SCROLL_HEIGHT = 145;
     }
     componentWillMount() {
         this._listenerSingerSongEvent = EventRegister.addEventListener('FilterSinger', (data) => {
@@ -79,60 +83,130 @@ export default class SingerScreen extends BaseScreen {
     }
     renderContent = () =>{
         if(!this.props.preLoad || this._allowLoad){
-            return (
-                <View style={{flex:1}}>
-                    <SingerTabsView 
-                        lanTabs={['hot','vn','en','cn','ja','kr']} 
-                        ref={ref => (this._singerTabs = ref)} 
-                        onChangeTab = {this._onChangeTab}
-                        onScroll = {this._handleListViewScroll} 
-                        top={this.MAX_SCROLL_HEIGHT}/>
-
-                    <MusicOnline 
-                        style = {{top:85}}
-                        ref={ref =>(this._musicOnline = ref)} />
-                </View>
-            )
+            if(GLOBALS.LANDSCAPE){
+                return (
+                    <View style={{flex:1}}>
+                        <SingerTabsView 
+                            lanTabs={['hot','vn','en','cn','ja','kr']} 
+                            ref={ref => (this._singerTabs = ref)} 
+                            onChangeTab = {this._onChangeTab}
+                            onScroll = {this._handleListViewScroll} 
+                            top={this.MAX_SCROLL_HEIGHT}/>
+    
+                        <MusicOnline 
+                            style = {{top:85}}
+                            ref={ref =>(this._musicOnline = ref)} />
+                    </View>
+                )
+            }
+            else{
+                return (
+                    <View style={{flex:1}}>
+                        <SingerTabsView 
+                            lanTabs={['hot','vn','en','cn','ja','kr']} 
+                            ref={ref => (this._singerTabs = ref)} 
+                            onChangeTab = {this._onChangeTab}
+                            onScroll = {this._handleListViewScroll} 
+                            tabTop = {50}
+                            top={this.MAX_SCROLL_HEIGHT}/>
+    
+                        <MusicOnline 
+                            style = {{top:93,height:40}}
+                            ref={ref =>(this._musicOnline = ref)} />
+                    </View>
+                )
+            }
         }
            // return this.renderContentView();
     }
     renderContentView = () => {
-        return (
-            <View style={{ flex: 1 }}>
-                <Animated.View style={[styles.headerContainer, { transform: [{ translateY: this._scrollY }]}]}>
-                    <Header2
-                        ref={ref=>(this._header = ref)}
-                        right={<View style={{flex:1,flexDirection:"row", justifyContent:"flex-end",alignItems:"center"}}>
-                                    <View style={{ width: 40, height: 40}}>
-                                        <IconRippe vector={true} name="all" size={20} color="#fff"
-                                            onPress={this._showOptOverlay} />
+        if(GLOBALS.LANDSCAPE){
+            return (
+                <View style={{ flex: 1 }}>
+                    <Animated.View style={[styles.headerContainer, { transform: [{ translateY: this._scrollY }]}]}>
+                        <Header2
+                            ref={ref=>(this._header = ref)}
+                            right={<View style={{flex:1,flexDirection:"row", justifyContent:"flex-end",alignItems:"center"}}>
+                                        <View style={{ width: 40, height: 40}}>
+                                            <IconRippe vector={true} name="all" size={20} color="#fff"
+                                                onPress={this._showOptOverlay} />
+                                        </View>
+                                        <View style={{ width: 40, height: 40}}>
+                                            <IconRippe vector={true} name="male" size={20} color="#fff"
+                                                onPress={this._showOptOverlay} />
+                                        </View>
+                                        <View style={{ width: 40, height: 40}}>
+                                            <IconRippe vector={true} name="famale" size={20} color="#fff"
+                                                onPress={this._showOptOverlay} />
+                                        </View>
+                                        <View style={{ width: 40, height: 40}}>
+                                            <IconRippe vector={true} name="nhomnhac" size={20} color="#fff"
+                                                onPress={this._showOptOverlay} />
+                                        </View>
                                     </View>
-                                    <View style={{ width: 40, height: 40}}>
-                                        <IconRippe vector={true} name="male" size={20} color="#fff"
-                                            onPress={this._showOptOverlay} />
+                                    }
+                            h = {40}
+                            onSearch={this._onSearch}
+                            onSearchChange = {this._onSearchChange}
+                            onBack = {this._onBack}
+                            left={<Text style={[styles.title]}>CA SỸ</Text>}
+                        />
+                    </Animated.View>
+    
+                    {this.renderContent()}
+                    
+                </View>
+            );
+        }
+        else{
+            return (
+                <View style={{ flex: 1 }}>
+                    <Animated.View style={[styles.headerContainer, {height:GLOBALS.HEADER_HEIGHT, transform: [{ translateY: this._scrollY }]}]}>
+                        <Header2
+                            ref={ref=>(this._header = ref)}
+                            right={<View style={{flex:1,flexDirection:"row", justifyContent:"flex-end",alignItems:"center"}}>
+                                        <View style={{ width: 40, height: 40}}>
+                                            <IconRippe vector={true} name="all" size={20} color="#fff"
+                                                onPress={this._showOptOverlay} />
+                                        </View>
+                                        <View style={{ width: 40, height: 40}}>
+                                            <IconRippe vector={true} name="male" size={20} color="#fff"
+                                                onPress={this._showOptOverlay} />
+                                        </View>
+                                        <View style={{ width: 40, height: 40}}>
+                                            <IconRippe vector={true} name="famale" size={20} color="#fff"
+                                                onPress={this._showOptOverlay} />
+                                        </View>
+                                        <View style={{ width: 40, height: 40}}>
+                                            <IconRippe vector={true} name="nhomnhac" size={20} color="#fff"
+                                                onPress={this._showOptOverlay} />
+                                        </View>
                                     </View>
-                                    <View style={{ width: 40, height: 40}}>
-                                        <IconRippe vector={true} name="famale" size={20} color="#fff"
+                                    }
+                            h = {40}
+                            onSearch={this._onSearch}
+                            onSearchChange = {this._onSearchChange}
+                            onBack = {this._onBack}
+                            left={<Text style={[styles.title]}>CA SỸ</Text>}
+                        />
+                        <Header4
+                            ref={ref=>(this._header = ref)}
+                            onSearch={this._onSearch}
+                            onSearchChange = {this._onSearchChange}
+                            onBack = {this._onBack}
+                            left={<Text style={[styles.title]}>CA SỸ</Text>}
+                            right = {<View style={{ width: 40, height: 40}}>
+                                        <IconRippe vector={true} name="tuychon2" size={20} color="#fff"
                                             onPress={this._showOptOverlay} />
-                                    </View>
-                                    <View style={{ width: 40, height: 40}}>
-                                        <IconRippe vector={true} name="nhomnhac" size={20} color="#fff"
-                                            onPress={this._showOptOverlay} />
-                                    </View>
-                                </View>
-                                }
-                        h = {40}
-                        onSearch={this._onSearch}
-                        onSearchChange = {this._onSearchChange}
-                        onBack = {this._onBack}
-                        left={<Text style={[styles.title]}>CA SỸ</Text>}
-                    />
-                </Animated.View>
-
-                {this.renderContent()}
-                
-            </View>
-        );
+                                    </View>}
+                        />
+                    </Animated.View>
+    
+                    {this.renderContent()}
+                    
+                </View>
+            );
+        }
     }
 }
 

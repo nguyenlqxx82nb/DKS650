@@ -129,7 +129,7 @@ export default class OptionOverlay extends React.Component {
         var screenHeight = Utils.Height() - GLOBALS.STATUS_BAR_HEIGHT ;
         var top = {};
         if(this.overlayType == GLOBALS.SING_OVERLAY.KEYBROARD){
-            top = {top:40} ;
+            top = {top:GLOBALS.HEADER_HEIGHT} ;
             //this.state.opacityValue.setValue(0.5);
             this._data.height = 0;
         }

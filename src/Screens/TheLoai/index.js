@@ -7,7 +7,8 @@ import { Grid, Col, Row } from "react-native-easy-grid";
 import LinearGradient from 'react-native-linear-gradient';
 import GLOBALS from '../../DataManagers/Globals.js';
 import { EventRegister } from 'react-native-event-listeners';
-import SongListScreen from '../BaiHat/SongListScreen';
+import Header from '../Header/header1';
+//import SongListScreen from '../BaiHat/SongListScreen';
 
 export default class TheloaiScreen extends BaseScreen {
     static propTypes = {
@@ -33,23 +34,18 @@ export default class TheloaiScreen extends BaseScreen {
         // EventRegister.emit('ShowOptOverlay', {id:-1,overlayType:GLOBALS.SING_OVERLAY.SINGER});
     }
     _openTheloaiSong = (type, name) => {
-        this.theloaiSong.updateSongType(GLOBAL.type, name);
-        this.theloaiSong.show();
+        // this.theloaiSong.updateSongType(GLOBAL.type, name);
+        // this.theloaiSong.show();
+        EventRegister.emit("OpenTypeSong",{type:type,name:name})
     }
     renderContentView = () => {
         return (
             <View style={{ flex: 1, position: "relative" }}>
                 <View style={{ flex: 1 }}>
                     <View style={styles.headerContainer}>
-                        <View style={{ width: 40, height: 40, marginLeft: 5 }}>
-                            <IconRippe vector={true} name="back" size={20} color="#fff"
-                                onPress={this._onBack} />
-                        </View>
-                        <View style={{ flex: 1, justifyContent: "center", alignItems: "flex-start" }}>
-                            <Text style={[styles.title]}>Thể Loại</Text></View>
-                        {/* <View style={{ width: 40, height: 40, marginRight: 5 }}>
-                            <IconRippe vector={true} name="search" size={20} color="#fff" />
-                        </View> */}
+                        <Header title={"THỂ LOẠI"} onBack={()=>{this.props.onBack()}} 
+                            style = {{height:GLOBALS.HEADER_HEIGHT}}
+                        />
                     </View>
 
                     <View style={{ flex: 1, margin: 5, backgroundColor: "transparent" }}>
@@ -153,14 +149,6 @@ export default class TheloaiScreen extends BaseScreen {
                         </Grid>
                     </View>
                 </View>
-
-                <SongListScreen
-                    ref={ref => (this.theloaiSong = ref)}
-                    transition={GLOBALS.TRANSITION.SLIDE_LEFT}
-                    maxZindex={4}
-                    onBack={() => {
-                        this.theloaiSong.hide();
-                    }} />
             </View>
         );
     }
@@ -169,9 +157,6 @@ export default class TheloaiScreen extends BaseScreen {
 const styles = StyleSheet.create({
     headerContainer: {
         flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        //marginTop: GLOBALS.STATUS_BAR_HEIGHT, 
         height: 50
     },
     button: {

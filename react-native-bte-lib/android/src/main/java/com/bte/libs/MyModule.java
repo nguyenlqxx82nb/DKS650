@@ -126,8 +126,7 @@ public class MyModule extends ReactContextBaseJavaModule {
     public void fetchSongs(String type, int type_val , String actor , String sort ,
                            int temp, String kwd , String ids,
                            int start, int pagesize,Callback callback){
-        WritableArray songs = MySQConnector.fetchSongs(type,type_val,actor,sort,temp,kwd,ids,start,pagesize);
-        callback.invoke(songs);
+        MySQConnector.fetchSongs(type,type_val,actor,sort,temp,kwd,ids,start,pagesize,callback);
     }
 
     private void sendEvent(String eventName, @Nullable WritableMap params) {

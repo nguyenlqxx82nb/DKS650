@@ -15,14 +15,11 @@ export default class SingerTabsView extends React.Component {
         onChangeTab : PropTypes.func,
         onScroll : PropTypes.func,
         top: PropTypes.number,
+        tabTop: PropTypes.number,
     };
-    // static defaultProps = {
-    //     //number: PropTypes.number.isRequired,
-    //     //color: PropTypes.string.isRequired,
-    //     onOptionOverlayOpen: null,
-    //     onBack: null,
-    //     //duration : 200
-    // };
+    static defaultProps = {
+        tabTop : 45
+    };
 
     _tabs = [];
     _currPage = 0;
@@ -91,13 +88,6 @@ export default class SingerTabsView extends React.Component {
 
     render() {
         var tabContent = {};
-        if(GLOBALS.LANDSCAPE){
-            tabContent = {
-                //marginTop: 50,
-                borderTopWidth: 0,
-                borderColor: '#00ECBC',
-            }
-        }
         return (
             <ScrollableTabView
                         style={{ marginTop: 0, }}
@@ -113,8 +103,8 @@ export default class SingerTabsView extends React.Component {
                             style={{ borderWidth: 0, }}
                             isTabRound = {true}
                             tabContainerStyle = {{height:30,borderRadius:15, marginLeft:5}}
-                            style ={{height:40,top:43}}
-                            tabWidth={110}
+                            style ={{height:40,top:this.props.tabTop}}
+                            tabWidth={100}
                         />}
                     >
                     {this.props.lanTabs.map((lan, index) => {
@@ -137,7 +127,7 @@ export default class SingerTabsView extends React.Component {
 const styles = StyleSheet.create({
     tabContent: {
         flex: 1,
-        borderTopWidth: 0.5,
-        borderColor: '#00ECBC',
+        //borderTopWidth: 0.5,
+       // borderColor: '#00ECBC',
     },
 })

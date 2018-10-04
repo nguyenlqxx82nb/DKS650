@@ -6,14 +6,13 @@ import DATA_INFO from '../DataManagers/DataInfo';
 var SQLite = require('react-native-sqlite-storage')
 var db = SQLite.openDatabase({name: 'testDB', createFromLocation: '~songbook.db'})
 
-export default class SQLiteMagager { 
+export default class MySQLMagager { 
     static getSongQuery(type,type_val,sort,temp,kwd,kwd_alias,page,pageSize){
-        
         var query = "",_sort ="",_start = 0,_pagesize;
         //console.warn("getSongQuery = "+type+ ", "+type_val+" "+sort+" , "+page+" , "+pageSize);
-        // BTElib.fetchSongs("type",7,"","",1,"","",0,20,(datas)=>{
-        //     console.warn("length songs = "+datas.length);
-        // });
+        BTElib.fetchSongs("type",7,"","",1,"","",0,20,(datas)=>{
+            console.warn("length songs = "+datas.length);
+        });
 
         if(sort=='new') _sort='date desc';
         else if(sort=='name'){ _sort = 'Qindex asc'; }
@@ -62,24 +61,24 @@ export default class SQLiteMagager {
 
     static getSongList(lan,page,pageCount,term,songType,listType,actor,callback,errorCallback){
         var type = "",
-            type_val = "",
+            type_val=-1,
             sort = "",
             temp = 1,
             kwd = "",
             kwd_alias="",
             page = pageCount*page ;
-        //console.warn("song type = "+songType);
+        
         if(songType != GLOBALS.SONG_TYPE.ALL){
             type="type";
-            type_val=""+songType;
+            type_val=songType;
         }
-        else if(lan != GLOBALS.LANGUAGE_KEY.ALL){
+        else if(lan != GLOBALS.LANGUAGE_KEY.all){
             type="lang";
-            type_val=""+GLOBALS.LANGUAGE[lan];
+            type_val= GLOBALS.LANGUAGE[lan];
         }
         else if(actor != ""){
             type="star";
-            type_val=actor;
+            //type_val=actor;
         }
 
         if(listType == GLOBALS.SONG_LIST_TYPE.NEW){
@@ -94,20 +93,26 @@ export default class SQLiteMagager {
         }
         if(term != ""){
             kwd=term;
-            kwd_alias=term;
+            //kwd_alias=term;
         }
-        var query = this.getSongQuery(type,type_val,sort,temp,kwd,kwd_alias,page,pageCount)
-      //  console.warn("query = "+query);
-        db.transaction((tx) => {
-            tx.executeSql(query, [], (tx, results) => {
-               // console.warn("length = "+results.rows.length);
-                var datas = this.covertSongDatas(results.rows);
-               // console.warn("length = "+results.rows.length +" , data = "+datas.length);
-                callback(datas);
-            },(error)=>{
-                errorCallback(error)
-            });
+        //var query = this.getSongQuery(type,type_val,sort,temp,kwd,kwd_alias,page,pageCount)
+        //console.warn("query = "+type +" , "+type_val +" , "+actor+" , sort = "+sort+", page = "+page);
+        BTElib.fetchSongs(type,type_val,actor,sort,temp,kwd,"",page,pageCount,(datas)=>{
+            //console.warn("length songs = "+datas);
+            var songs = this.covertSongDatas(datas);
+            callback(songs);
         });
+
+        // db.transaction((tx) => {
+        //     tx.executeSql(query, [], (tx, results) => {
+        //        // console.warn("length = "+results.rows.length);
+        //         var datas = this.covertSongDatas(results.rows);
+        //        // console.warn("length = "+results.rows.length +" , data = "+datas.length);
+        //         callback(datas);
+        //     },(error)=>{
+        //         errorCallback(error)
+        //     });
+        // });
     }
 
     static covertSongDatas(rows){
@@ -115,14 +120,14 @@ export default class SQLiteMagager {
         if(rows == null || rows.length == 0){
             return datas;
         }
-
+        var breakLine = (GLOBALS.LANDSCAPE)?"\n":" , ";
         for(var i=0; i<rows.length; i++){
             var singerName = 
-                (rows.item(i).SecondActor =="NONE" || rows.item(i).SecondActor =="")?rows.item(i).Actor:rows.item(i).Actor+","+rows.item(i).SecondActor;
+                (rows[i].SecondActor =="NONE" || rows[i].SecondActor =="")?rows[i].Actor:rows[i].Actor+breakLine+rows[i].SecondActor;
             var item = {
-                id: rows.item(i).Song_ID,
-                name : rows.item(i).Song_Name,
-                actor : rows.item(i).Actor,
+                id: rows[i].Song_ID,
+                name : rows[i].Song_Name,
+                actor : rows[i].Actor,
                 singerName: singerName
             }
             //console.warn("covertSongDatas = "+singerName);
@@ -132,16 +137,16 @@ export default class SQLiteMagager {
                 item.index = " "+(selectIndex + 1);
             }
             else{
-                // if(rows.item(i).Temp == 0){
-                //     item.status = GLOBALS.SING_STATUS.NO_DOWNLOADED;
-                // }
-                // else if(rows[i].Temp == 2){
-                //     item.status = GLOBALS.SING_STATUS.DOWNLOADING;
-                // }
-                // else{
-                //     item.status = GLOBALS.SING_STATUS.NORMAL;
-                // }
-                item.status = GLOBALS.SING_STATUS.NORMAL;
+                if(rows[i].Temp == 0){
+                    item.status = GLOBALS.SING_STATUS.NO_DOWNLOADED;
+                }
+                else if(rows[i].Temp == 2){
+                    item.status = GLOBALS.SING_STATUS.DOWNLOADING;
+                }
+                else{
+                    item.status = GLOBALS.SING_STATUS.NORMAL;
+                }
+                //item.status = GLOBALS.SING_STATUS.NORMAL;
                 item.index = "";
             }
             datas.push(item);

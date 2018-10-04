@@ -10,6 +10,7 @@ import Databases from '../DataManagers/DatabaseManager.js';
 import DataInfo from '../DataManagers/DataInfo.js';
 import IndicatorView from './IndicatorView.js';
 import BoxControl from '../DataManagers/BoxControl.js';
+import CustomIcon from '../Components/CustomIcon';
 
 let { height, width } = Dimensions.get('window');
 export default class SongListView extends React.Component {
@@ -320,7 +321,7 @@ export default class SongListView extends React.Component {
             </View> :
             <View style={{ height: 1, width: '100%' }} />;
     }
-    _rowRenderer = (type, item) => {
+    _rowRenderer = (type, item, index) => {
         const {id,name,actor,singerName,status} = item;
         const {listType} = this.props;
         var _status = (listType != GLOBALS.SONG_LIST_TYPE.SELECTED)?status:GLOBALS.SING_STATUS.NORMAL;
@@ -335,30 +336,38 @@ export default class SongListView extends React.Component {
         else{
             singPrefix = (singPrefix != "") ? ("(" + singPrefix  + item.index  + ")") : "";
         }
+
         var hasOptionButton = (status  == GLOBALS.SING_STATUS.NO_DOWNLOADED
                                 || status  == GLOBALS.SING_STATUS.DOWNLOADING)?false:true;
-
+        var containerStyle = {};
+        if(index == 0){
+            containerStyle.borderTopWidth = 0.5;
+            //containerStyle.borderColor= '#00ECBC';
+        }
         return (
             <ListItem
-                style={styles.listItem}
-                onPress={this._onPressSong.bind(this, id, status)}
+                style={[styles.listItem,containerStyle]}
+                onPress={()=>{
+                            //this._onPressSong.bind(this, id, status)
+                        }}
                // underlayColor="white"
                 >
                 <View style={{
                     flex: 1, flexDirection: "row", justifyContent: "center",
-                    alignItems: "center", height: 60, marginLeft: 17, marginRight: 5}}>
+                    alignItems: "center", height: 60, marginLeft: 15, marginRight: 5}}>
                     <View style={{ flex: 1 }}>
-                        <Text numberOfLines={1} style={[styles.songText, {color: singColor }]}>
+                        <Text numberOfLines={1} style={[styles.songText, {fontSize:19,color: singColor }]}>
                             {name + singPrefix}
                         </Text>
-                        <Text style={[styles.singerText, {color: singerColor }]}>
+                        <Text style={[styles.singerText, {fontSize:15,color: singerColor }]}>
                             {singerName}
                         </Text>
                     </View>
                     { hasOptionButton &&
-                        <View style={{ width: 55, height: 55 }}>
+                        <View style={{ width: 40, height: 40 }}>
                             <IconRippe vector={true} name="tuychon" size={20} 
-                                onPress={this._showOptOverlay.bind(this,id,overlayType,actor)} />
+                                //onPress={this._showOptOverlay.bind(this,id,overlayType,actor)} 
+                            />
                         </View> }
                 </View>
             </ListItem>
@@ -389,7 +398,7 @@ export default class SongListView extends React.Component {
                 <ListItem
                     style={{width:"100%",height:53}}
                     rippleRound = {true}
-                    onPress={this._onPressSong.bind(this, id, status)}
+                    //onPress={this._onPressSong.bind(this, id, status)}
                     >
                     <View style={{
                         flex: 1, flexDirection: "row", justifyContent: "center",alignItems:"center"}}>
@@ -412,6 +421,7 @@ export default class SongListView extends React.Component {
                                                 <IconRippe vector={true} name={button.icon} size={20}
                                                     onPress={this._handleActionSong.bind(this,button.type,id,actor)}
                                                 />
+                                                {/* <CustomIcon name={button.icon} size={20} /> */}
                                             </View>) ;
                                     })}
                             </View>
@@ -469,11 +479,13 @@ export default class SongListView extends React.Component {
     }
 
     render = () => {
+        var containerStyle = {};
+       
         return (
             <View style={{ flex: 1 }}>
                 <RecyclerListView
                     ref={ref => (this._listView = ref)}
-                    style={{ flex: 1,marginLeft:15,marginRight:15 }}
+                    style={[{ flex: 1},containerStyle]}
                     //contentContainerStyle={{ margin: 3 }}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
@@ -483,7 +495,7 @@ export default class SongListView extends React.Component {
                     rowRenderer={(GLOBALS.LANDSCAPE)?this._rowRenderer2:this._rowRenderer}
                     renderFooter={this._renderFooter}
                     extendedState={this.state.dataProvider} 
-                    renderAheadOffset = {1000}
+                    renderAheadOffset = {(GLOBALS.LANDSCAPE)?1000:250}
                     externalScrollView={this.renderScroll}
                     onScroll = {(rawEvent, offsetX, offsetY)=>{
                         if(this.props.onScroll != null){
@@ -521,9 +533,6 @@ const styles = StyleSheet.create({
         height: 60,
         justifyContent: "center",
         alignItems: "center",
-        borderTopWidth: 0,
-        borderLeftWidth: 0,
-        borderRightWidth: 0,
         borderBottomWidth: 0.5,
         borderColor: '#00ECBC',
     },

@@ -17,12 +17,14 @@ export default class SongTabsView extends React.Component {
         songListType : PropTypes.number,
         top : PropTypes.number,
         onScroll : PropTypes.number,
+        tabTop:  PropTypes.number,
     };
     static defaultProps = {
         songType : GLOBALS.SONG_TYPE.ALL,
         songListType : GLOBALS.SONG_LIST_TYPE.ALL,
         top : 40,
-        tabType: GLOBALS.SONG_TAB.LANGUAGE
+        tabType: GLOBALS.SONG_TAB.LANGUAGE,
+        tabTop : 45
     };
 
     _tabs = [];
@@ -114,6 +116,7 @@ export default class SongTabsView extends React.Component {
     }
 
     render() {
+        const {tabTop}= this.props;
         var tabContent = {};
         if(GLOBALS.LANDSCAPE){
             tabContent ={
@@ -135,9 +138,9 @@ export default class SongTabsView extends React.Component {
                             textStyle={{ fontSize: 14, color: "#fff", fontFamily:GLOBALS.FONT.BOLD }}
                             style={{ borderWidth: 0, }}
                             isTabRound = {true}
-                            tabContainerStyle = {{height:30,borderRadius:15, marginLeft:10}}
-                            style ={{height:40,top:43}}
-                            tabWidth={105}
+                            tabContainerStyle = {{height:30,borderRadius:15, marginLeft:5}}
+                            style ={{height:40,top:tabTop}}
+                            tabWidth={100}
                         />}
                     >
                     {(this.props.tabType == GLOBALS.SONG_TAB.LANGUAGE)&& this.props.tabs.map((lan, index) => {
@@ -184,6 +187,7 @@ export default class SongTabsView extends React.Component {
 const styles = StyleSheet.create({
     tabContent: {
         flex: 1,
+        // backgroundColor:"red"
         // borderTopWidth: 0.5,
         // borderColor: '#00ECBC',
     },

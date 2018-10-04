@@ -34,7 +34,7 @@ export default class TuKhoaHot extends React.Component {
                     showsHorizontalScrollIndicator={false}
                     // style={{ marginLeft: 20 }}
                     contentContainerStyle ={{
-                        paddingLeft:15,
+                        paddingLeft:0,
                         alignItems:"center"
                     }}
                 >
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         alignItems: "center",
         justifyContent: "center",
-        marginLeft: 15,
+        marginLeft: 10,
         // backgroundColor:"#3D4B84",
         // shadowColor: '#000',
         // shadowOffset: { width: 0, height: 2 },
@@ -94,13 +94,13 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: "center",
         justifyContent: "center",
-        paddingLeft: 15,
-        paddingRight: 15,
+        paddingLeft: 10,
+        paddingRight: 10,
     },
 
     titleHotItem: {
         fontFamily: GLOBALS.FONT.MEDIUM,
-        fontSize: 15,
+        fontSize: 16,
         color: "#fff",
 
     }

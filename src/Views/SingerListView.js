@@ -43,46 +43,52 @@ export default class SingerListView extends React.Component {
 
     constructor(props) {
         super(props);
-        this._layoutProvider = new LayoutProvider(
-            index => {
-                return "FULL";
-            },
-            (type, dim) => {
-                switch (type) {
-                    case "FULL":
-                        dim.width = (width-15 -1) /3;
-                        dim.height = dim.width*3.5/3;
-                        break;
-                    default:
-                        dim.width = width;
-                        dim.height = 60;
-                }
+        
+        if(GLOBALS.LANDSCAPE){
+            var colNumbers = 6;
+            if(colNumbers < 1000){
+                colNumbers = 5;
             }
-        );
-        var colNumbers = 6;
-        if(colNumbers < 1000){
-            colNumbers = 5;
+            // else if(colNumbers < 1000){
+            //     colNumbers = 5;
+            // }
+            this._width = (width-20 -1) /colNumbers;
+            this._layoutProvider2 = new LayoutProvider(
+                index => {
+                    return "FULL";
+                },
+                (type, dim) => {
+                    switch (type) {
+                        case "FULL":
+                            dim.width = this._width;
+                            dim.height = this._width*3.5/3;
+                            break;
+                        default:
+                            dim.width = width;
+                            dim.height = 60;
+                    }
+                }
+            );
         }
-        // else if(colNumbers < 1000){
-        //     colNumbers = 5;
-        // }
-        this._width = (width-20 -1) /colNumbers;
-        this._layoutProvider2 = new LayoutProvider(
-            index => {
-                return "FULL";
-            },
-            (type, dim) => {
-                switch (type) {
-                    case "FULL":
-                        dim.width = this._width;
-                        dim.height = this._width*3.5/3;
-                        break;
-                    default:
-                        dim.width = width;
-                        dim.height = 60;
+        else{
+            this._width = (width-20 -1) /3;
+            this._layoutProvider = new LayoutProvider(
+                index => {
+                    return "FULL";
+                },
+                (type, dim) => {
+                    switch (type) {
+                        case "FULL":
+                            dim.width = this._width;
+                            dim.height = dim.width*3.5/3;
+                            break;
+                        default:
+                            dim.width = width;
+                            dim.height = 60;
+                    }
                 }
-            }
-        );
+            );
+        }
 
         this.getAvatarUrl = this.getAvatarUrl.bind(this);
         this._loadData = this._loadData.bind(this);
@@ -262,7 +268,7 @@ export default class SingerListView extends React.Component {
                     layoutProvider={(GLOBALS.LANDSCAPE)?this._layoutProvider2:this._layoutProvider}
                     rowRenderer={this.rowRenderer}
                     renderFooter={this._renderFooter} 
-                    renderAheadOffset = {1000}
+                    renderAheadOffset = {(GLOBALS.LANDSCAPE)?1000:250}
                     externalScrollView={this.renderScroll}
                     onScroll = {(rawEvent, offsetX, offsetY)=>{
                         if(this.props.onScroll != null){

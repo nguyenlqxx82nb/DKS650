@@ -11,7 +11,7 @@ import SingOptionOverlay from '../Overlay/OptionOverlay.js';
 import TheloaiScreen from '../TheLoai/index.js'
 import OnlineScreen from '../Online/index.js'
 import SecondScreen from '../../SideBar/SecondScreen';
-import SongOnlineScreen from '../Online/SongOnlineScreen';
+import SongOnlineScreen from '../Online/onlineScreen.landscape';
 import SongListScreen from '../../Screens/BaiHat/SongListScreen';
 import AdminScreen from '../../Screens/Admin/index';
 
@@ -26,10 +26,15 @@ export default class Taisao extends React.Component {
     _currentScreen = null;
     constructor(props) {
         super(props);
-        console.ignoredYellowBox = ['Warning: Stateless'];
+        console.disableYellowBox = true; // ['Warning: Stateless'];
         GLOBALS.INFO.VERSION = GLOBALS.BOX_VERSION.S650;
-        GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.HTTP;
+        //GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.HTTP;
         //GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.SQLITE;
+        GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.MYSQL;
+        
+        GLOBALS.LANDSCAPE = false;
+        GLOBALS.FOOTER_HEIGHT = 60;
+        GLOBALS.HEADER_HEIGHT = 45;
     }
 
     componentDidMount() {
@@ -90,10 +95,15 @@ export default class Taisao extends React.Component {
 
         // Show overlay
         this._listenerShowOptOverlayEvent = EventRegister.addEventListener('ShowOptOverlay', (data) => {
-            this._singOverlay.updateView(data.overlayType,data.data);
-            this._footer.hide();
-            this._singOverlay.show();
+            this._showOverlay(data);
         });
+
+        // // Show overlay
+        // this._listenerShowOptOverlayEvent = EventRegister.addEventListener('ShowOptOverlay', (data) => {
+        //     this._singOverlay.updateView(data.overlayType,data.data);
+        //     this._footer.hide();
+        //     this._singOverlay.show();
+        // });
 
         // Open Second screen
         this._listenerOpenSecondScreenEvent = EventRegister.addEventListener('OpenSecondScreen', (data) => {
@@ -134,6 +144,19 @@ export default class Taisao extends React.Component {
         this._listenerAdminScreenEvent = EventRegister.addEventListener('OpenAdminScreen', (data) => {
             this._adminScreen.show();
         });
+
+        this._listenerShowKeybroardEvent = EventRegister.addEventListener('ShowKeybroard', (data) => {
+            this._showOverlay({overlayType:GLOBALS.SING_OVERLAY.KEYBROARD,data:{input:data.input}});
+        });
+
+        this._listenerHideKeybroardEvent = EventRegister.addEventListener('HideKeybroard', (data) => {
+            this._singOverlay.hide();
+        });
+
+        this._listenerOpenTypeSongEvent = EventRegister.addEventListener('OpenTypeSong', (data) => {
+            this.theloaiSong.updateSongType(data.type, data.name);
+            this.theloaiSong.show();
+        });
     }
     componentWillUnmount() {
         //EventRegister.removeEventListener(this._listenerControlEvent);
@@ -144,8 +167,19 @@ export default class Taisao extends React.Component {
         EventRegister.removeEventListener(this._listenerShowOnlineScreenEvent);
         EventRegister.removeEventListener(this._listenerSingerSongEvent);
         EventRegister.removeEventListener(this._listenerAdminScreenEvent);
+        EventRegister.removeEventListener(this._listenerHideKeybroardEvent);
+        EventRegister.removeEventListener(this._listenerShowKeybroardEvent);
+        EventRegister.removeEventListener(this._listenerOpenTypeSongEvent);
     }
     
+    _showOverlay= (data)=>{
+        this._singOverlay.updateView(data.overlayType,data.data);
+        if(data.overlayType == GLOBALS.SING_OVERLAY.KEYBROARD)
+            this._footer.hide();
+
+        this._singOverlay.show();
+    }
+
     _onOpenSearch = () => {
         this._searchScreen.show();
         setTimeout(()=>{
@@ -193,89 +227,13 @@ export default class Taisao extends React.Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <SecondScreen 
-                    bottom = {0}
-                    opacity= {0} 
-                    maxZindex ={11} 
-                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
-                    duration={250}
-                    onBack={()=>{
-                        this._secondScreen.hide();
-                    }} 
-                    ref={ref => (this._secondScreen = ref)} />
-
-                <SingOptionOverlay opacity={0} maxZindex={10} ref={ref => (this._singOverlay = ref)} 
-                    onClose ={this._onSingOverlayClose}
-                />
-                <SongListScreen 
-                    ref = {ref => (this._singerSong = ref)} 
-                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
-                    maxZindex = {6}
-                    listType={GLOBALS.SONG_LIST_TYPE.SINGER}
-                    onBack = {() => {
-                        this._singerSong.hide();}} />
-
-                <OnlineScreen  opacity= {0} maxZindex ={2} 
-                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
-                    duration={250}
-                    onBack={this._onBackHome} 
-                    ref={ref => (this._onlineScreen = ref)} />
-                <SongTabScreen opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
-                    duration={250}
-                    onBack={this._onBackHome} ref={ref => (this._searchScreen = ref)}
-                />
-                <SongTabScreen 
-                    opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
-                    duration={250}
-                    onBack={this._onBackHome} ref={ref => (this._songScreen = ref)}
-                />
-                <SongListScreen opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
-                    duration={250}
-                    listType={GLOBALS.SONG_LIST_TYPE.HOT}
-                    title ={"Bài Hot"}
-                    onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
-                />
-                <TheloaiScreen opacity= {0} maxZindex ={2} 
-                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
-                    duration={250}
-                    onBack={this._onBackHome} 
-                    ref={ref => (this._theloaiScreen = ref)}/>
-                <SingerScreen opacity= {0} maxZindex ={2} 
-                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
-                    duration={250}
-                    onBack={this._onBackHome} 
-                    ref={ref => (this._singerScreen = ref)}/>
+                {/* 
+                
                 <SelectedSong maxZindex ={7} transition = {GLOBALS.TRANSITION.SLIDE_TOP}
                     onBack={this._onCloseSelectedSong} ref={ref => (this._selectedSong = ref)}
                 />
 
-                <SongOnlineScreen 
-                    ref = {ref => (this.youtubeSong = ref)} 
-                    type = {GLOBALS.SONG_ONLINE.YOUTUBE}
-                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
-                    maxZindex = {6}
-                    onBack = {() => {
-                        this.youtubeSong.hide();
-                    }}
-                />
-                <SongOnlineScreen 
-                    ref = {ref => (this.soundSong = ref)} 
-                    type = {GLOBALS.SONG_ONLINE.SOUNDCLOUD}
-                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
-                    maxZindex = {6}
-                    onBack = {() => {
-                        this.soundSong.hide();
-                    }}
-                />
-                <SongOnlineScreen 
-                    ref = {ref => (this.mixSong = ref)} 
-                    type = {GLOBALS.SONG_ONLINE.MIXCLOUD}
-                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
-                    maxZindex = {6}
-                    onBack = {() => {
-                        this.mixSong.hide();
-                    }}
-                />    
+                    */}
                 
                 <HomeScreen zIndex={1}  
                     opacity= {1} maxZindex ={1} 
@@ -290,17 +248,122 @@ export default class Taisao extends React.Component {
                     }}
                     ref={ref => (this._homeScreen = ref)} />
 
-                <Footer ref={ref => (this._footer = ref)} maxZindex ={8} 
-                    onSelectedSong={this._onOpenSelectedSong} />
+                <SongListScreen 
+                    opacity= {0} 
+                    maxZindex ={2} 
+                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                    duration={150}
+                    listType={GLOBALS.SONG_LIST_TYPE.HOT}
+                    title ={"BÀI HOT"}
+                    onBack={this._onBackHome} 
+                    ref={ref => (this._hotScreen = ref)}
+                />
+
+                <TheloaiScreen opacity= {0} maxZindex ={2} 
+                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                    duration={150}
+                    onBack={this._onBackHome} 
+                    ref={ref => (this._theloaiScreen = ref)}/>
+
+                <SongTabScreen 
+                    title={"BÀI HÁT"}
+                    opacity= {0} 
+                    maxZindex ={2}
+                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                    duration={150}
+                    onBack={this._onBackHome} 
+                    ref={ref => (this._songScreen = ref)}
+                />
+
+                <SingerScreen 
+                    opacity= {0}
+                    maxZindex ={2} 
+                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                    duration={150}
+                    onBack={this._onBackHome} 
+                    ref={ref => (this._singerScreen = ref)}/>
+
+                <OnlineScreen  
+                    opacity= {0}
+                    maxZindex ={2} 
+                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                    duration={150}
+                    onBack={this._onBackHome} 
+                    ref={ref => (this._onlineScreen = ref)} />
+
+                <SongListScreen
+                    ref={ref => (this.theloaiSong = ref)}
+                    transition={GLOBALS.TRANSITION.SLIDE_LEFT}
+                    maxZindex={4}
+                    onBack={() => {
+                        this.theloaiSong.hide();
+                    }} />
+
+                <SongListScreen 
+                    ref = {ref => (this._singerSong = ref)} 
+                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
+                    maxZindex = {6}
+                    listType={GLOBALS.SONG_LIST_TYPE.SINGER}
+                    onBack = {() => {
+                        this._singerSong.hide();}} />
+
+                <SecondScreen 
+                    opacity= {0} 
+                    maxZindex ={11} 
+                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                    duration={250}
+                    onBack={()=>{
+                        this._secondScreen.hide();
+                    }} 
+                    ref={ref => (this._secondScreen = ref)} />
+                
+                <SongOnlineScreen 
+                    ref = {ref => (this.soundSong = ref)} 
+                    type = {GLOBALS.SONG_ONLINE.SOUNDCLOUD}
+                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
+                    maxZindex = {7}
+                    onBack = {() => {
+                        this.soundSong.hide();
+                    }}
+                />
+                <SongOnlineScreen 
+                    ref = {ref => (this.mixSong = ref)} 
+                    type = {GLOBALS.SONG_ONLINE.MIXCLOUD}
+                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
+                    maxZindex = {7}
+                    onBack = {() => {
+                        this.mixSong.hide();
+                    }}
+                /> 
+                <SongOnlineScreen 
+                    ref = {ref => (this.youtubeSong = ref)} 
+                    type = {GLOBALS.SONG_ONLINE.YOUTUBE}
+                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
+                    maxZindex = {8}
+                    onBack = {() => {
+                        this.youtubeSong.hide();
+                    }}
+                />  
+                {/* 
+                  */}
                 <AdminScreen 
                     ref = {ref => (this._adminScreen = ref)} 
                     transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
-                    maxZindex = {12}
-                    bottom = {10}
+                    maxZindex = {9}
+                    bottom = {13}
                     onBack = {() => {
                         this._adminScreen.hide();
                     }}
                 />
+                <SingOptionOverlay 
+                    opacity={0} 
+                    maxZindex={10} 
+                    ref={ref => (this._singOverlay = ref)} 
+                    onClose ={this._onSingOverlayClose}
+                />
+                <Footer ref={ref => (this._footer = ref)} maxZindex ={15} 
+                    onSelectedSong={this._onOpenSelectedSong} />
+                
                 <StatusBar
                     backgroundColor={GLOBALS.COLORS.STATUS_BAR}
                     // translucent={true}

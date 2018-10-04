@@ -40,7 +40,7 @@ export default class ChannelList extends React.Component {
                     showsHorizontalScrollIndicator={false}
                     // style={{ marginLeft: 20 }}
                     contentContainerStyle ={{
-                        paddingLeft:15
+                        paddingLeft:0
                     }}
                 >
                 {
@@ -99,14 +99,14 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         flexDirection:"row",
-        paddingLeft: 15,
-        paddingRight: 15,
+        paddingLeft: 10,
+        paddingRight: 10,
        // backgroundColor:"blue"
     },
 
     title: {
         fontFamily: GLOBALS.FONT.MEDIUM,
-        fontSize: 14,
+        fontSize: 16,
         color: "#fff",
 
     }

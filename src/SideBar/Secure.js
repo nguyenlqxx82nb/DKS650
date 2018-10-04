@@ -178,7 +178,7 @@ export default class Secure extends React.Component {
             
             return (
                 <View style={{flex:1, marginBottom: GLOBALS.FOOTER_HEIGHT}}>
-                    <Header title={"Mật Khẩu"} onBack={()=>{this.props.onBack()}} />
+                    <Header title={"MẬT KHẨU"} onBack={()=>{this.props.onBack()}} />
 
                     <View style={{ flex: 1,backgroundColor:"transparent",justifyContent:"center",alignItems:"center"}}>
                         <Text style={styles.title}>NHẬP MẬT KHẨU</Text>

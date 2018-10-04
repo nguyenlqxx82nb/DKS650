@@ -8,6 +8,7 @@ import { EventRegister  } from 'react-native-event-listeners';
 import SongListView from '../../Views/SongListView.js';
 import MusicOnline from '../../Views/MusicOnlineButton.js';
 import Header from '../Header/index';
+import Header4 from '../Header/header4';
 import SearchInput from '../../Views/SearchInput';
 import Utils from "../../Utils/Utils.js";
 import BTELib from "react-native-bte-lib";
@@ -41,7 +42,7 @@ export default class SongListScreen extends BaseScreen {
             avatar : ""
         }
 
-        this.MAX_SCROLL_HEIGHT = 110;
+        this.MAX_SCROLL_HEIGHT = 105;
     }
     componentWillMount() {
         // selected song changed
@@ -139,58 +140,100 @@ export default class SongListScreen extends BaseScreen {
     renderContent = () =>{
         const {singerName,songType,} = this.state;
         if(!this.props.preLoad || this._allowLoad){
-            return (
-                <View style={{flex:1}}>
-                    <MusicOnline style={{top:50}} 
-                        ref={ref =>(this._musicOnline = ref)}
-                        onOpenOnline = {()=>{
-                            //this._searchInput.blur();
-                        }} />
-
-                    <SongListView 
-                        ref={ref=>(this._songList = ref)} 
-                        listType = {this.listType} 
-                        actor ={singerName} 
-                        songType = {songType}
-                        onScroll = {this._handleListViewScroll} 
-                        top={this.MAX_SCROLL_HEIGHT}
-                    />
-                </View>
-            )
+            if(GLOBALS.LANDSCAPE){
+                return (
+                    <View style={{flex:1}}>
+                        <MusicOnline 
+                            style={{top:50}} 
+                            ref={ref =>(this._musicOnline = ref)}
+                            onOpenOnline = {()=>{
+                                //this._searchInput.blur();
+                            }} />
+    
+                        <SongListView 
+                            ref={ref=>(this._songList = ref)} 
+                            listType = {this.listType} 
+                            actor ={singerName} 
+                            songType = {songType}
+                            onScroll = {this._handleListViewScroll} 
+                            top={this.MAX_SCROLL_HEIGHT}
+                        />
+                    </View>
+                )
+            }
+            else{
+                return (
+                    <View style={{flex:1}}>
+                        <MusicOnline 
+                            style={{top:55,height:40}} 
+                            ref={ref =>(this._musicOnline = ref)}
+                            onOpenOnline = {()=>{
+                                //this._searchInput.blur();
+                            }} />
+    
+                        <SongListView 
+                            ref={ref=>(this._songList = ref)} 
+                            listType = {this.listType} 
+                            actor ={singerName} 
+                            songType = {songType}
+                            onScroll = {this._handleListViewScroll} 
+                            top={this.MAX_SCROLL_HEIGHT}
+                        />
+                    </View>
+                )
+            }
+            
         }
     }
 
     renderContentView = () => {
         const {title } = this.state;
-        var songContainer = {};
         if(GLOBALS.LANDSCAPE){
-            songContainer = {
-                //marginTop:0,
-                borderTopWidth: 0
-            }
+            return (
+                <View style={{ flex: 1,width:'100%' }}>
+                    <Animated.View style={[styles.headerContainer,{ transform: [{ translateY: this._scrollY }]}]}>
+                        <Header 
+                            ref = {ref=>(this._searchHeader = ref)}
+                            h={40}
+                            onBack = {this._onBack}
+                            onSearch = {this._onSearch}
+                            onSearchChange = {this._onSearchChange}
+                            center ={
+                                <View style={{flex:1,justifyContent:"center",alignItems:"center", flexDirection:"row"}}>
+                                    {this.state.avatar !="" && 
+                                        <Image style={{width:34,height:34,borderRadius:17}} 
+                                            source={{uri:this.state.avatar}} />}
+                                    <Text style={[styles.title]}> {title}</Text>
+                                </View>
+                            }
+                        />
+                    </Animated.View>
+                    {this.renderContent()}
+                </View>
+            );
         }
-        return (
-            <View style={{ flex: 1,width:'100%' }}>
-                <Animated.View style={[styles.headerContainer,{ transform: [{ translateY: this._scrollY }]}]}>
-                    <Header 
-                        ref = {ref=>(this._searchHeader = ref)}
-                        h={40}
-                        onBack = {this._onBack}
-                        onSearch = {this._onSearch}
-                        onSearchChange = {this._onSearchChange}
-                        center ={
-                            <View style={{flex:1,justifyContent:"center",alignItems:"center", flexDirection:"row"}}>
-                                {this.state.avatar !="" && 
-                                    <Image style={{width:34,height:34,borderRadius:17}} 
-                                        source={{uri:this.state.avatar}} />}
-                                <Text style={[styles.title]}> {title}</Text>
-                            </View>
-                        }
-                    />
-                </Animated.View>
-                {this.renderContent()}
-            </View>
-        );
+        else{
+            return (
+                <View style={{ flex: 1,width:'100%' }}>
+                    <Animated.View style={[styles.headerContainer,{height:GLOBALS.HEADER_HEIGHT, transform: [{ translateY: this._scrollY }]}]}>
+                        <Header4
+                            ref={ref=>(this._searchHeader = ref)}
+                            onSearch={this._onSearch}
+                            onSearchChange = {this._onSearchChange}
+                            onBack = {this._onBack}
+                            left={<View style={{flex:1,justifyContent:"flex-start",alignItems:"center", flexDirection:"row"}}>
+                                    {this.state.avatar !="" && 
+                                        <Image style={{width:34,height:34,borderRadius:17}} 
+                                            source={{uri:this.state.avatar}} />}
+                                    <Text style={[styles.title]}> {title}</Text>
+                                 </View>}
+                        />
+                    </Animated.View>
+                    {this.renderContent()}
+                </View>
+            );
+        }
+        
     }
 }
 

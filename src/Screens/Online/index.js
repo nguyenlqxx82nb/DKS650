@@ -39,6 +39,7 @@ export default class OnlineScreen extends BaseScreen {
         return (
             <View style={{ flex: 1 }}>
                 <Header
+                    style = {{height:45}}
                     title = {"NHẠC ONLINE"}
                     onBack = {this._onBack}
                 />

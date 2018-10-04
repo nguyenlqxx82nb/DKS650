@@ -40,7 +40,7 @@ export default class App extends Component<Props> {
   orientation = GLOBALS.ORIENTATION_TYPE.LANDSCAPE;
   componentWillMount(){
     var maxSize = Math.max(screen.width,screen.height);
-    if(maxSize > 700){
+    if(maxSize > 800){
         Orientation.lockToLandscape();
         this.orientation = GLOBALS.ORIENTATION_TYPE.LANDSCAPE;
     }

@@ -35,7 +35,8 @@ export default {
         ADD_AUTO:5,
         REMOVE_AUTO:6,
         REMOVE_SELECT:7,
-        SELECT : 8
+        SELECT : 8,
+        LIKE: 9
     },
     
     SONG_MENU_TYPE:{
@@ -323,7 +324,8 @@ export default {
 
     DATABASE_CONNECT:{
         HTTP:1,
-        SQLITE:2
+        SQLITE:2,
+        MYSQL:3,
     },
 
     INFO:{
@@ -345,5 +347,6 @@ export default {
         SONG_TYPE:2
     },
 
-    FOOTER_HEIGHT:60
+    FOOTER_HEIGHT:60,
+    HEADER_HEIGHT:40,
 };

@@ -9,6 +9,7 @@ import SongTabsView from '../../Views/SongTabsView.js';
 import SearchInput from '../../Views/SearchInput.js';
 import MusicOnline from '../../Views/MusicOnlineButton.js';
 import Header2 from '../Header/header2';
+import Header4 from '../Header/header4';
 
 const lans = [
     GLOBALS.LANGUAGE_KEY.vn,
@@ -54,7 +55,10 @@ export default class SongTabScreen extends BaseScreen {
         this._hasOnlineButton = (this.props.hasOnlineButton != null)?this.props.hasOnlineButton: true;
         this.tabType = (this.props.tabType != null)?this.props.tabType:GLOBALS.SONG_TAB.LANGUAGE;
 
-        this.MAX_SCROLL_HEIGHT = 135;
+        if(GLOBALS.LANDSCAPE)
+            this.MAX_SCROLL_HEIGHT = 135;
+        else
+            this.MAX_SCROLL_HEIGHT = 150;
     }
     _onBack = () => {
         const { onBack } = this.props;
@@ -107,49 +111,91 @@ export default class SongTabScreen extends BaseScreen {
     }
     renderContent = () =>{
         if(!this.props.preLoad || this._allowLoad){
-            return (
-                <View style={{flex:1}}>
-                    <SongTabsView 
-                        tabs={(this.tabType == GLOBALS.SONG_TAB.LANGUAGE)?lans:song_types} 
-                        ref={ref => (this._songTabs = ref)} 
-                        songListType = {this._listType}
-                        onChangeTab = {this._onChangeTab} 
-                        tabType = {this.tabType}
-                        onScroll = {this._handleListViewScroll} 
-                        top={this.MAX_SCROLL_HEIGHT}/>
-                    { 
-                        this._hasOnlineButton && 
-                        <MusicOnline 
-                            ref={ref =>(this._musicOnline = ref)}
-                            style = {{top:85}}
-                            onOpenOnline = {()=>{
-                                //this._searchInput.blur();
-                            }}
-                        />
-                    }
-                </View>
-            )
+            if(GLOBALS.LANDSCAPE)
+                return (
+                    <View style={{flex:1}}>
+                        <SongTabsView 
+                            tabs={(this.tabType == GLOBALS.SONG_TAB.LANGUAGE)?lans:song_types} 
+                            ref={ref => (this._songTabs = ref)} 
+                            songListType = {this._listType}
+                            onChangeTab = {this._onChangeTab} 
+                            tabType = {this.tabType}
+                            onScroll = {this._handleListViewScroll} 
+                            top={this.MAX_SCROLL_HEIGHT}/>
+                        { 
+                            this._hasOnlineButton && 
+                            <MusicOnline 
+                                ref={ref =>(this._musicOnline = ref)}
+                                style = {{top:85}}
+                                onOpenOnline = {()=>{
+                                    //this._searchInput.blur();
+                                }}
+                            />
+                        }
+                    </View>
+                )
+            else{
+                return (
+                    <View style={{flex:1}}>
+                        <SongTabsView 
+                            tabs={(this.tabType == GLOBALS.SONG_TAB.LANGUAGE)?lans:song_types} 
+                            ref={ref => (this._songTabs = ref)} 
+                            songListType = {this._listType}
+                            onChangeTab = {this._onChangeTab} 
+                            tabType = {this.tabType}
+                            tabTop = {50}
+                            onScroll = {this._handleListViewScroll} 
+                            top={this.MAX_SCROLL_HEIGHT}/>
+                        { 
+                            this._hasOnlineButton && 
+                            <MusicOnline 
+                                ref={ref =>(this._musicOnline = ref)}
+                                style = {{top:100,height:40}}
+                                onOpenOnline = {()=>{
+                                    //this._searchInput.blur();
+                                }}
+                            />
+                        }
+                    </View>
+                )
+            }
         }
     }
 
     renderContentView = () => {
         var top = (this._hasOnlineButton)?(GLOBALS.LANDSCAPE?50:40):0;
-        
-        return (
-            <View style={{ flex: 1 }}>
-                <Animated.View style={[styles.headerContainer, { transform: [{ translateY: this._scrollY }]}]}>
-                    <Header2
-                        ref={ref=>(this._header = ref)}
-                        h = {40}
-                        onSearch={this._onSearch}
-                        onSearchChange = {this._onSearchChange}
-                        onBack = {this._onBack}
-                        left={<Text style={[styles.title]}>{this.props.title}</Text>}
-                    />
-                </Animated.View>
-                {this.renderContent()}
-            </View>
-        );
+        if(GLOBALS.LANDSCAPE)
+            return (
+                <View style={{ flex: 1 }}>
+                    <Animated.View style={[styles.headerContainer, { transform: [{ translateY: this._scrollY }]}]}>
+                        <Header2
+                            ref={ref=>(this._header = ref)}
+                            h = {40}
+                            onSearch={this._onSearch}
+                            onSearchChange = {this._onSearchChange}
+                            onBack = {this._onBack}
+                            left={<Text style={[styles.title]}>{this.props.title}</Text>}
+                        />
+                    </Animated.View>
+                    {this.renderContent()}
+                </View>
+            );
+        else{
+            return (
+                <View style={{ flex: 1 }}>
+                    <Animated.View style={[styles.headerContainer, {height:45, transform: [{ translateY: this._scrollY }]}]}>
+                        <Header4
+                            ref={ref=>(this._header = ref)}
+                            onSearch={this._onSearch}
+                            onSearchChange = {this._onSearchChange}
+                            onBack = {this._onBack}
+                            left={<Text style={[styles.title]}>{this.props.title}</Text>}
+                        />
+                    </Animated.View>
+                    {this.renderContent()}
+                </View>
+            );
+        }
     }
 }
 

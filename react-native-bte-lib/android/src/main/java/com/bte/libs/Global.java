@@ -133,7 +133,7 @@ public class Global {
 
     public static String driver = "com.mysql.jdbc.Driver";
 
-    public static String url = "jdbc:mysql://192.168.10.1:3306/skymedia_vod";//characterEncoding=UTF8
+    public static String url = "";//jdbc:mysql://192.168.10.1:3306/skymedia_vod";//characterEncoding=UTF8
 
     //public static Connection con;
     //public static boolean isConnected = false;

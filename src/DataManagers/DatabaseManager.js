@@ -2,6 +2,7 @@ import GLOBALS from "./Globals";
 import DataInfo from './DataInfo';
 import SQLiteManager from "./SqliteManager";
 import HTTPManager from "./HTTPManager";
+import MYSQLManager from "./MySQLManager";
 import YoutubeAPI from './YoutubeAPI';
 import MixAPI from './MixCloudAPI';
 
@@ -12,6 +13,8 @@ class Databases {
             SQLiteManager.getSongList(lan,page,pageCount,term,songType,listType,actor,callback,errorCallback);
         else if(GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.HTTP)
             HTTPManager.getSongList(lan,page,pageCount,term,songType,listType,actor,callback,errorCallback);
+        else if(GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.MYSQL)
+            MYSQLManager.getSongList(lan,page,pageCount,term,songType,listType,actor,callback,errorCallback);
     }
 
     static async fetchSingerData(lan,page, pageCount, term,sex,callback,errorCallback){
@@ -19,6 +22,8 @@ class Databases {
             SQLiteManager.getSingers(lan,sex,term,page,pageCount,callback,errorCallback);
         else if(GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.HTTP)
             HTTPManager.getSingers(lan,sex,term,page,pageCount,callback,errorCallback);
+        else if(GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.MYSQL)
+            MYSQLManager.getSingers(lan,sex,term,page,pageCount,callback,errorCallback);
     }
 
     // static fetchSelectedSong(callback){
