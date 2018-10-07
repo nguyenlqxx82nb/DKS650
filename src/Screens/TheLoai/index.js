@@ -38,12 +38,20 @@ export default class TheloaiScreen extends BaseScreen {
         // this.theloaiSong.show();
         EventRegister.emit("OpenTypeSong",{type:type,name:name})
     }
+    renderContent = () =>{
+        const {searchHolder} = this.props;
+        if(!this.props.preLoad || this._allowLoad){ 
+        }
+    }
     renderContentView = () => {
         return (
             <View style={{ flex: 1, position: "relative" }}>
                 <View style={{ flex: 1 }}>
                     <View style={styles.headerContainer}>
-                        <Header title={"THỂ LOẠI"} onBack={()=>{this.props.onBack()}} 
+                        <Header 
+                            style={{height:45}}
+                            title={"THỂ LOẠI"} 
+                            onBack={()=>{this.props.onBack()}} 
                             style = {{height:GLOBALS.HEADER_HEIGHT}}
                         />
                     </View>

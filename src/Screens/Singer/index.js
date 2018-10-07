@@ -120,6 +120,7 @@ export default class SingerScreen extends BaseScreen {
            // return this.renderContentView();
     }
     renderContentView = () => {
+        const {searchHolder} = this.props;
         if(GLOBALS.LANDSCAPE){
             return (
                 <View style={{ flex: 1 }}>
@@ -162,39 +163,13 @@ export default class SingerScreen extends BaseScreen {
             return (
                 <View style={{ flex: 1 }}>
                     <Animated.View style={[styles.headerContainer, {height:GLOBALS.HEADER_HEIGHT, transform: [{ translateY: this._scrollY }]}]}>
-                        <Header2
-                            ref={ref=>(this._header = ref)}
-                            right={<View style={{flex:1,flexDirection:"row", justifyContent:"flex-end",alignItems:"center"}}>
-                                        <View style={{ width: 40, height: 40}}>
-                                            <IconRippe vector={true} name="all" size={20} color="#fff"
-                                                onPress={this._showOptOverlay} />
-                                        </View>
-                                        <View style={{ width: 40, height: 40}}>
-                                            <IconRippe vector={true} name="male" size={20} color="#fff"
-                                                onPress={this._showOptOverlay} />
-                                        </View>
-                                        <View style={{ width: 40, height: 40}}>
-                                            <IconRippe vector={true} name="famale" size={20} color="#fff"
-                                                onPress={this._showOptOverlay} />
-                                        </View>
-                                        <View style={{ width: 40, height: 40}}>
-                                            <IconRippe vector={true} name="nhomnhac" size={20} color="#fff"
-                                                onPress={this._showOptOverlay} />
-                                        </View>
-                                    </View>
-                                    }
-                            h = {40}
-                            onSearch={this._onSearch}
-                            onSearchChange = {this._onSearchChange}
-                            onBack = {this._onBack}
-                            left={<Text style={[styles.title]}>CA SỸ</Text>}
-                        />
                         <Header4
                             ref={ref=>(this._header = ref)}
+                            searchHolder = {searchHolder}
                             onSearch={this._onSearch}
                             onSearchChange = {this._onSearchChange}
                             onBack = {this._onBack}
-                            left={<Text style={[styles.title]}>CA SỸ</Text>}
+                            // left={<Text style={[styles.title]}>CA SỸ</Text>}
                             right = {<View style={{ width: 40, height: 40}}>
                                         <IconRippe vector={true} name="tuychon2" size={20} color="#fff"
                                             onPress={this._showOptOverlay} />

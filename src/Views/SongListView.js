@@ -20,10 +20,11 @@ export default class SongListView extends React.Component {
         songType : PropTypes.number,
         listType : PropTypes.number,
         top: PropTypes.number,
-        onScroll : PropTypes.func
+        onScroll : PropTypes.func,
         //onOptionOverlayOpen: PropTypes.func,
         //onBack: PropTypes.func,
         //duration : PropTypes.number
+        onSearch : PropTypes.func
 
     };
     static defaultProps = {
@@ -160,6 +161,8 @@ export default class SongListView extends React.Component {
         this._searchTerm = term;
         this._loaded = false;
         this._page = 0;
+        
+        this._onSearch(true);
         this._loadData(this.props.lan, this._page, this._pageCount,term);
     }
 
@@ -226,7 +229,7 @@ export default class SongListView extends React.Component {
     _handleFetchDataCompleted = (datas) =>{
         this._loading = false;
         var newDatas = [];
-    //    console.warn("_handleFetchDataCompleted data length = "+datas.length);
+        //console.warn("_handleFetchDataCompleted data length = "+datas.length);
         if(this._loaded){
             startId = this.state.datas.length;
             newDatas = this.state.datas.concat(datas);
@@ -252,10 +255,16 @@ export default class SongListView extends React.Component {
             this._hasData = false;
         }
 
+        this._onSearch(false);
         this.setState({
             dataProvider: this.state.dataProvider.cloneWithRows(newDatas),
             datas: newDatas
         });
+    }
+    _onSearch = (isSearching) =>{
+        if(this.props.onSearch != null){
+            this.props.onSearch(isSearching);
+        }
     }
     _onPressSong = (id, status) => {
         //return;
@@ -265,6 +274,7 @@ export default class SongListView extends React.Component {
             });        
         }
         else{
+            //console.warn("selectSong id = "+id);
             BoxControl.selectSong(id);
         }
     }
@@ -347,9 +357,7 @@ export default class SongListView extends React.Component {
         return (
             <ListItem
                 style={[styles.listItem,containerStyle]}
-                onPress={()=>{
-                            //this._onPressSong.bind(this, id, status)
-                        }}
+                onPress={this._onPressSong.bind(this, id, status)}
                // underlayColor="white"
                 >
                 <View style={{
@@ -366,7 +374,7 @@ export default class SongListView extends React.Component {
                     { hasOptionButton &&
                         <View style={{ width: 40, height: 40 }}>
                             <IconRippe vector={true} name="tuychon" size={20} 
-                                //onPress={this._showOptOverlay.bind(this,id,overlayType,actor)} 
+                                onPress={this._showOptOverlay.bind(this,id,overlayType,actor)} 
                             />
                         </View> }
                 </View>
@@ -398,7 +406,7 @@ export default class SongListView extends React.Component {
                 <ListItem
                     style={{width:"100%",height:53}}
                     rippleRound = {true}
-                    //onPress={this._onPressSong.bind(this, id, status)}
+                        onPress={this._onPressSong.bind(this, id, status)}
                     >
                     <View style={{
                         flex: 1, flexDirection: "row", justifyContent: "center",alignItems:"center"}}>
@@ -409,21 +417,14 @@ export default class SongListView extends React.Component {
                                 </Text>
                             </View>
                             
-                            <View style={{ width:"25%", justifyContent:"center",alignItems:"flex-start", paddingRight:10}}>
+                            <View style={{ width:"30%", justifyContent:"center",alignItems:"flex-start", paddingRight:10}}>
                                 <Text numberOfLines={0} style={[styles.singerText, {color: singerColor,}]}>
                                     {singerName}
                                 </Text>
                             </View>
-                            <View style={{  width:"25%",flexDirection:"row", justifyContent:"flex-end",alignItems:"center",paddingRight:10}}>
-                                {this._actionButtons.map((button, index) => {
-                                   // console.warn("button type = "+button.type +" , index = "+index);
-                                    return (<View key={index} style={{width:40,height:40}}>
-                                                <IconRippe vector={true} name={button.icon} size={20}
-                                                    onPress={this._handleActionSong.bind(this,button.type,id,actor)}
-                                                />
-                                                {/* <CustomIcon name={button.icon} size={20} /> */}
-                                            </View>) ;
-                                    })}
+                            <View style={{width:40,height:40}}>
+                                <IconRippe vector={true} name={"tuychon2"} size={20}
+                                />
                             </View>
                         </View>
                         
@@ -470,7 +471,7 @@ export default class SongListView extends React.Component {
                 });
             }
             buttons.push({
-                icon : "theloai",
+                icon : "auto",
                 type: GLOBALS.SONG_ACTION.ADD_AUTO
             });
         }
@@ -495,7 +496,7 @@ export default class SongListView extends React.Component {
                     rowRenderer={(GLOBALS.LANDSCAPE)?this._rowRenderer2:this._rowRenderer}
                     renderFooter={this._renderFooter}
                     extendedState={this.state.dataProvider} 
-                    renderAheadOffset = {(GLOBALS.LANDSCAPE)?1000:250}
+                    renderAheadOffset = {(GLOBALS.LANDSCAPE)?300:250}
                     externalScrollView={this.renderScroll}
                     onScroll = {(rawEvent, offsetX, offsetY)=>{
                         if(this.props.onScroll != null){

@@ -7,6 +7,8 @@ import GLOBALS from '../../DataManagers/Globals.js';
 import { EventRegister  } from 'react-native-event-listeners';
 import SongListView from '../../Views/SongListView.js';
 import Utils from '../../Utils/Utils';
+import Header from '../Header/header3';
+import MusicOnline from '../../Views/MusicOnlineButton.js';
 
 export default class SelectedSong extends BaseScreen {
     static propTypes = {
@@ -18,6 +20,7 @@ export default class SelectedSong extends BaseScreen {
         super(props);
 
         this.songChanged = false;
+        this.MAX_SCROLL_HEIGHT = 105;
     }
     componentWillMount() {
         // selected song changed
@@ -49,47 +52,65 @@ export default class SelectedSong extends BaseScreen {
         //const { maxZindex } = this.props;
         return (
             <View style={{ flex: 1,width:'100%' }}>
-                <View style={styles.headerContainer}>
-                    <View style={{ width: 40, height: 40, marginLeft: 10 }}>
-                        <IconRippe vector={true} name="listClose" size={20} color="#fff"
-                            onPress={this._onBack}
-                        />
-                    </View>
-                    <Text style={[styles.title]}>
-                            Bài đã chọn
-                    </Text>
-                </View>
-
-                <View style={{ flex: 1}}>
-                    <SongListView 
-                        ref={ref=>(this._songList = ref)} 
-                        listType = {GLOBALS.SONG_LIST_TYPE.SELECTED}  />
-                </View>
+                {this.renderContent()}
             </View>
         );
     }
+    renderContent = () =>{
+        if(!this.props.preLoad || this._allowLoad){
+            return (
+                <View style={{flex:1}}>
+                    <View style={styles.headerContainer}>
+                        <Header 
+                            back={false}
+                            left={<View style={{flexDirection:"row",alignItems:"center",justifyContent:"flex-start"}}>
+                                    <View style={{ width: 40, height: 40 }}>
+                                        <IconRippe vector={true} name="listClose" size={20} color="#fff"
+                                            onPress={this._onBack}
+                                        />
+                                    </View>
+                                    <Text style={[styles.title]}>
+                                        BÀI ĐÃ CHỌN
+                                    </Text>
+                                </View>}
+                        />  
+                    </View>
+                    <MusicOnline 
+                            style={{top:55,height:40}} 
+                            ref={ref =>(this._musicOnline = ref)}
+                            onOpenOnline = {()=>{
+                                //this._searchInput.blur();
+                            }} />
+
+                    <View style={{ flex: 1}}>
+                        <SongListView 
+                            ref={ref=>(this._songList = ref)} 
+                            listType = {GLOBALS.SONG_LIST_TYPE.SELECTED}
+                            onScroll = {this._handleListViewScroll} 
+                            top={this.MAX_SCROLL_HEIGHT}
+                        />
+                    </View>
+                </View>
+            )
+        }
+    }
+    
 }
 
 const styles = StyleSheet.create({
     headerContainer: {
         flexDirection: "row",
-        alignItems: "center", 
-        justifyContent: "center",
-       // marginTop: GLOBALS.STATUS_BAR_HEIGHT, 
-        height: 50,
-        borderTopWidth: 0,
-        borderLeftWidth: 0,
-        borderRightWidth: 0,
-        borderBottomWidth: 0.5,
-        borderColor: '#00ECBC',
+        height: 45,
+        width:"100%",
+        top:0,
+        position:"absolute",
+        zIndex:3,
     },
     title: {
-        fontSize: 18,
-        fontWeight: '300',
-        marginLeft:10,
+        fontSize: 20,
+        marginLeft:5,
         color:"#fff",
-        flex:1,
-        fontFamily:'SF-Pro-Text-Regular'
+        fontFamily:'SF-Pro-Text-Bold'
     },
 
 })

@@ -81,7 +81,7 @@ export default class OnlineScreen extends BaseScreen {
         if (type == GLOBALS.SONG_ONLINE.YOUTUBE) {
             return (
                 <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                    style={{ marginLeft: 5, height: 40, width: 90, justifyContent: "center", alignItems: "center" }}
+                    style={{ marginLeft: 5, height: 40, width: 90, marginRight:10}}
                     colors={['#FF6565', '#FF4242', '#FF2C2C', '#FF0404']} >
                     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                         <CustomIcon name={"youtube3"} size={60} style={{ color: "#fff" }} />
@@ -147,6 +147,7 @@ export default class OnlineScreen extends BaseScreen {
                                 onSearchChange = {this._onSearchChange}
                                 onBack = {this._onBack}
                                 left={this._renderOnlineIcon()}
+                                searchHolder = {"Tìm kiếm ... "}
                             />
                     </Animated.View>
                     {this.renderContent()}

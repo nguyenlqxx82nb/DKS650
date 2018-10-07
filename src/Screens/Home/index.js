@@ -21,6 +21,7 @@ import BoxControl from "../../DataManagers/BoxControl.js";
 import DATA_INFO from "../../DataManagers/DataInfo.js";
 import BTElib from 'react-native-bte-lib';
 import { DeviceEventEmitter } from 'react-native';
+import Utils from "../../Utils/Utils.js";
 
 export default class Taisao extends React.Component {
     _currentScreen = null;
@@ -35,6 +36,8 @@ export default class Taisao extends React.Component {
         GLOBALS.LANDSCAPE = false;
         GLOBALS.FOOTER_HEIGHT = 60;
         GLOBALS.HEADER_HEIGHT = 45;
+
+        console.warn("width = "+Utils.Width() + " , Height = "+ Utils.Height());
     }
 
     componentDidMount() {
@@ -227,13 +230,6 @@ export default class Taisao extends React.Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                {/* 
-                
-                <SelectedSong maxZindex ={7} transition = {GLOBALS.TRANSITION.SLIDE_TOP}
-                    onBack={this._onCloseSelectedSong} ref={ref => (this._selectedSong = ref)}
-                />
-
-                    */}
                 
                 <HomeScreen zIndex={1}  
                     opacity= {1} maxZindex ={1} 
@@ -267,6 +263,7 @@ export default class Taisao extends React.Component {
 
                 <SongTabScreen 
                     title={"BÀI HÁT"}
+                    searchHolder = {"Tìm bài hát ..."}
                     opacity= {0} 
                     maxZindex ={2}
                     transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
@@ -278,6 +275,7 @@ export default class Taisao extends React.Component {
                 <SingerScreen 
                     opacity= {0}
                     maxZindex ={2} 
+                    searchHolder = {"Tìm ca sỹ ..."}
                     transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={150}
                     onBack={this._onBackHome} 
@@ -292,6 +290,7 @@ export default class Taisao extends React.Component {
                     ref={ref => (this._onlineScreen = ref)} />
 
                 <SongListScreen
+                    searchHolder = {"Tìm bài hát ..."}
                     ref={ref => (this.theloaiSong = ref)}
                     transition={GLOBALS.TRANSITION.SLIDE_LEFT}
                     maxZindex={4}
@@ -300,6 +299,7 @@ export default class Taisao extends React.Component {
                     }} />
 
                 <SongListScreen 
+                    searchHolder = {"Tìm bài hát ..."}
                     ref = {ref => (this._singerSong = ref)} 
                     transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
                     maxZindex = {6}
@@ -355,6 +355,9 @@ export default class Taisao extends React.Component {
                         this._adminScreen.hide();
                     }}
                 />
+                 <SelectedSong maxZindex ={14} transition = {GLOBALS.TRANSITION.SLIDE_TOP}
+                    onBack={this._onCloseSelectedSong} ref={ref => (this._selectedSong = ref)}
+                />
                 <SingOptionOverlay 
                     opacity={0} 
                     maxZindex={10} 
@@ -363,7 +366,6 @@ export default class Taisao extends React.Component {
                 />
                 <Footer ref={ref => (this._footer = ref)} maxZindex ={15} 
                     onSelectedSong={this._onOpenSelectedSong} />
-                
                 <StatusBar
                     backgroundColor={GLOBALS.COLORS.STATUS_BAR}
                     // translucent={true}

@@ -268,7 +268,7 @@ export default class SingerListView extends React.Component {
                     layoutProvider={(GLOBALS.LANDSCAPE)?this._layoutProvider2:this._layoutProvider}
                     rowRenderer={this.rowRenderer}
                     renderFooter={this._renderFooter} 
-                    renderAheadOffset = {(GLOBALS.LANDSCAPE)?1000:250}
+                    renderAheadOffset = {(GLOBALS.LANDSCAPE)?300:250}
                     externalScrollView={this.renderScroll}
                     onScroll = {(rawEvent, offsetX, offsetY)=>{
                         if(this.props.onScroll != null){

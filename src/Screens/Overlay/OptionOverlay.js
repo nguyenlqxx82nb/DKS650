@@ -6,6 +6,7 @@ import GLOBALS from '../../DataManagers/Globals.js';
 import Emoji from "./Emoji";
 import SingerMenu from "./SingerMenu";
 import SongMenu from "./SongMenu";
+import Volume from './Volume';
 import Utils from "../../Utils/Utils";
 
 export default class OptionOverlay extends React.Component {
@@ -24,6 +25,9 @@ export default class OptionOverlay extends React.Component {
         this.state = {
             opacityValue : new Animated.Value(0),
             yPos : new Animated.Value(240),
+            scaleX : new Animated.Value(0),
+            scaleY : new Animated.Value(0),
+            opacity2 : new Animated.Value(1),
         }
     }
     _onClose =() => {
@@ -64,7 +68,9 @@ export default class OptionOverlay extends React.Component {
         else if(this.overlayType == GLOBALS.SING_OVERLAY.SINGER){
             return <SingerMenu 
                         onClose= {this._onClose}
-                    />;
+                    />; }
+        else if(this.overlayType == GLOBALS.SING_OVERLAY.VOLUME){
+            return <Volume />;
         }
     }
     show = () => {
@@ -76,65 +82,134 @@ export default class OptionOverlay extends React.Component {
                 width: Utils.Width()
             }
         });
-        if(this.overlayType != GLOBALS.SING_OVERLAY.KEYBROARD){
+        if(this.overlayType == GLOBALS.SING_OVERLAY.VOLUME){
+            this.state.scaleX.setValue(0.75);
+            this.state.scaleY.setValue(0.75);
             Animated.parallel([
                 Animated.timing(this.state.opacityValue, {
-                    toValue: 0.6,
+                    toValue: 0.75,
                     useNativeDriver: Platform.OS === 'android',
-                    duration: 500,
+                    duration: 350,
                 }),
-                Animated.timing(this.state.yPos, {
-                    toValue: 0,
+                Animated.timing(this.state.scaleX, {
+                    toValue: 1,
                     useNativeDriver: Platform.OS === 'android',
-                    duration: 250,
+                    duration: 100,
+                }),
+                Animated.timing(this.state.scaleY, {
+                    toValue: 1,
+                    useNativeDriver: Platform.OS === 'android',
+                    duration: 100,
                 }),
             ]).start(function onComplete() {
                 //this.setState({});
             });
         }
         else{
-            this.state.opacityValue.setValue(0.5);
+            this.state.scaleX.setValue(1);
+            this.state.scaleY.setValue(1);
+            this.state.yPos.setValue(100);
+
+            if(this.overlayType != GLOBALS.SING_OVERLAY.KEYBROARD){
+                Animated.parallel([
+                    Animated.timing(this.state.opacityValue, {
+                        toValue: 0.75,
+                        useNativeDriver: Platform.OS === 'android',
+                        duration: 350,
+                    }),
+                    Animated.timing(this.state.yPos, {
+                        toValue: 0,
+                        useNativeDriver: Platform.OS === 'android',
+                        duration: 150,
+                    }),
+                ]).start(function onComplete() {
+                    //this.setState({});
+                });
+            }
+            else{
+                this.state.opacityValue.setValue(0.75);
+            }
         }
+        
     }
     hide = () => {
         const {maxZindex,onClose} = this.props;
         let container = this._container;
-        Animated.parallel([
-            Animated.timing(this.state.opacityValue, {
-                toValue: 0,
-                useNativeDriver: Platform.OS === 'android',
-                duration: 500,
-            }),
-            Animated.timing(this.state.yPos, {
-                toValue: 240,
-                useNativeDriver: Platform.OS === 'android',
-                duration: 250,
-            }),
-        ]).start(function onComplete() {
-            container.setNativeProps({
-                style: {
-                    zIndex: 0,
-                    width:0
-                }
+        this._isVisible = false;
+        var that = this;
+        if(this.overlayType == GLOBALS.SING_OVERLAY.VOLUME){
+            Animated.parallel([
+                Animated.timing(this.state.opacityValue, {
+                    toValue: 0,
+                    useNativeDriver: Platform.OS === 'android',
+                    duration: 350,
+                }),
+                Animated.timing(this.state.scaleX, {
+                    toValue: 0.5,
+                    useNativeDriver: Platform.OS === 'android',
+                    duration: 150,
+                }),
+                Animated.timing(this.state.scaleY, {
+                    toValue: 0.5,
+                    useNativeDriver: Platform.OS === 'android',
+                    duration: 150,
+                }),
+                Animated.timing(this.state.opacity2, {
+                    toValue: 0,
+                    useNativeDriver: Platform.OS === 'android',
+                    duration: 150,
+                }),
+            ]).start(function onComplete() {
+                container.setNativeProps({
+                    style: {
+                        zIndex: 0,
+                        width:0
+                    }
+                });
+                that.state.scaleX.setValue(0);
+                that.state.scaleY.setValue(0);
+                that.state.opacity2.setValue(1);
             });
-        });
+        }
+        else{
+            Animated.parallel([
+                Animated.timing(this.state.opacityValue, {
+                    toValue: 0,
+                    useNativeDriver: Platform.OS === 'android',
+                    duration: 350,
+                }),
+                Animated.timing(this.state.yPos, {
+                    toValue: 240,
+                    useNativeDriver: Platform.OS === 'android',
+                    duration: 150,
+                }),
+            ]).start(function onComplete() {
+                container.setNativeProps({
+                    style: {
+                        zIndex: 0,
+                        width:0
+                    }
+                });
+            });
+        }
+        
         
         if(onClose != null){
             onClose();
         }
-
-        this._isVisible = false;
     }
     render = () => {
         var screenHeight = Utils.Height() - GLOBALS.STATUS_BAR_HEIGHT ;
         var top = {};
+        const {opacityValue,yPos,scaleX,scaleY,opacity2} = this.state;
+
         if(this.overlayType == GLOBALS.SING_OVERLAY.KEYBROARD){
             top = {top:GLOBALS.HEADER_HEIGHT} ;
             //this.state.opacityValue.setValue(0.5);
             this._data.height = 0;
         }
-        const {opacityValue,yPos} = this.state;
-
+        var _posY = (this.overlayType == GLOBALS.SING_OVERLAY.VOLUME)?new Animated.Value(0):yPos;
+        var bottom = (this.overlayType == GLOBALS.SING_OVERLAY.VOLUME)?(screenHeight + GLOBALS.FOOTER_HEIGHT -this._data.height)/2:GLOBALS.FOOTER_HEIGHT;
         return (
             <View style={[{position:"absolute",
                             width: 0,
@@ -152,7 +227,14 @@ export default class OptionOverlay extends React.Component {
                 
                 <Animated.View  ref={ref => (this._panel = ref)}
                         style={[styles.container,
-                                {height:this._data.height,bottom:GLOBALS.FOOTER_HEIGHT, transform:[{translateY: yPos}]}]}>
+                                {height:this._data.height,bottom:bottom, 
+                                opacity:opacity2,
+                                transform:[{
+                                    translateY: _posY
+                                },
+                                {scaleX : scaleX},
+                                {scaleY : scaleY}]
+                            }]}>
                         {this.renderView()}
                         {/* <View style={{height:50,width:'100%', backgroundColor:"#444083"}}>
                             <IconRippe vector={true} name={""}

@@ -287,7 +287,7 @@ export default class SongOnlineListView extends React.Component {
                     onScroll = {this._handleScroll}
                     externalScrollView={this.renderScroll}
                     scrollThrottle = {16}
-                    renderAheadOffset = {GLOBALS.LANDSCAPE? 1000: 250}
+                    renderAheadOffset = {GLOBALS.LANDSCAPE? 300: 250}
                     //extendedState={this.state.dataProvider} 
                     />
                 <IndicatorView ref={ref => (this._indicator = ref)}/>

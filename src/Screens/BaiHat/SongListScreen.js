@@ -178,6 +178,9 @@ export default class SongListScreen extends BaseScreen {
                             songType = {songType}
                             onScroll = {this._handleListViewScroll} 
                             top={this.MAX_SCROLL_HEIGHT}
+                            onSearch = {(value)=>{
+                                this._searchHeader.showIndicator(value);
+                            }}
                         />
                     </View>
                 )
@@ -188,6 +191,8 @@ export default class SongListScreen extends BaseScreen {
 
     renderContentView = () => {
         const {title } = this.state;
+        const {searchHolder} = this.props;
+        
         if(GLOBALS.LANDSCAPE){
             return (
                 <View style={{ flex: 1,width:'100%' }}>
@@ -218,14 +223,15 @@ export default class SongListScreen extends BaseScreen {
                     <Animated.View style={[styles.headerContainer,{height:GLOBALS.HEADER_HEIGHT, transform: [{ translateY: this._scrollY }]}]}>
                         <Header4
                             ref={ref=>(this._searchHeader = ref)}
+                            searchHolder = {searchHolder}
                             onSearch={this._onSearch}
                             onSearchChange = {this._onSearchChange}
                             onBack = {this._onBack}
-                            left={<View style={{flex:1,justifyContent:"flex-start",alignItems:"center", flexDirection:"row"}}>
-                                    {this.state.avatar !="" && 
+                            left={this.state.avatar !="" && 
+                                    <View style={{width:45,height:40, fjustifyContent:"flex-start",alignItems:"center", flexDirection:"row"}}>
                                         <Image style={{width:34,height:34,borderRadius:17}} 
-                                            source={{uri:this.state.avatar}} />}
-                                    <Text style={[styles.title]}> {title}</Text>
+                                            source={{uri:this.state.avatar}} />
+                                    {/* <Text style={[styles.title]}> {title}</Text> */}
                                  </View>}
                         />
                     </Animated.View>
@@ -239,10 +245,6 @@ export default class SongListScreen extends BaseScreen {
 
 const styles = StyleSheet.create({
     headerContainer: {
-        flexDirection: "row",
-        alignItems: "center", 
-        justifyContent: "center",
-        //marginTop: GLOBALS.STATUS_BAR_HEIGHT, 
         height: 40,
         width:"100%",
         top:0,

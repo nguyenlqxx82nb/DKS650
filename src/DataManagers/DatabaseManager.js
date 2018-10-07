@@ -48,8 +48,10 @@ class Databases {
     // }
 
     static getSong(songId,callback,errorCallback){
-       if(GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.HTTP)
+        if(GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.HTTP)
             HTTPManager.getSong(songId,callback,errorCallback);
+        else if(GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.MYSQL)
+            MYSQLManager.getSong(songId,callback,errorCallback);
     }
 
     static fetchOnlineSongData(page, pageCount, term,songOln,callback,errorCallback){
@@ -63,7 +65,9 @@ class Databases {
 
     static getDownloadQueue(callback,errorCallback){
         if(GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.HTTP)
-             HTTPManager.getDownloadQueue(callback,errorCallback);
+            HTTPManager.getDownloadQueue(callback,errorCallback);
+        else if(GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.MYSQL)
+            MYSQLManager.getDownloadQueue(callback,errorCallback);
     }
 
     static getChannels(callback,errorCallback){

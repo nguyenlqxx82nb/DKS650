@@ -129,6 +129,22 @@ public class MyModule extends ReactContextBaseJavaModule {
         MySQConnector.fetchSongs(type,type_val,actor,sort,temp,kwd,ids,start,pagesize,callback);
     }
 
+    @ReactMethod
+    public void fetchSong(String songId, Callback callback){
+        MySQConnector.fetchSong(songId,callback);
+    }
+
+    @ReactMethod
+    public void fetchDownloadSong(Callback callback){
+        MySQConnector.fetchDownloadSongs(callback);
+    }
+
+    @ReactMethod
+    public void fetchSinger(String type, String type_val , String sort ,
+                           String kwd ,int page, int pagesize,Callback callback){
+        MySQConnector.fetchSingers(type,type_val,sort,kwd,page,pagesize,callback);
+    }
+
     private void sendEvent(String eventName, @Nullable WritableMap params) {
         mReactContext
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)

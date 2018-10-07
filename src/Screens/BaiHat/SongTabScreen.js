@@ -45,7 +45,7 @@ export default class SongTabScreen extends BaseScreen {
         listType: PropTypes.number,
         hasOnlineButton : PropTypes.bool,
         tabType: PropTypes.number,
-        title : PropTypes.string
+        title : PropTypes.string,
     };
     _searchTerm = "";
     constructor(props) {
@@ -121,7 +121,11 @@ export default class SongTabScreen extends BaseScreen {
                             onChangeTab = {this._onChangeTab} 
                             tabType = {this.tabType}
                             onScroll = {this._handleListViewScroll} 
-                            top={this.MAX_SCROLL_HEIGHT}/>
+                            top={this.MAX_SCROLL_HEIGHT}
+                            // onSearch = {(value)=>{
+                            //     this._onSearch(value);
+                            // }}
+                            />
                         { 
                             this._hasOnlineButton && 
                             <MusicOnline 
@@ -145,7 +149,11 @@ export default class SongTabScreen extends BaseScreen {
                             tabType = {this.tabType}
                             tabTop = {50}
                             onScroll = {this._handleListViewScroll} 
-                            top={this.MAX_SCROLL_HEIGHT}/>
+                            top={this.MAX_SCROLL_HEIGHT}
+                            onSearch = {(value)=>{
+                                this._header.showIndicator(value);
+                            }}
+                            />
                         { 
                             this._hasOnlineButton && 
                             <MusicOnline 
@@ -163,6 +171,7 @@ export default class SongTabScreen extends BaseScreen {
     }
 
     renderContentView = () => {
+        const {searchHolder} = this.props;
         var top = (this._hasOnlineButton)?(GLOBALS.LANDSCAPE?50:40):0;
         if(GLOBALS.LANDSCAPE)
             return (
@@ -175,6 +184,7 @@ export default class SongTabScreen extends BaseScreen {
                             onSearchChange = {this._onSearchChange}
                             onBack = {this._onBack}
                             left={<Text style={[styles.title]}>{this.props.title}</Text>}
+                            searchHolder = {searchHolder}
                         />
                     </Animated.View>
                     {this.renderContent()}
@@ -189,7 +199,8 @@ export default class SongTabScreen extends BaseScreen {
                             onSearch={this._onSearch}
                             onSearchChange = {this._onSearchChange}
                             onBack = {this._onBack}
-                            left={<Text style={[styles.title]}>{this.props.title}</Text>}
+                            searchHolder = {searchHolder}
+                            //left={<Text style={[styles.title]}>{this.props.title}</Text>}
                         />
                     </Animated.View>
                     {this.renderContent()}

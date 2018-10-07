@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, TextInput,Text} from "react-native";
+import { StyleSheet, View, TextInput,Text,ActivityIndicator} from "react-native";
 import PropTypes from 'prop-types';
 import CustomIcon from '../Components/CustomIcon'
 import IconRippe from '../Components/IconRippe.js'
@@ -14,12 +14,14 @@ export default class SearchInput extends React.Component {
         onSearchChange : PropTypes.func,
         onFocus : PropTypes.func,
         onBlur : PropTypes.func,
+        holder : PropTypes.string,
         //duration : PropTypes.number
     };
     static defaultProps = {
-        style : {}
+        style : {},
+        holder :"Tìm kiếm ..."
     };
-
+    _showIndicator = false;
     constructor(props) {
         super(props);
         this.height = 35;
@@ -60,10 +62,13 @@ export default class SearchInput extends React.Component {
     }
     _handleBlur = () =>{
         const {onBlur,onSearch} = this.props;
-        EventRegister.emit("HideKeybroard",{});
-        if(onBlur != null){
-            onBlur();
-        }
+        setTimeout(()=>{
+            EventRegister.emit("HideKeybroard",{});
+            if(onBlur != null){
+                onBlur();
+            }
+        },250);
+
         if(onSearch != null){
             onSearch(this.getValue());
         }
@@ -103,9 +108,15 @@ export default class SearchInput extends React.Component {
         //this._searchInput.clear();
         this._searchInput._lastNativeText = value;
     }
+    showIndicator = (isShow) =>{
+        if(isShow != this._showIndicator){
+            this._showIndicator = isShow;
+            this.setState({});
+        }
+    }
     render = () => {
         const {showRemoveBtn} =this.state;
-        const {style} = this.props;
+        const {style,holder} = this.props;
         //console.warn("LANDSCAPE = "+GLOBALS.LANDSCAPE);
         var conteinerStyle = {};
         if(GLOBALS.LANDSCAPE){
@@ -123,18 +134,24 @@ export default class SearchInput extends React.Component {
                     underlineColorAndroid={'transparent'}
                     placeholderTextColor={'#9192C6'}
                     style={[styles.input]}
-                    placeholder="Tìm kiếm ..."
+                    placeholder={holder}
                     onFocus = {this._handleTextFocus}
                     onBlur = {this._handleBlur}
                     onSubmitEditing = {this._handleTextSubmit}
                     onChangeText={this._handleTextChanged}
                     disableFullscreenUI={true}
                     returnKeyType='search'
-                    onEndEditing={(e) => {}}
+                    //onEndEditing={(e) => {}}
                     //value={this.state.value}
                 />
+                {this._showIndicator && 
+                    <ActivityIndicator 
+                    style={styles.indicator}
+                    color="#00ECBC"
+                    size="small" />
+                }
                 {showRemoveBtn && 
-                (<View style={{ width: 30, height: 30 }}>
+                (<View style={{ width: 30, height: 30,marginRight:5 }}>
                     <IconRippe vector={true} size={15} name="close" color={"#fff"} 
                         onPress = {this._handleClearSearch} />
                 </View>) }
@@ -148,20 +165,24 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center", 
         justifyContent: "center",
-        marginRight:10,
+        //marginRight:5,
         borderRadius: 16,
         backgroundColor: "#565BAC", 
         height: 32, 
-        paddingRight: 3,
-        marginLeft: 10,
+        // paddingRight: 3,
+        //marginLeft: 5,
     },
     input: {
         flex:1, 
-        fontSize: 16,
+        fontSize: 17,
         color: "white", 
         padding: 0, 
         margin: 0,
         fontFamily:GLOBALS.FONT.MEDIUM,
-        marginLeft:10
+        marginLeft:10,
+        marginRight:10
     },
+    indicator : {
+        marginRight : 5
+    }
 })

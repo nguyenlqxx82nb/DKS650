@@ -18,6 +18,7 @@ export default class SongTabsView extends React.Component {
         top : PropTypes.number,
         onScroll : PropTypes.number,
         tabTop:  PropTypes.number,
+        onSearch: PropTypes.func
     };
     static defaultProps = {
         songType : GLOBALS.SONG_TYPE.ALL,
@@ -157,6 +158,10 @@ export default class SongTabsView extends React.Component {
                                             this.props.onScroll(value);  
                                     }}
                                     top={this.props.top}
+                                    onSearch = {(isSearching)=>{
+                                        if(this.props.onSearch != null)
+                                            this.props.onSearch(isSearching);
+                                    }}
                                     />
                             </View>) ;
                     })}

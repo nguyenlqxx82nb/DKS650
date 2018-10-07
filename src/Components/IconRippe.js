@@ -20,13 +20,13 @@ const styles = StyleSheet.create({
         // margin: 16,
         alignItems: 'center',
         justifyContent: 'center',
-        //backgroundColor:"red"
+        overflow:'hidden'
     },
     badgeContainer : {
         position:"absolute",
         backgroundColor:"red",
-        top : 0,
-        right:0,
+        top : -5,
+        right:-5,
         width:20,
         height:20,
         borderRadius:10,
@@ -198,7 +198,7 @@ class IconRippe extends PureComponent {
     }
     renderBadge = () =>{
         return (this._badge > 0)?
-            <View style={styles.badgeContainer}><Text style={styles.badgeNumber}>{this._badge}</Text></View> : null;
+            <View style={[styles.badgeContainer,]}><Text style={styles.badgeNumber}>{this._badge}</Text></View> : null;
     }
     renderImageView(){
         const {size, color, iconSource, name,name1, vector,text , iconType, textStyle} = this.props;
@@ -302,8 +302,10 @@ class IconRippe extends PureComponent {
                 <TouchableWithoutFeedback onPressIn={this.onPressedIn} onPressOut={this.onPressedOut}>
                     <View style={[styles.iconContainer]}>
                         {this.renderRippleView()}
-                        {this.renderImageView()}
-                        {this.renderBadge()}
+                        <View>
+                            {this.renderImageView()}
+                            {this.renderBadge()}
+                        </View>
                     </View>
                 </TouchableWithoutFeedback>
             </View>

@@ -46,12 +46,12 @@ export default class FooterHome extends React.Component {
             this._playBtn.setIconType(DATA_INFO.PLAYBACK_INFO.IsPlaying ? 2 : 1);
             this._micBtn.setIconType(DATA_INFO.PLAYBACK_INFO.IsMute ? 2 : 1);
             //console.warn("volume = "+DATA_INFO.PLAYBACK_INFO.Volume);
-            this.setState({volume:DATA_INFO.PLAYBACK_INFO.Volume});
+            //this.setState({volume:DATA_INFO.PLAYBACK_INFO.Volume});
         });
 
         this._listenerSongUpdateEvent = EventRegister.addEventListener('SongUpdate', (data) => {
-            // if(GLOBALS.IS_BOX_CONNECTED)
-            //     this._listBtn.updateBagde(DATA_INFO.PLAY_QUEUE.length);
+            if(GLOBALS.IS_BOX_CONNECTED)
+                this._listBtn.updateBagde(DATA_INFO.PLAY_QUEUE.length);
         });
 
         this._listenerConnectToBoxEvent = EventRegister.addEventListener('ConnectToBox', (data) => {
@@ -125,84 +125,10 @@ export default class FooterHome extends React.Component {
         });
     }
 
-    // _openVolumeView = () =>{
-    //     let that = this;
-    //     Animated.timing(this._topViewOpacity.text, {
-    //         toValue: 0,
-    //         useNativeDriver: Platform.OS === 'android',
-    //         duration: 200,
-    //     }).start(function onComplete() {
-    //         that._textView.setNativeProps({
-    //             style: {
-    //                 zIndex: 0
-    //             }
-    //         });
-    //     });
-
-    //     Animated.timing(this._topViewOpacity.volume, {
-    //         toValue: 1,
-    //         useNativeDriver: Platform.OS === 'android',
-    //         duration: 400,
-    //     }).start(function onComplete() {
-    //         that._volmView.setNativeProps({
-    //             style: {
-    //                 zIndex: 1
-    //             }
-    //         });
-    //     });
-    // }
-    // _closeVolumeView = () =>{
-    //     let that = this;
-    //     Animated.timing(this._topViewOpacity.text, {
-    //         toValue: 1,
-    //         useNativeDriver: Platform.OS === 'android',
-    //         duration: 400,
-    //     }).start(function onComplete() {
-    //         that._textView.setNativeProps({
-    //             style: {
-    //                 zIndex: 1
-    //             }
-    //         });
-    //     });
-
-    //     Animated.timing(this._topViewOpacity.volume, {
-    //         toValue: 0,
-    //         useNativeDriver: Platform.OS === 'android',
-    //         duration: 200,
-    //     }).start(function onComplete() {
-    //         that._volmView.setNativeProps({
-    //             style: {
-    //                 zIndex: 0
-    //             }
-    //         });
-    //     });
-    // }
-
-    // _onVolumeChange = () =>{
-    //     //console.warn("_onVolumeChange = "+this.state.volume);
-    //     BoxControl.volumeChange(this.state.volume);
-    // }
-
     _connectToBox = (data) =>{
         //console.warn("ConnectToBox : "+GLOBALS.IS_BOX_CONNECTED);
         this.setState({});
     }
-    // _renderRightIcon = () =>{
-    //     let songNumber = DATA_INFO.PLAY_QUEUE.length;
-    //     var status = (GLOBALS.IS_NO_WIFI_CHECKED || !GLOBALS.IS_BOX_CONNECTED)?GLOBALS.ICON_STATUS.OFFLINE:GLOBALS.ICON_STATUS.ONLINE;
-    //     if(GLOBALS.IS_NO_WIFI_CHECKED || GLOBALS.IS_BOX_CONNECTED){
-    //         return(
-    //             <View style={styles.iconTopRight}>
-    //                 <IconRippe status={status}  vector={true} size={25} name="list" onPress={this._openSongList} badge ={songNumber} ref={ref => (this._listBtn = ref)} />
-    //             </View>)
-    //     }
-    //     else{
-    //         return(
-    //             <View style={styles.iconTopRight}>
-    //                 <IconRippe  vector={true} size={25} name="wifi" color={GLOBALS.COLORS.ERROR}  />
-    //             </View>)
-    //     }
-    // }
 
     render() {
         const { bottomValue } = this._state;
@@ -210,7 +136,7 @@ export default class FooterHome extends React.Component {
 
         var playIconType = (DATA_INFO.PLAYBACK_INFO.IsPlaying) ? 2 : 1;
         var micIconType = (DATA_INFO.PLAYBACK_INFO.IsMute) ? 2 : 1;
-
+        let songNumber = DATA_INFO.PLAY_QUEUE.length;
         var status = (GLOBALS.IS_NO_WIFI_CHECKED || !GLOBALS.IS_BOX_CONNECTED)?GLOBALS.ICON_STATUS.OFFLINE:GLOBALS.ICON_STATUS.ONLINE;
         return (
             <Animated.View
@@ -218,54 +144,17 @@ export default class FooterHome extends React.Component {
                 style={[styles.footerContainer, {zIndex:maxZindex, transform: [{ translateY: bottomValue }] }]}>
                 <View style={styles.container}>
                     <Grid>
-                        {/* <Row style={{ height: 40 }}>
-                            <Animated.View style={[styles.topContainer,{zIndex:1,opacity:this._topViewOpacity.text}]} ref={ref => (this._textView=ref)}>
-                                <View style={{flex:1, flexDirection:"row",justifyContent:"center",alignItems:"center",}}>
-                                    <View style={styles.iconTopLeft}>
-                                        <IconRippe status={status} vector={true} size={25} name="volumnOn"
-                                            onPress ={this._openVolumeView} />
-                                    </View>
-                                    <SongTextRun />
-                                    {this._renderRightIcon()}
-                                </View>
-                            </Animated.View>
-                            <Animated.View style={[styles.topContainer,
-                                {zIndex:0,opacity:this._topViewOpacity.volume}]} 
-                                ref={ref => (this._volmView = ref)}>
-                                <View style={{flex:1,justifyContent:"center",alignItems:"center",flexDirection: "row"}}>
-                                    <View style={styles.iconTopLeft}>
-                                        <IconRippe status={status} vector={true} size={25} name="volumn"
-                                                onPress ={this._closeVolumeView} />
-                                    </View>
-                                    <View style={{flex: 1,
-                                                    height:40,
-                                                    alignItems: 'stretch',
-                                                    justifyContent: 'center',}}>
-                                        <Slider
-                                            thumbTintColor ="#fff"
-                                            minimumTrackTintColor = "#fff"
-                                            maximumTrackTintColor ="#69669C"
-                                            value={this.state.volume} 
-                                            onValueChange={(value) => this.setState({volume : value})}
-                                            onSlidingComplete = {this._onVolumeChange}
-                                            /> 
-                                    </View>
-                                    
-                                    <View style={styles.iconTopRight}>
-                                        <IconRippe status={status} vector={true} size={25} name="volumnOn" 
-                                        onPress ={this._closeVolumeView} />
-                                    </View>
-                                </View>
-                            </Animated.View>
-                        </Row> */}
                         <Row>
                             <Grid>
                                 <Col size={1} style={[styles.container_center]}>
-                                    <IconRippe status={status} vector={true} size={28} 
-                                        name="list" onPress={this._onEmojiPress}  />
+                                    <IconRippe 
+                                        ref = {ref =>(this._listBtn = ref)}
+                                        status={status} vector={true} size={26} 
+                                        name="list" onPress={this._openSongList}  
+                                        badge ={songNumber} />
                                 </Col>
                                 <Col size={1} style={[styles.container_center]}>
-                                    <IconRippe status={status} vector={true} size={28} name="replay"
+                                    <IconRippe status={status} vector={true} size={26} name="replay"
                                             onPress={()=>{
                                                 BoxControl.rePlay();
                                             }}
@@ -277,14 +166,14 @@ export default class FooterHome extends React.Component {
                                             iconType={playIconType} onPress={this._onPlayPress} />
                                 </Col>
                                 <Col size={1} style={[styles.container_center]}>
-                                    <IconRippe status={status} vector={true} size={25} name="next"
+                                    <IconRippe status={status} vector={true} size={23} name="next"
                                         onPress={()=>{
                                             BoxControl.nextSong();
                                         }}
                                     />
                                 </Col>
                                 <Col size={1} style={[styles.container_center]}>
-                                    <IconRippe status={status} ref={ref => (this._micBtn = ref)} vector={true} size={25} 
+                                    <IconRippe status={status} ref={ref => (this._micBtn = ref)} vector={true} size={23} 
                                             name="micOn" name1="micOff" iconType={micIconType} 
                                             onPress={()=>{
                                                 BoxControl.mute();

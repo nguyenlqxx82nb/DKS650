@@ -16,11 +16,12 @@ class BaseScreen extends React.Component {
         bottom :  PropTypes.number,
         type: PropTypes.number,
         preLoad : PropTypes.bool,
-        startTrans : PropTypes.number
+        startTrans : PropTypes.number,
+        searchHolder : PropTypes.string,
     };
      
     static defaultProps = {
-        duration: 200,
+        duration: 150,
         opacity: 1,
         maxZindex: 1,
         sizeX : Utils.Width(),
@@ -29,7 +30,8 @@ class BaseScreen extends React.Component {
         bottom : GLOBALS.FOOTER_HEIGHT,
         type : GLOBALS.SCREEN_TYPE.BOTTOM,
         preLoad : true,
-        startTrans : 100
+        startTrans : 100,
+        searchHolder : ""
     };
     _songTabs = null;
     MAX_SCROLL_HEIGHT = 135;
@@ -68,6 +70,18 @@ class BaseScreen extends React.Component {
             return;
         }
         
+        if(this.props.preLoad && !this._allowLoad){
+            setTimeout(()=>{
+                this._allowLoad = true;
+                this.setState({});
+            },5);
+            this._show();
+        }
+        else{
+            this._show();
+        }
+    }
+    _show = ()=>{
         this._processing = true;
 
         let container = this._container;
@@ -75,12 +89,7 @@ class BaseScreen extends React.Component {
         var that = this;
         var zindex = Math.min(this._maxIndex,maxZindex);
         this._isVisible = true;
-        if(this.props.preLoad && !this._allowLoad){
-            setTimeout(()=>{
-                this._allowLoad = true;
-                this.setState({});
-            },20);
-        }
+        
         if(transition == GLOBALS.TRANSITION.FADE){
             Animated.timing(this.animate.opacity, {
                 toValue: 1,
@@ -101,14 +110,23 @@ class BaseScreen extends React.Component {
             container.setNativeProps({
                 style: Utils.zIndexWorkaround(zindex)
             });
-            this.animate.posX.setValue(startTrans);
-            this.animate.opacity.setValue(1);
-            Animated.timing(this.animate.posX, {
-                toValue: 0,
-                useNativeDriver: Platform.OS === 'android',
-                duration: duration,
-                easing: Easing.bezier(0.0, 0.0, 0.2, 1),
-            }).start(function onComplete() {
+            this.animate.posX.setValue(100);
+            this.animate.opacity.setValue(0.3);
+            Animated.parallel([
+                Animated.timing(this.animate.posX, {
+                    toValue: 0,
+                    useNativeDriver: Platform.OS === 'android',
+                    duration: duration,
+                    easing: Easing.bezier(0.0, 0.0, 0.2, 1),
+                }),
+                Animated.timing(this.animate.opacity, {
+                    toValue: 1,
+                    useNativeDriver: Platform.OS === 'android',
+                    duration: duration,
+                    easing: Easing.bezier(0.0, 0.0, 0.2, 1),
+                })
+            ])
+            .start(function onComplete() {
                 that.showCompleted();
             });
         }
@@ -118,6 +136,8 @@ class BaseScreen extends React.Component {
                     zIndex: zindex
                 }
             });
+            this.animate.posY.setValue(100);
+            this.animate.opacity.setValue(1);
             Animated.timing(this.animate.posY, {
                 toValue: 0,
                 useNativeDriver: Platform.OS === 'android',
@@ -167,7 +187,7 @@ class BaseScreen extends React.Component {
             });
             Animated.parallel([
                 Animated.timing(this.animate.posX, {
-                    toValue: startTrans,
+                    toValue: 100,
                     useNativeDriver: Platform.OS === 'android',
                     duration: duration,
                     easing: Easing.bezier(0.0, 0.0, 0.2, 1),
@@ -188,12 +208,21 @@ class BaseScreen extends React.Component {
             });
         }
         else if(transition == GLOBALS.TRANSITION.SLIDE_TOP){
-            Animated.timing(this.animate.posY, {
-                toValue: Utils.Height(),
-                useNativeDriver: Platform.OS === 'android',
-                duration: duration,
-                easing: Easing.bezier(0.0, 0.0, 0.2, 1),
-            }).start(function onComplete() {
+            Animated.parallel([
+                Animated.timing(this.animate.posY, {
+                    toValue: 100,
+                    useNativeDriver: Platform.OS === 'android',
+                    duration: duration,
+                    easing: Easing.bezier(0.0, 0.0, 0.2, 1),
+                }),
+                Animated.timing(this.animate.opacity, {
+                    toValue: 0,
+                    useNativeDriver: Platform.OS === 'android',
+                    duration: duration,
+                    easing: Easing.bezier(0.0, 0.0, 0.2, 1),
+                })
+            ]).start(function onComplete() {
+                that.animate.posY.setValue(Utils.Height());
                 that.hideCompleted();
                 if(callback != null)
                     callback();

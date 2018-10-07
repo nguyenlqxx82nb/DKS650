@@ -187,7 +187,7 @@ export default class Header2 extends React.Component {
                             onSearchChange = {(value) =>{
                                 //console.error("value 0 "+value);
                                 if(onSearchChange != null){
-                                    onSearchChange(value);
+                                   // onSearchChange(value);
                                 }
                             }}
                             ref={ref=>(this._searchInput = ref)}  

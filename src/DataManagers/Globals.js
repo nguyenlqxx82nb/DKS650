@@ -81,6 +81,7 @@ export default {
         EMOJI: 2,
         SINGER: 3,
         KEYBROARD: 4,
+        VOLUME : 5
     },
 
     LANGUAGE: {
