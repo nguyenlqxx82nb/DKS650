@@ -27,7 +27,7 @@ export default class OptionOverlay extends React.Component {
             yPos : new Animated.Value(240),
             scaleX : new Animated.Value(0),
             scaleY : new Animated.Value(0),
-            opacity2 : new Animated.Value(1),
+            opacity2 : new Animated.Value(0.8),
         }
     }
     _onClose =() => {
@@ -57,7 +57,7 @@ export default class OptionOverlay extends React.Component {
                         songId={this._data.songId} 
                         actor={this._data.actor} 
                         onClose= {this._onClose}
-                        menuType = {this._data.menuType}
+                        buttons = {this._data.buttons}
                         />;
         }
         else if(this.overlayType == GLOBALS.SING_OVERLAY.EMOJI){
@@ -108,19 +108,19 @@ export default class OptionOverlay extends React.Component {
         else{
             this.state.scaleX.setValue(1);
             this.state.scaleY.setValue(1);
-            this.state.yPos.setValue(100);
+            this.state.yPos.setValue(20);
 
             if(this.overlayType != GLOBALS.SING_OVERLAY.KEYBROARD){
                 Animated.parallel([
                     Animated.timing(this.state.opacityValue, {
                         toValue: 0.75,
                         useNativeDriver: Platform.OS === 'android',
-                        duration: 350,
+                        duration: 200,
                     }),
                     Animated.timing(this.state.yPos, {
                         toValue: 0,
                         useNativeDriver: Platform.OS === 'android',
-                        duration: 150,
+                        duration: 100,
                     }),
                 ]).start(function onComplete() {
                     //this.setState({});
@@ -168,20 +168,26 @@ export default class OptionOverlay extends React.Component {
                 });
                 that.state.scaleX.setValue(0);
                 that.state.scaleY.setValue(0);
-                that.state.opacity2.setValue(1);
+                that.state.opacity2.setValue(0.8);
             });
         }
         else{
+            
             Animated.parallel([
                 Animated.timing(this.state.opacityValue, {
                     toValue: 0,
                     useNativeDriver: Platform.OS === 'android',
-                    duration: 350,
+                    duration: 200,
                 }),
                 Animated.timing(this.state.yPos, {
-                    toValue: 240,
+                    toValue: 20,
                     useNativeDriver: Platform.OS === 'android',
-                    duration: 150,
+                    duration: 100,
+                }),
+                Animated.timing(this.state.opacity2, {
+                    toValue: 0,
+                    useNativeDriver: Platform.OS === 'android',
+                    duration: 100,
                 }),
             ]).start(function onComplete() {
                 container.setNativeProps({
@@ -190,6 +196,9 @@ export default class OptionOverlay extends React.Component {
                         width:0
                     }
                 });
+                that.state.scaleX.setValue(0);
+                that.state.scaleY.setValue(0);
+                that.state.opacity2.setValue(0.8);
             });
         }
         
@@ -198,6 +207,7 @@ export default class OptionOverlay extends React.Component {
             onClose();
         }
     }
+
     render = () => {
         var screenHeight = Utils.Height() - GLOBALS.STATUS_BAR_HEIGHT ;
         var top = {};

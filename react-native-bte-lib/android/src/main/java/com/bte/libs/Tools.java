@@ -180,31 +180,6 @@ public class Tools {
     }
 
     public static void checkWifiStatus(final ReactContext reactContext) {
-//        new Thread(new Runnable() {
-//            public void run() {
-//                Socket socket = null;
-//                try {
-//                    socket = new Socket();
-//                    SocketAddress socketAddress = new InetSocketAddress(Constants.HOST_IP, Constants.HOST_PORT);
-//                    socket.connect(socketAddress, 3000);
-//                    WritableMap params = Arguments.createMap();
-//                    params.putBoolean("isConnected",true);
-//                    SendEvent(reactContext,params,"ConnectToBox");
-//                    Global.isWifiConnected = true;
-//                } catch (Exception e) {
-//                    WritableMap params = Arguments.createMap();
-//                    params.putBoolean("isConnected",false);
-//                    SendEvent(reactContext,params,"ConnectToBox");
-//                    Global.isWifiConnected = false;
-//                } finally {
-//                    try {
-//                        socket.close();
-//                    } catch (Exception e) {
-//                        // e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }).start();
         new Thread(new Runnable() {
             public void run() {
                 // while (Global.isAppRunning) {
@@ -484,6 +459,119 @@ public class Tools {
         }).start();
     }
 
+    //living VideoType "1"  normal VideoType "0"
+    public static void addYoutubeToEndOfList(final String VideoId,final String youtubename,final String  VideoType) {
+        new Thread(new Runnable() {
+            public void run() {
+                Socket socket = null;
+                OutputStream writes = null;
+                Boolean flag = false;
+                while(Constants.HOST_IP.length()<5)
+                {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    socket = new Socket();
+                    SocketAddress socketAddress = new InetSocketAddress(Constants.HOST_IP, Constants.HOST_PORT);
+                    socket.connect(socketAddress, 3000);
+                    writes = socket.getOutputStream();
+                    byte[] buff = new byte[2048];
+                    if (Global.playQueue.contains(VideoId)) {
+                        //XLog.d("---------------> contain");
+                        buff[3] = (byte) 151;
+                        flag = true;
+                    } else {
+                        buff[3] = (byte) 150;
+                        flag = false;
+                    }
+                    System.arraycopy(VideoId.getBytes(), 0, buff, 4, VideoId.getBytes().length);
+                    System.arraycopy(youtubename.getBytes(), 0, buff, 16, youtubename.getBytes().length);
+                    System.arraycopy(VideoType.getBytes(), 0, buff, 144, VideoType.getBytes().length);
+                    writes.write(buff);
+                    writes.flush();
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                    // threadAlert("         ⣬      ָ    wifi!");
+                } finally {
+                    try {
+                        socket.close();
+                        writes.close();
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    if (flag) {
+                        //XLog.d("-------------------------> add song success");
+                        // threadAlert("  ȡ  ");
+                    }
+                }
+            }
+        }).start();
+    }
+
+    public static void addYoutubeToEndOfList2(final String VideoId,final String youtubename) {
+        new Thread(new Runnable() {
+            public void run() {
+                Socket socket = null;
+                OutputStream writes = null;
+                Boolean flag = false;
+                while(Constants.HOST_IP.length()<5)
+                {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    socket = new Socket();
+                    SocketAddress socketAddress = new InetSocketAddress(Constants.HOST_IP, Constants.HOST_PORT);
+                    socket.connect(socketAddress, 3000);
+                    writes = socket.getOutputStream();
+                    byte[] buff = new byte[2048];
+                    if (Global.playQueue.contains(VideoId)) {
+                        //XLog.d("---------------> contain");
+                        buff[3] = (byte) 151;
+                        flag = true;
+                    } else {
+                        buff[3] = (byte) 150;
+                        flag = false;
+                    }
+                    System.arraycopy(VideoId.getBytes(), 0, buff, 4, VideoId.getBytes().length);
+                    System.arraycopy(youtubename.getBytes(), 0, buff, 16, youtubename.getBytes().length);
+                    writes.write(buff);
+                    writes.flush();
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                    // threadAlert("         ⣬      ָ    wifi!");
+                } finally {
+                    try {
+                        socket.close();
+                        writes.close();
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    if (flag) {
+                       // XLog.d("-------------------------> add song success");
+                        // threadAlert("  ȡ  ");
+                    } else {
+                       // XLog.d("-------------------------> add song fail");
+                        // threadAlert(" ѵ㲥");
+                    }
+                }
+            }
+        }).start();
+    }
+
     public static void priority(final String songId) {
         new Thread(new Runnable() {
             public void run() {
@@ -699,7 +787,55 @@ public class Tools {
         }).start();
     }
 
-    public static void getSystemInfo()
+    public static void fetchSongsFromUsb(final Callback callback)
+    {
+        new Thread(new Runnable() {
+            public void run() {
+                Socket socket = null;
+                OutputStream writes = null;
+                try {
+                    socket = new Socket();
+                    SocketAddress socketAddress = new InetSocketAddress(Constants.HOST_IP, Constants.HOST_PORT);
+                    socket.connect(socketAddress, 3000);
+                    writes= socket.getOutputStream();
+                    byte[] buff = new byte[2048];
+                    buff[3] = (byte)215;
+                    writes.write(buff);
+                    writes.flush();
+
+                    InputStream inputStream = socket.getInputStream();
+                    byte[] bytes = new byte[1024];
+                    inputStream.read(bytes);
+                    if (bytes[3] == (byte)215) {
+                        byte[] queue = new byte[1020];
+                        System.arraycopy(bytes,4,queue,0,1020);
+                        //String queueString = new String(queue);
+                        String usbSong = new String(queue);
+                        if(usbSong != null && usbSong.indexOf(".") != -1)
+                            Global.stb_usbsongs = usbSong;
+                         else
+                            Global.stb_usbsongs = "";
+                    }
+
+                } catch (Exception e) {
+
+                } finally {
+                    callback.invoke(Global.stb_usbsongs);
+                    try {
+                        socket.close();
+                        writes.close();
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    // threadAlert("����ɹ�");
+                }
+
+            }
+        }).start();
+    }
+
+    public static void getSystemInfo(final  Callback callback)
     {
         new Thread(new Runnable() {
             public void run() {
@@ -722,9 +858,6 @@ public class Tools {
                         byte[] queue = new byte[1020];
                         System.arraycopy(bytes,4,queue,0,1020);
                         String queueString = new String(queue);
-
-                        //XLog.e("-----------------> System Info =" + queueString);
-
                         String[] array = queueString.split("\n");
                         for(int i=0; i<array.length; i++){
                             //XLog.e(array[i]);
@@ -797,17 +930,7 @@ public class Tools {
                             }
                         }
                     }
-
-//                    if(listener != null)
-//                        listener.onResponse(1);
-
                 } catch (Exception e) {
-//                    if(listener != null)
-//                        listener.onResponse(0);
-//                    // TODO Auto-generated catch block
-//
-//                    XLog.e("-----------------> System Info Exception =" + e.getMessage());
-                    // threadAlert("���������⣬������ָ����wifi!");
                 } finally {
                     try {
                         socket.close();
@@ -816,7 +939,11 @@ public class Tools {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    // threadAlert("����ɹ�");
+
+                    callback.invoke(Global.stb_videoput,Global.stb_audioput,Global.stb_revolvint1,Global.stb_databasetype
+                                ,Global.stb_downdomain,Global.stb_delesongpwd,Global.stb_netmode,Global.stb_lantype,
+                                Global.stb_ipadd,Global.stb_gateway,Global.stb_wlanid,Global.stb_wlanpwd,Global.stb_ssidid,
+                                Global.stb_ssidpwd,Global.stb_publicsong);
                 }
 
             }

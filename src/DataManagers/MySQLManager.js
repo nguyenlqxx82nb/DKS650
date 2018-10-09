@@ -17,7 +17,28 @@ export default class MySQLMagager {
             kwd_alias="",
             page = pageCount*page ,
             ids = "";
-        if(listType == GLOBALS.SONG_LIST_TYPE.SELECTED){
+        if(listType == GLOBALS.SONG_LIST_TYPE.USB){
+            BTElib.fetchUsbSong((datas)=>{
+                console.warn("length Usb songs = "+datas);
+                var songs =[];
+                if(datas != "" && datas.indexOf(".") != -1){
+                    var items = datas.split(",");
+                    for(var i=0; i<items.length; i++){
+                        var item = {
+                            id: items[i],
+                            name : items[i],
+                            actor : "Từ USB",
+                            singerName: "Từ USB",
+                            status : GLOBALS.SING_STATUS.NORMAL
+                        }
+                        songs.push(item);
+                    }
+                }
+                callback(songs);
+            });
+            return;
+        }
+        else if(listType == GLOBALS.SONG_LIST_TYPE.SELECTED){
             //var songIds = "";
             let size = DATA_INFO.PLAY_QUEUE.length;
             for(i = 0; i< size; i++){
@@ -26,6 +47,21 @@ export default class MySQLMagager {
                     ids += ",";
                 }
             }
+        }
+        else if(listType == GLOBALS.SONG_LIST_TYPE.DOWNLOADING){
+            var size = 0,i=0;
+            for (var key in DATA_INFO.DOWN_QUEUE) {
+                size++;
+            }
+
+            for (var key in DATA_INFO.DOWN_QUEUE){
+                ids += key;
+                if(i < size - 1){
+                    ids += ",";
+                }
+                i++;
+            }
+            temp=0;
         }
         else{
             if(songType != GLOBALS.SONG_TYPE.ALL){
@@ -44,9 +80,12 @@ export default class MySQLMagager {
             if(listType == GLOBALS.SONG_LIST_TYPE.NEW){
                 sort= "new";
             }
-            else if(listType == GLOBALS.SONG_LIST_TYPE.NO_DOWNLOAD){
+            else if(listType == GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD){
                 temp=0;
                 sort="new";
+            }
+            else if(listType == GLOBALS.SONG_LIST_TYPE.HOT){
+                type="hot";
             }
             else if(listType == GLOBALS.SONG_LIST_TYPE.FAVORITE){
                 sort="hot";
@@ -56,14 +95,18 @@ export default class MySQLMagager {
                 //kwd_alias=term;
             }
         }
-        
-        if(listType == GLOBALS.SONG_LIST_TYPE.SELECTED && ids == ""){
+        //console.warn("temp = "+temp +" , type = "+type+" , sort "+sort+", kwd= "+kwd+" , page = "+page+",ids = "+ids);
+        if((listType == GLOBALS.SONG_LIST_TYPE.SELECTED && ids == "")
+            || (listType == GLOBALS.SONG_LIST_TYPE.DOWNLOADING && ids == "")){
             callback([]);
         }
         else{
             BTElib.fetchSongs(type,type_val,actor,sort,temp,kwd,ids,page,pageCount,(datas)=>{
                 //console.warn("length songs = "+datas);
                 var songs = this.covertSongDatas(datas);
+                if(listType == GLOBALS.SONG_LIST_TYPE.SELECTED){
+                    songs = this.sortSelectSong(songs);
+                }
                 callback(songs);
             });
         }
@@ -91,6 +134,7 @@ export default class MySQLMagager {
                 item.index = " "+(selectIndex + 1);
             }
             else{
+                //console.warn("Temp = "+rows[i].Temp);
                 if(rows[i].Temp == 0){
                     item.status = GLOBALS.SING_STATUS.NO_DOWNLOADED;
                 }
@@ -106,6 +150,22 @@ export default class MySQLMagager {
             datas.push(item);
         }
         return datas;
+    }
+
+    static sortSelectSong(datas){
+        var newDatas = [];
+        var temps = {};
+        for(var i=0; i<datas.length; i++){
+            temps[datas[i].id] = datas[i];
+        }
+
+        for(var j=0; j<DATA_INFO.PLAY_QUEUE.length; j++){
+            if(temps[DATA_INFO.PLAY_QUEUE[j]]!= null){
+                newDatas.push(temps[DATA_INFO.PLAY_QUEUE[j]]);
+            }
+        }
+
+        return newDatas;
     }
 
     static getSong(songId,callback,errorCallback){

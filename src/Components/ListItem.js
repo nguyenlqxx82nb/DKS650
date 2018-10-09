@@ -14,27 +14,41 @@ export default class ListItem extends Component {
 
   static propTypes = {
     rippleColor: PropTypes.string,
-    rippleRound:PropTypes.bool
+    rippleRound:PropTypes.bool,
+    selected : PropTypes.bool,
   };
   static defaultProps = {
     rippleColor : '#ccc',
-    rippleRound : false
+    rippleRound : false,
+    selected : true
   }
   render() {
-    const {rippleColor,rippleRound} = this.props;
-    if (
+    const {rippleColor,rippleRound,selected} = this.props;
+    if(!selected){
+      return (
+        <View
+          ref={c => (this._root = c)}
+          {...this.props}
+        //  delayPressIn={30}
+        >
+          {this.props.children}
+        </View>
+      );
+    }
+    else if (
       Platform.OS === "ios" ||
       Platform.OS === "web" ||
       //variables.androidRipple === false ||
       (!this.props.onPress && !this.props.onLongPress) ||
-      Platform.Version <= 21
+      Platform.Version <= 19
     ) {
       return (
         <TouchableHighlight
           onPress={this.props.onPress}
+
           onLongPress={this.props.onLongPress}
           ref={c => (this._root = c)}
-          underlayColor={"#DDD"}
+          underlayColor={"#C0C0C0"}
           {...this.props}
           style={this.props.touchableHighlightStyle}
         >

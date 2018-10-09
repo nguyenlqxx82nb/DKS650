@@ -9,7 +9,6 @@ import SongListView from '../../Views/SongListView.js';
 import MusicOnline from '../../Views/MusicOnlineButton.js';
 import Header from '../Header/index';
 import Header4 from '../Header/header4';
-import SearchInput from '../../Views/SearchInput';
 import Utils from "../../Utils/Utils.js";
 import BTELib from "react-native-bte-lib";
 
@@ -28,6 +27,7 @@ export default class SongListScreen extends BaseScreen {
     //     listType: GLOBALS.SONG_LIST_TYPE.ALL,
     // }
     _songList = null
+    _avatar = "";
     constructor(props) {
         super(props);
 
@@ -39,7 +39,7 @@ export default class SongListScreen extends BaseScreen {
             singerId : -1,
             songType : GLOBALS.SONG_TYPE.ALL,
             title:(this.props.title != null)?this.props.title:"",
-            avatar : ""
+            
         }
 
         this.MAX_SCROLL_HEIGHT = 105;
@@ -73,7 +73,10 @@ export default class SongListScreen extends BaseScreen {
         }
     }
     _showCompleted = () =>{
-        if(this.reLoad){
+        if(this.props.forceLoad){
+            this._songList.loadData("");
+        }
+        else if(this.reLoad){
             this._songList.refreshData("");
             this.reLoad = false;
         }
@@ -104,9 +107,9 @@ export default class SongListScreen extends BaseScreen {
             });
 
             BTELib.getUrlActorAvatar(name,0,(url,_index)=>{
-                this.setState({
-                    avatar:url,
-                });
+                //console.warn("url = "+url);
+                this._avatar = url;
+                this.forceUpdate();
             });
 
             this.reLoad = true;
@@ -205,9 +208,9 @@ export default class SongListScreen extends BaseScreen {
                             onSearchChange = {this._onSearchChange}
                             center ={
                                 <View style={{flex:1,justifyContent:"center",alignItems:"center", flexDirection:"row"}}>
-                                    {this.state.avatar !="" && 
+                                    {this._avatar !="" && 
                                         <Image style={{width:34,height:34,borderRadius:17}} 
-                                            source={{uri:this.state.avatar}} />}
+                                            source={{uri:this._avatar}} />}
                                     <Text style={[styles.title]}> {title}</Text>
                                 </View>
                             }
@@ -227,10 +230,10 @@ export default class SongListScreen extends BaseScreen {
                             onSearch={this._onSearch}
                             onSearchChange = {this._onSearchChange}
                             onBack = {this._onBack}
-                            left={this.state.avatar !="" && 
-                                    <View style={{width:45,height:40, fjustifyContent:"flex-start",alignItems:"center", flexDirection:"row"}}>
+                            left={this._avatar !="" && 
+                                    <View style={{width:40,height:40, fjustifyContent:"flex-start",alignItems:"center", flexDirection:"row"}}>
                                         <Image style={{width:34,height:34,borderRadius:17}} 
-                                            source={{uri:this.state.avatar}} />
+                                            source={{uri:this._avatar}} />
                                     {/* <Text style={[styles.title]}> {title}</Text> */}
                                  </View>}
                         />

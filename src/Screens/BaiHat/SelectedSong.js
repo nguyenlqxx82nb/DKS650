@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet,View,Text} from "react-native";
+import { StyleSheet,View,Text,Animated} from "react-native";
 import BaseScreen from "../ScreenBase.js"
 import PropTypes from 'prop-types';
 import IconRippe from '../../Components/IconRippe.js'
@@ -56,11 +56,14 @@ export default class SelectedSong extends BaseScreen {
             </View>
         );
     }
+    scrollExtendComponent = (top) =>{
+        this._musicOnline.setTopValue(top);
+    }
     renderContent = () =>{
         if(!this.props.preLoad || this._allowLoad){
             return (
                 <View style={{flex:1}}>
-                    <View style={styles.headerContainer}>
+                    <Animated.View style={[styles.headerContainer,{ transform: [{ translateY: this._scrollY }]}]}>
                         <Header 
                             back={false}
                             left={<View style={{flexDirection:"row",alignItems:"center",justifyContent:"flex-start"}}>
@@ -74,7 +77,7 @@ export default class SelectedSong extends BaseScreen {
                                     </Text>
                                 </View>}
                         />  
-                    </View>
+                    </Animated.View>
                     <MusicOnline 
                             style={{top:55,height:40}} 
                             ref={ref =>(this._musicOnline = ref)}
@@ -94,7 +97,6 @@ export default class SelectedSong extends BaseScreen {
             )
         }
     }
-    
 }
 
 const styles = StyleSheet.create({

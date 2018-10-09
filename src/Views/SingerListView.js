@@ -13,6 +13,7 @@ import BoxControl from '../DataManagers/BoxControl.js';
 import LayoutUtils from '../Utils/LayoutUtils.js';
 import ImageRender from '../Views/ImageRenderer.js'
 import BTElib from 'react-native-bte-lib';
+import Globals from "../DataManagers/Globals.js";
 
 let { height, width } = Dimensions.get('window');
 export default class SingerListView extends React.Component {
@@ -71,7 +72,7 @@ export default class SingerListView extends React.Component {
             );
         }
         else{
-            this._width = (width-20 -1) /3;
+            this._width = (width-15 -1) /3;
             this._layoutProvider = new LayoutProvider(
                 index => {
                     return "FULL";
@@ -239,7 +240,7 @@ export default class SingerListView extends React.Component {
     };
 
     _onPressSinger = (id,name) =>{
-        EventRegister.emit("OpenSingerSong",{id:id,name:name});
+        EventRegister.emit("OpenSingerSong",{name:name});
     }
 
     async getAvatarUrl(singerName) {
@@ -258,7 +259,7 @@ export default class SingerListView extends React.Component {
 
     render = () => {
         return (
-            <View style={{ flex: 1,marginLeft:10, marginRight:10, borderRadius:5}}>
+            <View style={{ flex: 1,marginLeft:10, marginRight:(GLOBALS.LANDSCAPE)?10:5}}>
                 <RecyclerListView
                     ref = {ref=>(this._listView = ref)}
                     style={{ flex: 1}}

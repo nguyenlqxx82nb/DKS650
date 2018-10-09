@@ -60,6 +60,9 @@ export default class SecondScreen extends BaseScreen {
         else if(this._type == GLOBALS.SECOND_SCREEN.DOWNLOADING){
             this._downloadScreen.loadData();
         }
+        else if(this._type == GLOBALS.SECOND_SCREEN.USB){
+            this._usbScreen.loadData();
+        }
     }
 
     // renderContentView = () => {
@@ -70,6 +73,7 @@ export default class SecondScreen extends BaseScreen {
             //console.warn("renderContentView UNDOWNLOAD "+this._type);
             return(
                 <SongListScreen 
+                    key={GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD}
                     opacity= {1} 
                     maxZindex ={5} 
                     //transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
@@ -79,6 +83,7 @@ export default class SecondScreen extends BaseScreen {
                     onBack={this._onBack}
                     ref = {ref =>(this._undownloadScreen=ref)}
                     preLoad = {false}
+                    searchHolder = {"Bài chưa tải"}
                     //onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
                     //bottom={60}
                 />);
@@ -95,7 +100,7 @@ export default class SecondScreen extends BaseScreen {
             //return <Secure onBack = {this._onBack}  />
             return(
                 <SongListScreen 
-                    key={1}
+                    key={GLOBALS.SONG_LIST_TYPE.DOWNLOADING}
                     opacity= {1} 
                     maxZindex ={5} 
                     //transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
@@ -105,6 +110,26 @@ export default class SecondScreen extends BaseScreen {
                     onBack={this._onBack}
                     ref = {ref =>(this._downloadScreen=ref)}
                     preLoad = {false}
+                    searchHolder = {"Bài đang tải"}
+                    //onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
+                    //bottom={60}
+                />);
+        }
+        else if(this._type == GLOBALS.SECOND_SCREEN.USB){
+            //return <Secure onBack = {this._onBack}  />
+            return(
+                <SongListScreen 
+                    key={GLOBALS.SECOND_SCREEN.USB}
+                    opacity= {1} 
+                    maxZindex ={5} 
+                    //transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                    duration={250}
+                    listType={GLOBALS.SONG_LIST_TYPE.USB}
+                    title ={"BÀI USB"}
+                    onBack={this._onBack}
+                    ref = {ref =>(this._usbScreen=ref)}
+                    preLoad = {false}
+                    searchHolder = {"Bài usb"}
                     //onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
                     //bottom={60}
                 />);

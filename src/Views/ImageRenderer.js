@@ -53,16 +53,26 @@ export default class ImageRenderer extends React.Component {
   
   render() {
     const {width,onPress} = this.props;
+
     var height = (width)*3.5/3 - 13;
+    var _width = width - 10;
+    var _left = 5;
+    var _bottom = 13;
+    if(!GLOBALS.LANDSCAPE){
+      height = (width)*3.5/3 - 7;
+      _width = width - 5;
+      _left = 0;
+      _bottom = 7;
+    }
     return (
       <View
           style={{
             flex: 1,
             backgroundColor: 'lightgrey',
-            borderRadius: 10,
+            borderRadius: 5,
+            marginLeft: _left,
             marginRight: 5,
-            marginLeft: 5,
-            marginBottom:13,
+            marginBottom:_bottom,
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.2,
@@ -77,7 +87,7 @@ export default class ImageRenderer extends React.Component {
                     //resizeMode={'contain'}
                     style={{
                       flex: 1,
-                      borderRadius: 10,
+                      borderRadius: 5,
                     }}
                     onLoad={this.handleOnLoad}
                     //source={{ uri: GLOBALS.SINGER_TEST[this.props.source] }} 
@@ -85,11 +95,11 @@ export default class ImageRenderer extends React.Component {
             </View>
             <View 
             // onPress = {this.onPressed}
-              style={{width:width - 10,height:height, position:"absolute"
-                      ,top:0,zIndex:2,borderRadius:10}}>
+              style={{width:_width,height:height, position:"absolute"
+                      ,top:0,zIndex:2,borderRadius:5}}>
                   <ListItem 
                       rippleRound={true}
-                      style={{width:width - 10,height:height}}
+                      style={{width:_width,height:height}}
                       onPress = {()=>{
                         if(onPress != null){
                           onPress();

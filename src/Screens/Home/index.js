@@ -27,7 +27,7 @@ export default class Taisao extends React.Component {
     _currentScreen = null;
     constructor(props) {
         super(props);
-        console.disableYellowBox = true; // ['Warning: Stateless'];
+        //console.disableYellowBox = true; // ['Warning: Stateless'];
         GLOBALS.INFO.VERSION = GLOBALS.BOX_VERSION.S650;
         //GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.HTTP;
         //GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.SQLITE;
@@ -37,7 +37,7 @@ export default class Taisao extends React.Component {
         GLOBALS.FOOTER_HEIGHT = 60;
         GLOBALS.HEADER_HEIGHT = 45;
 
-        console.warn("width = "+Utils.Width() + " , Height = "+ Utils.Height());
+        //console.warn("width = "+Utils.Width() + " , Height = "+ Utils.Height());
     }
 
     componentDidMount() {
@@ -47,6 +47,7 @@ export default class Taisao extends React.Component {
         BTElib.syncPlaybackQueue();
         BTElib.syncPlaybackInfo();
         BTElib.syncDownloadQueue();
+        BoxControl.fetchSystemInfo();
 
         DeviceEventEmitter.addListener('ConnectToBox', this.handleConnectToBox);
         DeviceEventEmitter.addListener('PlaybackInfoUpdate', this.handlePlaybackChange);
@@ -140,6 +141,7 @@ export default class Taisao extends React.Component {
         });
 
         this._listenerSingerSongEvent = EventRegister.addEventListener('OpenSingerSong', (data) => {
+            //console.warn("OpenSingerSong "+data.name);
             this._singerSong.updateSinger(data.name);
             this._singerSong.show();
         });
@@ -160,6 +162,10 @@ export default class Taisao extends React.Component {
             this.theloaiSong.updateSongType(data.type, data.name);
             this.theloaiSong.show();
         });
+
+        this._listenerCloseDrawerEvent = EventRegister.addEventListener('CloseDrawer', (data) => {
+            this.props.navigation.closeDrawer();    
+        });
     }
     componentWillUnmount() {
         //EventRegister.removeEventListener(this._listenerControlEvent);
@@ -173,6 +179,7 @@ export default class Taisao extends React.Component {
         EventRegister.removeEventListener(this._listenerHideKeybroardEvent);
         EventRegister.removeEventListener(this._listenerShowKeybroardEvent);
         EventRegister.removeEventListener(this._listenerOpenTypeSongEvent);
+        EventRegister.removeEventListener(this._listenerCloseDrawerEvent);
     }
     
     _showOverlay= (data)=>{
@@ -251,11 +258,14 @@ export default class Taisao extends React.Component {
                     duration={150}
                     listType={GLOBALS.SONG_LIST_TYPE.HOT}
                     title ={"BÀI HOT"}
+                    searchHolder = {"Bài hot ..."}
                     onBack={this._onBackHome} 
+                    forceLoad = {true}
                     ref={ref => (this._hotScreen = ref)}
                 />
 
-                <TheloaiScreen opacity= {0} maxZindex ={2} 
+                <TheloaiScreen 
+                    opacity= {0} maxZindex ={2} 
                     transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={150}
                     onBack={this._onBackHome} 
@@ -306,17 +316,6 @@ export default class Taisao extends React.Component {
                     listType={GLOBALS.SONG_LIST_TYPE.SINGER}
                     onBack = {() => {
                         this._singerSong.hide();}} />
-
-                <SecondScreen 
-                    opacity= {0} 
-                    maxZindex ={11} 
-                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
-                    duration={250}
-                    onBack={()=>{
-                        this._secondScreen.hide();
-                    }} 
-                    ref={ref => (this._secondScreen = ref)} />
-                
                 <SongOnlineScreen 
                     ref = {ref => (this.soundSong = ref)} 
                     type = {GLOBALS.SONG_ONLINE.SOUNDCLOUD}
@@ -346,16 +345,25 @@ export default class Taisao extends React.Component {
                 />  
                 {/* 
                   */}
+                <SecondScreen 
+                    opacity= {0} 
+                    maxZindex ={9} 
+                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                    duration={250}
+                    onBack={()=>{
+                        this._secondScreen.hide();
+                    }} 
+                    ref={ref => (this._secondScreen = ref)} />
+
                 <AdminScreen 
                     ref = {ref => (this._adminScreen = ref)} 
                     transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
                     maxZindex = {9}
-                    bottom = {13}
                     onBack = {() => {
                         this._adminScreen.hide();
                     }}
                 />
-                 <SelectedSong maxZindex ={14} transition = {GLOBALS.TRANSITION.SLIDE_TOP}
+                 <SelectedSong maxZindex ={10} transition = {GLOBALS.TRANSITION.SLIDE_TOP}
                     onBack={this._onCloseSelectedSong} ref={ref => (this._selectedSong = ref)}
                 />
                 <SingOptionOverlay 

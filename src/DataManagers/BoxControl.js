@@ -66,6 +66,14 @@ class BoxControl {
         BTE_LIB.addSongToEndOfList(songId);
     }
 
+    static selectYoutubeSong(videoId,videoName,videoType){
+        BTE_LIB.addYoutubeToEndOfList(videoId,videoName,videoType);
+    }
+
+    static selectYoutubeSong2(videoId,videoName){
+        BTE_LIB.addYoutubeToEndOfList2(videoId,videoName);
+    }
+
     static playNow(songId){
         BTE_LIB.playNow(songId);
     }
@@ -80,6 +88,46 @@ class BoxControl {
 
     static nextSong(){
         BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_NEXT_SONG);
+    }
+
+    static fetchSystemInfo(){
+        BTE_LIB.fetchSystemInfo((stb_videoput,stb_audioput,stb_revolvint1,stb_databasetype
+            ,stb_downdomain,stb_delesongpwd,stb_netmode,stb_lantype,
+            stb_ipadd,stb_gateway,stb_wlanid,stb_wlanpwd,stb_ssidid,
+            stb_ssidpwd,stb_publicsong)=>{
+
+                DATA_INFO.SYSTEM_INFO.stb_videoput = stb_videoput;
+                DATA_INFO.SYSTEM_INFO.stb_audioput = stb_audioput;
+                DATA_INFO.SYSTEM_INFO.stb_revolvint1 = stb_revolvint1;
+                DATA_INFO.SYSTEM_INFO.stb_databasetype = stb_databasetype;
+                DATA_INFO.SYSTEM_INFO.stb_downdomain = stb_downdomain;
+                DATA_INFO.SYSTEM_INFO.stb_delesongpwd = stb_delesongpwd;
+                DATA_INFO.SYSTEM_INFO.stb_lantype = stb_lantype;
+                DATA_INFO.SYSTEM_INFO.stb_netmode = stb_netmode;
+                DATA_INFO.SYSTEM_INFO.stb_gateway = stb_gateway;
+                DATA_INFO.SYSTEM_INFO.stb_ipadd = stb_ipadd;
+                DATA_INFO.SYSTEM_INFO.stb_wlanid = stb_wlanid;
+                DATA_INFO.SYSTEM_INFO.stb_wlanpwd = stb_wlanpwd;
+                DATA_INFO.SYSTEM_INFO.stb_ssidid = stb_ssidid;
+                DATA_INFO.SYSTEM_INFO.stb_ssidpwd = stb_ssidpwd;
+                DATA_INFO.SYSTEM_INFO.stb_publicsong = stb_publicsong;
+
+                console.warn(DATA_INFO.SYSTEM_INFO.stb_videoput + " \n " + 
+                            DATA_INFO.SYSTEM_INFO.stb_audioput + " \n" + 
+                            DATA_INFO.SYSTEM_INFO.stb_revolvint1 + " \n " + 
+                            DATA_INFO.SYSTEM_INFO.stb_databasetype + " \n " + 
+                            DATA_INFO.SYSTEM_INFO.stb_downdomain + " ,\n " + 
+                            DATA_INFO.SYSTEM_INFO.stb_delesongpwd + " \n " + 
+                            DATA_INFO.SYSTEM_INFO.stb_lantype + " \n " + 
+                            DATA_INFO.SYSTEM_INFO.stb_netmode + " \n " + 
+                            DATA_INFO.SYSTEM_INFO.stb_gateway + " \n " + 
+                            DATA_INFO.SYSTEM_INFO.stb_ipadd + " \n " + 
+                            DATA_INFO.SYSTEM_INFO.stb_wlanid + " \n " + 
+                            DATA_INFO.SYSTEM_INFO.stb_wlanpwd + " \n " + 
+                            DATA_INFO.SYSTEM_INFO.stb_ssidid + " \n " + 
+                            DATA_INFO.SYSTEM_INFO.stb_ssidpwd + " \n " + 
+                            DATA_INFO.SYSTEM_INFO.stb_publicsong + " \n ");
+        });
     }
 
     static downloadSong(id,callback) {

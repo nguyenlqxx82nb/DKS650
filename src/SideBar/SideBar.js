@@ -5,11 +5,13 @@ import CustomIcon from '../Components/CustomIcon';
 import { EventRegister } from 'react-native-event-listeners'
 import LinearGradient from 'react-native-linear-gradient';
 import GLOBALS from "../DataManagers/Globals";
+import AutoHeightImage from "react-native-auto-height-image";
 
+const logo = require("../../assets/logo.png");
 const datas = [
     {
         title:"Chưa tải",
-        icon:"singOpt",
+        icon:"chua-tai",
         event:"OpenSecondScreen",
         color:"#00ECBB",
         screenType: GLOBALS.SECOND_SCREEN.UNDOWNLOAD
@@ -21,16 +23,16 @@ const datas = [
         color:"#00ECBB",
         screenType: GLOBALS.SECOND_SCREEN.DOWNLOADING
     },
-    {
-        title:"Đã hát",
-        icon:"mic2",
-        event:"OpenSecondScreen",
-        color:"#00ECBB",
-        screenType: GLOBALS.SECOND_SCREEN.SING
-    },
+    // {
+    //     title:"Đã hát",
+    //     icon:"mic2",
+    //     event:"OpenSecondScreen",
+    //     color:"#00ECBB",
+    //     screenType: GLOBALS.SECOND_SCREEN.SING
+    // },
     {
         title:"Bài USB",
-        icon:"uutien",
+        icon:"usb",
         event:"OpenSecondScreen",
         color:"#00ECBB",
         screenType: GLOBALS.SECOND_SCREEN.USB
@@ -87,10 +89,12 @@ export default class SideBar extends React.Component
                     },20); 
                 }}
                 style={{height:60,width:"100%"}}>
-                <View style={{flex:1, marginLeft:25,marginRight:10,justifyContent:"center",alignItems:"center",flexDirection:"row"}}>
-                    <CustomIcon name={icon} size ={30} style={{color:color}} />
+                <View style={{flex:1, marginLeft:10,marginRight:15,justifyContent:"center",alignItems:"center",flexDirection:"row"}}>
+                    <View style={{width:60,justifyContent:"center",alignItems:"center"}}>
+                        <CustomIcon name={icon} size ={30} style={{color:color}} />
+                    </View>
                     <View style={{flex:1,justifyContent:"center",alignItems:"flex-start"}}>
-                        <Text style={{fontSize:16,fontFamily:"SF-Pro-Text-Medium",color:"#fff",marginLeft:10}}>{title}</Text>
+                        <Text style={{fontSize:17,fontFamily:"SF-Pro-Text-Medium",color:"#fff",marginLeft:5}}>{title}</Text>
                     </View>
                     <CustomIcon name={"goPage"} size ={20} style={{color:"#fff"}} />
                 </View>
@@ -102,6 +106,7 @@ export default class SideBar extends React.Component
         return(
             <View style={{flex:1}}>
                 <View style={styles.headerContainer}>
+                    <AutoHeightImage source={logo} width={70} ></AutoHeightImage>
                 </View>
                 <LinearGradient 
                     start={{x: 0.1, y: 0.1}} end={{x: 1, y: 1}} 
@@ -113,6 +118,10 @@ export default class SideBar extends React.Component
                         renderRow={this.renderRow}
                     /> 
                 </LinearGradient>   
+                <View style={{height:40,width:"100%",
+                        position:"absolute",bottom:0,backgroundColor:"transparent",justifyContent:"center",alignItems:"center"}}>
+                    <Text style={{fontSize:15,color:"#fff",fontFamily:GLOBALS.FONT.BOLD}}>BTE copyright © 2018</Text>
+                </View>
             </View>
         );
     }
@@ -121,8 +130,10 @@ export default class SideBar extends React.Component
 const styles = StyleSheet.create({
     headerContainer : {
         width:"100%",
-        height:60,
-        backgroundColor:"#444083"
+        height:90,
+        backgroundColor:"#444083",
+        justifyContent:"center",
+        alignItems:"center"
     },
 
     listContainer :{

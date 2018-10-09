@@ -116,7 +116,7 @@ export default class AdminScreen extends BaseScreen
         };
     }
     showSubContent = (title,element,isFull = false) =>{
-        this._subScreen.setContent(title,element,isFull); 
+        this._subScreen.setContent(title,element,(GLOBALS.LANDSCAPE)?isFull:true); 
         if(GLOBALS.LANDSCAPE)
             this._subScreen.setVisible(false);
         this._subScreen.show();
@@ -207,25 +207,32 @@ export default class AdminScreen extends BaseScreen
         else{
             return(
                 <View style={{flex:1}} >
-                    <Header 
-                        style={styles.header}
-                        title={"CÀI ĐẶT"} onBack={()=>{
-                        this.hide();
-                    }} />
-    
                     <View style={{flex:1}}>
+                        {/* <Header 
+                            style={{height:50,position:"absolute",top:0,zIndex:0}}
+                            title={"CÀI ĐẶT 1"} onBack={()=>{
+                            this.hide();
+                        }} /> */}
+                       
                         <ListView
                             dataSource = {this.state.dataSource}
-                            contentContainerStyle = {{ marginTop: 0 }}
+                            contentContainerStyle = {{ paddingTop: 60}}
                             renderRow={this.renderRow}
                         /> 
+                        <View style={{height:50,zIndex:2 ,position:"absolute",width:"100%",top:0,zIndex:0}}>
+                            <Header 
+                                style={{height:50}}
+                                title={"CÀI ĐẶT"} onBack={()=>{
+                                this.hide();
+                            }}/>
+                        </View>
                     </View>
     
                     <SubScreen 
                         ref = {ref => (this._subScreen = ref)} 
                         transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
-                        maxZindex = {1}
-                        bottom = {10}
+                        maxZindex = {5}
+                        duration={100}
                         onBack = {() => {
                             this._subScreen.hide();
                         }}

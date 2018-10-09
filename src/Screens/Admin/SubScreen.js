@@ -18,19 +18,38 @@ export default class SubScreen extends BaseScreen
         this._title = title;
         this._element = element;
         this._isFull = isFull;
+        //console.warn("_title = "+this._title);
         this.setState({});
     }
     renderContentView = () => {
-        return(
-            <View style={{flex:1}} >
-                <Header 
-                    style={styles.header}
-                    title={this._title}
-                    back = {false}
-                />
-                {this.renderContent()}
-            </View>
-        );
+        if(GLOBALS.LANDSCAPE){
+            return(
+                <View style={{flex:1}} >
+                    <Header 
+                        style={styles.header}
+                        title={this._title}
+                        back = {false}
+                    />
+                    {this.renderContent()}
+                </View>
+            );
+        }
+        else{
+            return(
+                <View style={{flex:1}} >
+                    <Header 
+                        style={[styles.header,{height:50} ]}
+                        title={this._title}
+                        onBack={()=>{
+                            if(this.props.onBack != null)
+                                this.props.onBack();
+                        }}
+                    />
+                    {this.renderContent()}
+                </View>
+            );
+        }
+        
     }
     renderContent = () =>{
         var style = {};

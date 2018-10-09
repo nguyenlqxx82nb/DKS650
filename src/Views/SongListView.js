@@ -50,9 +50,15 @@ export default class SongListView extends React.Component {
     _searchTerm = "";
     _hasChanged = false;
     _actionButtons = [];
+    _selectedList = true;
     constructor(props) {
         super(props);
 
+        if(this.props.listType == GLOBALS.SONG_LIST_TYPE.SELECTED
+            || this.props.listType == GLOBALS.SONG_LIST_TYPE.DOWNLOADING
+                || this.props.listType == GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD){
+            this._selectedList = false;
+        }
         this._layoutProvider = new LayoutProvider(
             index => {
                 return "FULL";
@@ -190,6 +196,10 @@ export default class SongListView extends React.Component {
             });
         }
     }
+    
+    loadData = () =>{
+        this.loadData(this._searchTerm);
+    }
 
     loadData = (term) => {
         if(this._loading 
@@ -227,6 +237,9 @@ export default class SongListView extends React.Component {
             });
     }
     _handleFetchDataCompleted = (datas) =>{
+        if(this._indicator == null)
+            return;
+
         this._loading = false;
         var newDatas = [];
         //console.warn("_handleFetchDataCompleted data length = "+datas.length);
@@ -268,15 +281,7 @@ export default class SongListView extends React.Component {
     }
     _onPressSong = (id, status) => {
         //return;
-        if(status == GLOBALS.SING_STATUS.NO_DOWNLOADED)
-        {
-            BoxControl.downloadSong(id,(errorCode)=>{
-            });        
-        }
-        else{
-            //console.warn("selectSong id = "+id);
-            BoxControl.selectSong(id);
-        }
+        BoxControl.selectSong(id);
     }
     _onEndReached = () => {
         if(!GLOBALS.IS_BOX_CONNECTED && GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.HTTP){
@@ -289,19 +294,13 @@ export default class SongListView extends React.Component {
     }
     _showOptOverlay = (id,overlayType,actor) =>{
         const {listType}=this.props;
-        var _height = 200;
-        var _songMenutype = GLOBALS.SONG_MENU_TYPE.NORMAL;
+        var _height = this._actionButtons.length*50+10;
         
-        if(listType ==GLOBALS.SONG_LIST_TYPE.SINGER ){
-            _height = 150;
-            _songMenutype = GLOBALS.SONG_MENU_TYPE.SINGER;
-        }
-
         EventRegister.emit('ShowOptOverlay', 
                 {overlayType:overlayType,
                 data:{
-                    menuType: _songMenutype,
                     songId:id,
+                    buttons: this._actionButtons,
                     height:_height,
                     actor:actor}
                 });
@@ -331,6 +330,34 @@ export default class SongListView extends React.Component {
             </View> :
             <View style={{ height: 1, width: '100%' }} />;
     }
+    _renderActionButton = (songId,overlayType,actor)=>{
+        const {listType} = this.props;
+        if(this._actionButtons.length == 0)
+            return;
+        else if(this._actionButtons.length == 1){
+            return(
+                <View style={{ width: 40, height: 40 }}>
+                            <IconRippe vector={true} name={this._actionButtons[0].icon} size={20} 
+                                onPress={()=>{
+                                    if(listType == GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD){
+                                        BoxControl.downloadSong(songId,(errorCode)=>{
+                                        });        
+                                    }
+                                }} 
+                            />
+                        </View>
+            );
+        }
+        else{
+            return(
+                <View style={{ width: 40, height: 40 }}>
+                    <IconRippe vector={true} name={GLOBALS.LANDSCAPE?"tuychon2":"tuychon"} size={20} 
+                        onPress={this._showOptOverlay.bind(this,songId,overlayType,actor)} 
+                    />
+                </View>
+            );
+        }
+    }
     _rowRenderer = (type, item, index) => {
         const {id,name,actor,singerName,status} = item;
         const {listType} = this.props;
@@ -339,7 +366,7 @@ export default class SongListView extends React.Component {
         const singerColor = GLOBALS.SINGER_COLORS[_status];
         let singPrefix = GLOBALS.SING_PREFIX[_status];
         let overlayType = GLOBALS.SING_OVERLAY.NORMAL;
-       // console.warn("Name = "+item["Name"]+" , item = "+item);
+       // console.warn("_status = "+_status+" , singColor = "+singColor);
         if(status == GLOBALS.SING_STATUS.DOWNLOADING){
             singPrefix = "[ " + item.progress  + "% ]";
         }
@@ -358,7 +385,7 @@ export default class SongListView extends React.Component {
             <ListItem
                 style={[styles.listItem,containerStyle]}
                 onPress={this._onPressSong.bind(this, id, status)}
-               // underlayColor="white"
+                selected={this._selectedList}
                 >
                 <View style={{
                     flex: 1, flexDirection: "row", justifyContent: "center",
@@ -371,12 +398,7 @@ export default class SongListView extends React.Component {
                             {singerName}
                         </Text>
                     </View>
-                    { hasOptionButton &&
-                        <View style={{ width: 40, height: 40 }}>
-                            <IconRippe vector={true} name="tuychon" size={20} 
-                                onPress={this._showOptOverlay.bind(this,id,overlayType,actor)} 
-                            />
-                        </View> }
+                    { this._renderActionButton(id,overlayType,actor)} 
                 </View>
             </ListItem>
         );
@@ -422,14 +444,8 @@ export default class SongListView extends React.Component {
                                     {singerName}
                                 </Text>
                             </View>
-                            <View style={{width:40,height:40}}>
-                                <IconRippe vector={true} name={"tuychon2"} size={20}
-                                />
-                            </View>
+                            { this._renderActionButton(id,overlayType,actor)} 
                         </View>
-                        
-                        
-                        
                     </View>
                 </ListItem>
             </View>
@@ -442,7 +458,8 @@ export default class SongListView extends React.Component {
         if(listType == GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD){
             buttons.push({
                 icon : "download",
-                type: GLOBALS.SONG_ACTION.DOWNLOAD
+                type: GLOBALS.SONG_ACTION.DOWNLOAD,
+                name :"Tải bài"
             });
         }
         else if(listType == GLOBALS.SONG_LIST_TYPE.USB 
@@ -452,27 +469,40 @@ export default class SongListView extends React.Component {
         else if(listType == GLOBALS.SONG_LIST_TYPE.AUTO){
             buttons.push({
                 icon : "closeMenu",
-                type: GLOBALS.SONG_ACTION.REMOVE_AUTO
+                type: GLOBALS.SONG_ACTION.REMOVE_AUTO,
+                name:"Xóa bài"
             });
         }
         else{
             buttons.push({
                 icon : "play2",
-                type: GLOBALS.SONG_ACTION.PLAY
+                type: GLOBALS.SONG_ACTION.PLAY,
+                name: "Hát ngay"
             });
             buttons.push({
                 icon : "uutien",
-                type: GLOBALS.SONG_ACTION.PRIORITY
+                type: GLOBALS.SONG_ACTION.PRIORITY,
+                name: "Ưu tiên"
             });
-            if(listType != GLOBALS.SONG_LIST_TYPE.SINGER){
+            if(listType == GLOBALS.SONG_LIST_TYPE.SELECTED){
+                buttons.push({
+                    icon : "closeMenu",
+                    type: GLOBALS.SONG_ACTION.REMOVE_SELECT,
+                    name: "Xóa chọn"
+                });
+            }
+            if(listType != GLOBALS.SONG_LIST_TYPE.SINGER
+                && listType != GLOBALS.SONG_LIST_TYPE.SELECTED){
                 buttons.push({
                     icon : "singerOpt",
-                    type: GLOBALS.SONG_ACTION.PLAY
+                    type: GLOBALS.SONG_ACTION.SINGER,
+                    name: "Ca sỹ"
                 });
             }
             buttons.push({
                 icon : "auto",
-                type: GLOBALS.SONG_ACTION.ADD_AUTO
+                type: GLOBALS.SONG_ACTION.ADD_AUTO,
+                name: "Bài tự động"
             });
         }
         //console.warn("buttons length = "+buttons.length);

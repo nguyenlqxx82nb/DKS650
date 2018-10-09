@@ -18,6 +18,7 @@ class BaseScreen extends React.Component {
         preLoad : PropTypes.bool,
         startTrans : PropTypes.number,
         searchHolder : PropTypes.string,
+        forceLoad : PropTypes.bool,
     };
      
     static defaultProps = {
@@ -31,7 +32,8 @@ class BaseScreen extends React.Component {
         type : GLOBALS.SCREEN_TYPE.BOTTOM,
         preLoad : true,
         startTrans : 100,
-        searchHolder : ""
+        searchHolder : "",
+        forceLoad : true,
     };
     _songTabs = null;
     MAX_SCROLL_HEIGHT = 135;

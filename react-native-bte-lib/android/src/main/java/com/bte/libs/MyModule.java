@@ -54,6 +54,11 @@ public class MyModule extends ReactContextBaseJavaModule {
         callback.invoke(urlStr,index);
     }
     @ReactMethod
+    public void fetchSystemInfo(Callback callback){
+        Tools.getSystemInfo(callback);
+    }
+
+    @ReactMethod
     public void syncPlaybackQueue(){
         Tools.synchronousPlaybackQueue(mReactContext);
     }
@@ -93,6 +98,16 @@ public class MyModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void addYoutubeToEndOfList(String videoId,String videoName, String videoType){
+        Tools.addYoutubeToEndOfList(videoId,videoName,videoType);
+    }
+
+    @ReactMethod
+    public void addYoutubeToEndOfList2(String videoId,String videoName){
+        Tools.addYoutubeToEndOfList2(videoId,videoName);
+    }
+
+    @ReactMethod
     public void playNow(String songId){
         Tools.playNow(songId);
     }
@@ -111,7 +126,6 @@ public class MyModule extends ReactContextBaseJavaModule {
     public void sendRequestControlBox2(int cmd,int state){
         Tools.sendRequestControlBox(cmd,state);
     }
-
     @ReactMethod
     public void sendRequestControlBox3(int cmd,int state,int value){
         Tools.sendRequestControlBox(cmd,state,value);
@@ -121,30 +135,29 @@ public class MyModule extends ReactContextBaseJavaModule {
     public void stbset(int cmd,String url,Callback callback){
         Tools.stbset(cmd,url,callback);
     }
-
     @ReactMethod
     public void fetchSongs(String type, int type_val , String actor , String sort ,
                            int temp, String kwd , String ids,
                            int start, int pagesize,Callback callback){
         MySQConnector.fetchSongs(type,type_val,actor,sort,temp,kwd,ids,start,pagesize,callback);
     }
-
     @ReactMethod
     public void fetchSong(String songId, Callback callback){
         MySQConnector.fetchSong(songId,callback);
     }
-
     @ReactMethod
     public void fetchDownloadSong(Callback callback){
         MySQConnector.fetchDownloadSongs(callback);
     }
-
     @ReactMethod
     public void fetchSinger(String type, String type_val , String sort ,
                            String kwd ,int page, int pagesize,Callback callback){
         MySQConnector.fetchSingers(type,type_val,sort,kwd,page,pagesize,callback);
     }
-
+    @ReactMethod
+    public void fetchUsbSong(Callback callback){
+        Tools.fetchSongsFromUsb(callback);
+    }
     private void sendEvent(String eventName, @Nullable WritableMap params) {
         mReactContext
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)

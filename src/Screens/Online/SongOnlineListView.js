@@ -231,8 +231,8 @@ export default class SongOnlineListView extends React.Component {
                 id ={id} title={title}
                 channel={channelTitle} 
                 onPress = {()=>{
-                    console.warn("OnlineItem2 id = "+id);
-                    BoxControl.selectSong(id);
+                    console.warn("OnlineItem2 id = "+id+" , title = "+title+"video Type = 0");
+                    BoxControl.selectYoutubeSong(id,title,"0");
                 }}
                 />
         );
@@ -250,8 +250,8 @@ export default class SongOnlineListView extends React.Component {
                 id ={id} title={title}
                 channel={channelTitle} 
                 onPress = {()=>{
-                    console.warn("OnlineItem2 id = "+id);
-                    BoxControl.selectSong(id);
+                    console.warn("OnlineItem2 id = "+id+" , title = "+title+"video Type = 0");
+                    BoxControl.selectYoutubeSong(id,title,0);
                 }}
                 />
         );
