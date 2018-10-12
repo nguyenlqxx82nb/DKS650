@@ -108,7 +108,7 @@ export default class OptionOverlay extends React.Component {
         else{
             this.state.scaleX.setValue(1);
             this.state.scaleY.setValue(1);
-            this.state.yPos.setValue(20);
+            this.state.yPos.setValue(60);
 
             if(this.overlayType != GLOBALS.SING_OVERLAY.KEYBROARD){
                 Animated.parallel([
@@ -180,7 +180,7 @@ export default class OptionOverlay extends React.Component {
                     duration: 200,
                 }),
                 Animated.timing(this.state.yPos, {
-                    toValue: 20,
+                    toValue: 50,
                     useNativeDriver: Platform.OS === 'android',
                     duration: 100,
                 }),

@@ -488,11 +488,12 @@ public class Tools {
                     } else {
                         buff[3] = (byte) 150;
                         flag = false;
+                        System.arraycopy(VideoId.getBytes(), 0, buff, 4, VideoId.getBytes().length);
+                        System.arraycopy(youtubename.getBytes(), 0, buff, 16, youtubename.getBytes().length);
+                        System.arraycopy(VideoType.getBytes(), 0, buff, 144, VideoType.getBytes().length);
+                        writes.write(buff);
                     }
-                    System.arraycopy(VideoId.getBytes(), 0, buff, 4, VideoId.getBytes().length);
-                    System.arraycopy(youtubename.getBytes(), 0, buff, 16, youtubename.getBytes().length);
-                    System.arraycopy(VideoType.getBytes(), 0, buff, 144, VideoType.getBytes().length);
-                    writes.write(buff);
+
                     writes.flush();
                 } catch (Exception e) {
                     // TODO Auto-generated catch block

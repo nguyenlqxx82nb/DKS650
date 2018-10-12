@@ -14,6 +14,7 @@ import LayoutUtils from '../Utils/LayoutUtils.js';
 import ImageRender from '../Views/ImageRenderer.js'
 import BTElib from 'react-native-bte-lib';
 import Globals from "../DataManagers/Globals.js";
+import Language from "../DataManagers/Language";
 
 let { height, width } = Dimensions.get('window');
 export default class SingerListView extends React.Component {
@@ -191,6 +192,9 @@ export default class SingerListView extends React.Component {
         }
         else{
             newDatas = datas;
+            if(datas.length == 0){
+                EventRegister.emit("ShowToast",{message:Language.Strings.noSinger});
+            }
         }
         
         this.setState({
@@ -198,7 +202,7 @@ export default class SingerListView extends React.Component {
             datas: newDatas
         });
 
-        if(datas.length <this._pageCount){
+        if(datas.length < this._pageCount){
             this._hasData = false;
         }
         else{

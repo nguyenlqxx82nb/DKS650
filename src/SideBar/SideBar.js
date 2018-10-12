@@ -6,18 +6,20 @@ import { EventRegister } from 'react-native-event-listeners'
 import LinearGradient from 'react-native-linear-gradient';
 import GLOBALS from "../DataManagers/Globals";
 import AutoHeightImage from "react-native-auto-height-image";
+import Utils from "../Utils/Utils";
+import Language from '../DataManagers/Language';
 
 const logo = require("../../assets/logo.png");
 const datas = [
     {
-        title:"Chưa tải",
+        title:Language.Strings.chuatai,
         icon:"chua-tai",
         event:"OpenSecondScreen",
         color:"#00ECBB",
         screenType: GLOBALS.SECOND_SCREEN.UNDOWNLOAD
     },
     {
-        title:"Đang tải",
+        title:Language.Strings.dangtai,
         icon:"tuychon",
         event:"OpenSecondScreen",
         color:"#00ECBB",
@@ -31,21 +33,21 @@ const datas = [
     //     screenType: GLOBALS.SECOND_SCREEN.SING
     // },
     {
-        title:"Bài USB",
+        title:Language.Strings.usb,
         icon:"usb",
         event:"OpenSecondScreen",
         color:"#00ECBB",
         screenType: GLOBALS.SECOND_SCREEN.USB
     },
     {
-        title:"Ngôn ngữ",
+        title:Language.Strings.ngon,
         icon:"ngonngu",
         event:"OpenSecondScreen",
         color:"#00ECBB",
         screenType: GLOBALS.SECOND_SCREEN.NGONNGU
     },
     {
-        title:"Cài đặt",
+        title:Language.Strings.caidat,
         icon:"setting",
         event:"OpenSecondScreen",
         color:"#00ECBC",
@@ -120,7 +122,8 @@ export default class SideBar extends React.Component
                 </LinearGradient>   
                 <View style={{height:40,width:"100%",
                         position:"absolute",bottom:0,backgroundColor:"transparent",justifyContent:"center",alignItems:"center"}}>
-                    <Text style={{fontSize:15,color:"#fff",fontFamily:GLOBALS.FONT.BOLD}}>BTE copyright © 2018</Text>
+                    <Text style={{fontSize:15,color:"#fff",fontFamily:GLOBALS.FONT.BOLD}}>{"BTE copyright © 2018 "} 
+                    </Text>
                 </View>
             </View>
         );

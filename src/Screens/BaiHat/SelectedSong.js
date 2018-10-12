@@ -9,6 +9,7 @@ import SongListView from '../../Views/SongListView.js';
 import Utils from '../../Utils/Utils';
 import Header from '../Header/header3';
 import MusicOnline from '../../Views/MusicOnlineButton.js';
+import Language from '../../DataManagers/Language';
 
 export default class SelectedSong extends BaseScreen {
     static propTypes = {
@@ -72,8 +73,8 @@ export default class SelectedSong extends BaseScreen {
                                             onPress={this._onBack}
                                         />
                                     </View>
-                                    <Text style={[styles.title]}>
-                                        BÀI ĐÃ CHỌN
+                                    <Text style={[GLOBALS.TITLE]}>
+                                        {Language.Strings.dachon.toUpperCase()}
                                     </Text>
                                 </View>}
                         />  
@@ -107,12 +108,6 @@ const styles = StyleSheet.create({
         top:0,
         position:"absolute",
         zIndex:3,
-    },
-    title: {
-        fontSize: 20,
-        marginLeft:5,
-        color:"#fff",
-        fontFamily:'SF-Pro-Text-Bold'
     },
 
 })

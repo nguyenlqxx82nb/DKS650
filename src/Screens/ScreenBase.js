@@ -28,7 +28,6 @@ class BaseScreen extends React.Component {
         sizeX : Utils.Width(),
         sizeY : Utils.Height(),
         transition : GLOBALS.TRANSITION.FADE,
-        bottom : GLOBALS.FOOTER_HEIGHT,
         type : GLOBALS.SCREEN_TYPE.BOTTOM,
         preLoad : true,
         startTrans : 100,
@@ -39,8 +38,8 @@ class BaseScreen extends React.Component {
     MAX_SCROLL_HEIGHT = 135;
     _offsetY = 0;
     _headerTopY = 0;
-    _allowLoad = false
-
+    _allowLoad = false;
+    _bottom = 0;
     constructor(props) {
         super(props);
 
@@ -60,6 +59,8 @@ class BaseScreen extends React.Component {
         this._maxIndex = this.props.maxZindex;
 
         this._scrollY = new Animated.Value(0);
+
+        this._bottom = (this.props.bottom == null)? GLOBALS.FOOTER_HEIGHT:this.props.bottom;
     }
     setVisible = (isVisible) =>{
         this._isVisible = isVisible;
@@ -301,7 +302,7 @@ class BaseScreen extends React.Component {
 
     render() {
         const {opacity,posX,posY} = this.animate;
-        const { bottom,type , maxZindex,sizeX,sizeY} = this.props;
+        const {type , maxZindex,sizeX,sizeY} = this.props;
         var style = {};
         // if(type == GLOBALS.SCREEN_TYPE.BOTTOM){
         //     style.top = 0;
@@ -322,7 +323,7 @@ class BaseScreen extends React.Component {
                     start={{x: 0.1, y: 0.1}} end={{x: 1, y: 1}} 
                     colors={['#444284', '#434B8C', '#445D9D', '#436BA8', '#2C87A2', '#1F98A1', '#05BA9B']} 
                     style={{flex:1, width:'100%'}}>
-                    <View style={{flex:1, marginBottom:bottom, width:'100%'}}>
+                    <View style={{flex:1, marginBottom:this._bottom, width:'100%'}}>
                         {this.renderContentView()}
                     </View>
                 </LinearGradient>

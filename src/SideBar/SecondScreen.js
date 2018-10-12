@@ -8,8 +8,8 @@ import GLOBALS from '../DataManagers/Globals.js';
 import Ngonngu from '../SideBar/Ngonngu';
 import Secure from '../SideBar/Secure';
 import SongListScreen from '../Screens/BaiHat/SongListScreen';
-
 import { EventRegister  } from 'react-native-event-listeners';
+import Language from '../DataManagers/Language'
 
 export default class SecondScreen extends BaseScreen {
     static propTypes = {
@@ -79,11 +79,11 @@ export default class SecondScreen extends BaseScreen {
                     //transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
                     listType={GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD}
-                    title ={"BÀI CHƯA TẢI"}
+                    title ={Language.Strings.baichuatai.toUpperCase()}
                     onBack={this._onBack}
                     ref = {ref =>(this._undownloadScreen=ref)}
                     preLoad = {false}
-                    searchHolder = {"Bài chưa tải"}
+                    searchHolder = {Language.Strings.baichuatai}
                     //onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
                     //bottom={60}
                 />);
@@ -106,11 +106,11 @@ export default class SecondScreen extends BaseScreen {
                     //transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
                     listType={GLOBALS.SONG_LIST_TYPE.DOWNLOADING}
-                    title ={"BÀI ĐANG TẢI"}
+                    title ={Language.Strings.baichuatai.toUpperCase()}
                     onBack={this._onBack}
                     ref = {ref =>(this._downloadScreen=ref)}
                     preLoad = {false}
-                    searchHolder = {"Bài đang tải"}
+                    searchHolder = {Language.Strings.baichuatai}
                     //onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
                     //bottom={60}
                 />);
@@ -125,11 +125,11 @@ export default class SecondScreen extends BaseScreen {
                     //transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
                     listType={GLOBALS.SONG_LIST_TYPE.USB}
-                    title ={"BÀI USB"}
+                    title ={Language.Strings.usb.toUpperCase()}
                     onBack={this._onBack}
                     ref = {ref =>(this._usbScreen=ref)}
                     preLoad = {false}
-                    searchHolder = {"Bài usb"}
+                    searchHolder = {Language.Strings.usb}
                     //onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
                     //bottom={60}
                 />);

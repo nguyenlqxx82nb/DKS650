@@ -7,6 +7,7 @@ import GLOBALS from '../../DataManagers/Globals';
 import {Grid,Row,Col} from 'react-native-easy-grid'
 import Utils from '../../Utils/Utils';
 import  CustomIcon from '../../Components/CustomIcon';
+import DATA_INFO from '../../DataManagers/DataInfo';
 
 const isIOS = Platform.OS === 'ios';
 
@@ -18,6 +19,7 @@ export default class SongOnlineItem extends React.Component {
     channel: PropTypes.string,
     maxOpacity: PropTypes.number,
     onPress : PropTypes.func,
+    onPlayPress : PropTypes.func,
     height2 : PropTypes.number,
     width: PropTypes.number
   }
@@ -63,6 +65,13 @@ export default class SongOnlineItem extends React.Component {
     }
   }
 
+  onPlayPress = () =>{
+    const {onPlayPress} = this.props;
+    if(onPlayPress != null){
+      onPlayPress();
+    }
+  }
+
 //   find_dimesions = (layout) =>{
 //     const {x, y, width, height} = layout;
 //     this._rippleView.setNativeProps({style:{
@@ -73,13 +82,16 @@ export default class SongOnlineItem extends React.Component {
 //   }
   render() {
     //console.warn(" url = "+GLOBALS.SINGER_SEX[1]);
-    const {width,height2,thumbnail} = this.props;
+    const {width,height2,thumbnail,id} = this.props;
     var _h = height2 - 25;
     var imageHeight = width*18/32;
     var container = {};
     if(GLOBALS.LANDSCAPE)
       container = {marginLeft:5, marginRight:5};
 
+    var _isSelected = (DATA_INFO.PLAY_QUEUE.indexOf(id) > 0)?true:false;
+    //console.warn("select = "+_isSelected+" , id = "+id);
+    //_isSelected = true;
     return (
       <View style={[{flex:1},container]}>
           <View style={{width:width,height:height2, position:"absolute",top:0,zIndex:1}}>
@@ -127,10 +139,13 @@ export default class SongOnlineItem extends React.Component {
                  <ListItem
                     rippleRound = {true} 
                     style={{width:70,height:70,justifyContent:"center",alignItems:"center"}}
-                    onPress = {this.onPressed}>
+                    onPress = {this.onPlayPress}>
                     <CustomIcon name="play" color="#14DCC4" size={40} />
                  </ListItem> 
           </View>
+          {_isSelected &&
+            <View style={{position:"absolute",top:10,right:10,width:40,height:40,zIndex:5}}> 
+                <CustomIcon name="mkDung" color="#14DCC4" size={35} /></View>}
       </View>
     );
   }

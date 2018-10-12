@@ -94,6 +94,7 @@ public class MyModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void addSongToEndOfList(String songId){
+
         Tools.addSongToEndOfList(songId);
     }
 
@@ -166,13 +167,14 @@ public class MyModule extends ReactContextBaseJavaModule {
 
     private void listenNetworkInfoChange() {
         IntentFilter filter;
-        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
-            filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        }
-        else{
-            filter = new IntentFilter("RNNetInfoChange");
-        }
+//        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
+//            filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+//        }
+//        else{
+//            filter = new IntentFilter("RNNetInfoChange");
+//        }
        //filter.addAction("android.intent.action.LOCKED_BOOT_COMPLETED");
+        filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         mReactContext.registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {

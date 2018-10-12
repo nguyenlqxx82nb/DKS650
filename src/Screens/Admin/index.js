@@ -1,5 +1,5 @@
 import React from "react";
-import {Text,StyleSheet,View,ListView} from "react-native";
+import {Text,StyleSheet,View,ListView,Alert} from "react-native";
 import ListItem from '../../Components/ListItem';
 import CustomIcon from '../../Components/CustomIcon';
 import { EventRegister } from 'react-native-event-listeners'
@@ -18,80 +18,83 @@ import Auto from './Auto';
 
 import GLOBALS from "../../DataManagers/Globals";
 import Utils from "../../Utils/Utils";
+import Language from '../../DataManagers/Language';
+import BoxControl from '../../DataManagers/BoxControl';
+import DATA_INFO from '../../DataManagers/DataInfo';
 
 const datas = [
     {
-        title:"Chữ chạy TV",
-        icon:"singOpt",
+        title:Language.Strings.admin.chuchay,
+        icon:"chu-chay",
         event:"OpenSecondScreen",
         color:"#00ECBB",
         screenType: GLOBALS.ADMIN_SCREEN.CHU_CHAY
     },
     {
-        title:"Cài đặt autoplay",
-        icon:"tuychon",
+        title:Language.Strings.admin.auto,
+        icon:"auto",
         event:"OpenSecondScreen",
         color:"#00ECBB",
         screenType: GLOBALS.ADMIN_SCREEN.AUTO_PLAY
     },
     {
-        title:"Ngõ ra video",
-        icon:"mic2",
+        title:Language.Strings.admin.video,
+        icon:"ngo-ra-video",
         event:"OpenSecondScreen",
         color:"#00ECBB",
         screenType: GLOBALS.ADMIN_SCREEN.NGO_VIDEO
     },
     {
-        title:"Đặt mật khẩu Admin",
-        icon:"uutien",
+        title:Language.Strings.admin.matkhau,
+        icon:"password",
         event:"OpenSecondScreen",
         color:"#00ECBB",
         screenType: GLOBALS.ADMIN_SCREEN.MAT_KHAU
     },
     {
-        title:"Cài đặt Wifi",
-        icon:"setting",
+        title:Language.Strings.admin.wifi,
+        icon:"wifi",
         event:"OpenSecondScreen",
         color:"#00ECBC",
         screenType: GLOBALS.ADMIN_SCREEN.WIFI
     },
     {
-        title:"Thiết lập mạng Lan",
-        icon:"setting",
+        title:Language.Strings.admin.lan,
+        icon:"lan",
         event:"OpenSecondScreen",
         color:"#00ECBC",
         screenType: GLOBALS.ADMIN_SCREEN.LAN
     },
     {
-        title:"Thiết lập mạng Wlan",
-        icon:"setting",
+        title:Language.Strings.admin.wlan,
+        icon:"airplay",
         event:"OpenSecondScreen",
         color:"#00ECBC",
         screenType: GLOBALS.ADMIN_SCREEN.WLAN
     },
     {
-        title:"Địa chỉ máy chủ",
-        icon:"setting",
+        title:Language.Strings.admin.domain,
+        icon:"musicOnline",
         event:"OpenSecondScreen",
         color:"#00ECBC",
         screenType: GLOBALS.ADMIN_SCREEN.SERVER
     },
     {
-        title:"Quét nhạc",
-        icon:"setting",
+        title:Language.Strings.admin.san,
+        icon:"Scan-song-01",
         event:"OpenSecondScreen",
         color:"#00ECBC",
         screenType: GLOBALS.ADMIN_SCREEN.SAN_MUSIC
     },
     {
-        title:"Cập nhật dữ liệu",
-        icon:"setting",
+        title:Language.Strings.admin.data,
+        icon:"update",
         event:"OpenSecondScreen",
         color:"#00ECBC",
         screenType: GLOBALS.ADMIN_SCREEN.DATA
     },
     {
-        title:"Khởi động lại",
+        title:Language.Strings.admin.restart,
         icon:"restart",
         event:"Restart",
         color:"#0093FF",
@@ -99,7 +102,7 @@ const datas = [
     },
     
     {
-        title:"Tắt máy",
+        title:Language.Strings.admin.tatmay,
         icon:"shutdown",
         event:"Shutdown",
         color:"#FF2626",
@@ -123,7 +126,7 @@ export default class AdminScreen extends BaseScreen
     }
     _showCompleted = () =>{
         if(GLOBALS.LANDSCAPE)
-            this.showSubContent("Chữ chạy TV",<Chuchay />);
+            this.showSubContent(Language.Strings.admin.chuchay,<Chuchay />);
     }
     renderRow =(item)=>{
         const {title,icon,color,event,screenType} =item;
@@ -155,6 +158,82 @@ export default class AdminScreen extends BaseScreen
                         case GLOBALS.ADMIN_SCREEN.SERVER:
                             this.showSubContent(title,<ServerAdmin />);
                             break;
+                        case GLOBALS.ADMIN_SCREEN.SHUTDOWN:
+                            Alert.alert(
+                                Language.Strings.admin.confirm,
+                                Language.Strings.admin.tmMsg1,
+                                [
+                                    {text: Language.Strings.admin.ok, onPress: () => {
+                                        BoxControl.stbset(GLOBALS.ADMIN_CMD.SHUTDOWN,"",(error)=>{
+                                            if(error == 0){
+                                                EventRegister.emit("ShowToast",
+                                                    {message:Language.Strings.admin.tmMsg2,
+                                                     duration:5000});
+                                            }
+                                        });
+                                    }},
+                                    {text: Language.Strings.admin.cancel, onPress: () => {}}
+                                ],
+                                { cancelable: false }
+                            )
+                            break;
+                        case GLOBALS.ADMIN_SCREEN.RESTART:
+                            Alert.alert(
+                                Language.Strings.admin.confirm,
+                                Language.Strings.admin.restartMsg1,
+                                [
+                                    {text: Language.Strings.admin.ok, onPress: () => {
+                                        BoxControl.stbset(GLOBALS.ADMIN_CMD.RESTART,"",(error)=>{
+                                            if(error == 0){
+                                                EventRegister.emit("ShowToast",
+                                                    {message:Language.Strings.admin.restartMsg2,
+                                                     duration:5000});
+                                            }
+                                        });
+                                    }},
+                                    {text: Language.Strings.admin.cancel, onPress: () => {}}
+                                ],
+                                { cancelable: false }
+                            )
+                            break;
+                        case GLOBALS.ADMIN_SCREEN.SAN_MUSIC:
+                            Alert.alert(
+                                Language.Strings.admin.confirm,
+                                Language.Strings.admin.scanMsg1,
+                                [
+                                    {text: Language.Strings.admin.ok, onPress: () => {
+                                        BoxControl.stbset(GLOBALS.ADMIN_CMD.SAN_MUSIC,"",(error)=>{
+                                            if(error == 0){
+                                                EventRegister.emit("ShowToast",
+                                                    {message:Language.Strings.admin.scanMsg2,
+                                                     duration:15000});
+                                            }
+                                        });
+                                    }},
+                                    {text: Language.Strings.admin.cancel, onPress: () => {}}
+                                ],
+                                { cancelable: false }
+                            )
+                            break;
+                        case GLOBALS.ADMIN_SCREEN.DATA:
+                            Alert.alert(
+                                Language.Strings.admin.confirm,
+                                Language.Strings.admin.dataMsg1,
+                                [
+                                    {text: Language.Strings.admin.ok, onPress: () => {
+                                        BoxControl.stbset(GLOBALS.ADMIN_CMD.DATA,"",(error)=>{
+                                            if(error == 0){
+                                                EventRegister.emit("ShowToast",
+                                                    {message:Language.Strings.admin.dataMsg2,
+                                                     duration:5000});
+                                            }
+                                        });
+                                    }},
+                                    {text: Language.Strings.admin.cancel, onPress: () => {}}
+                                ],
+                                { cancelable: false }
+                            )
+                            break;
                         default:
                             break;
                     }
@@ -162,7 +241,9 @@ export default class AdminScreen extends BaseScreen
                 }}
                 style={{height:55,width:"100%"}}>
                 <View style={styles.listItem}>
-                    <CustomIcon name={icon} size ={25} style={{color:color}} />
+                    <View style={{width:50,justifyContent:"center",alignItems:"center",height:"100%"}}>
+                        <CustomIcon name={icon} size ={25} style={{color:color}} />
+                    </View>
                     <View style={{flex:1,justifyContent:"center",alignItems:"flex-start"}}>
                         <Text style={styles.title}>{title}</Text>
                     </View>
@@ -178,7 +259,7 @@ export default class AdminScreen extends BaseScreen
                     <View style={styles.leftContainer}>
                         <Header 
                             style={styles.header}
-                            title={"CÀI ĐẶT"} onBack={()=>{
+                            title={Language.Strings.caidat} onBack={()=>{
                             this.hide();
                         }} />
         
@@ -222,7 +303,7 @@ export default class AdminScreen extends BaseScreen
                         <View style={{height:50,zIndex:2 ,position:"absolute",width:"100%",top:0,zIndex:0}}>
                             <Header 
                                 style={{height:50}}
-                                title={"CÀI ĐẶT"} onBack={()=>{
+                                title={Language.Strings.caidat} onBack={()=>{
                                 this.hide();
                             }}/>
                         </View>

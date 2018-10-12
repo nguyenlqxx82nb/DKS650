@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import GLOBALS from '../../DataManagers/Globals.js';
 import { Col, Grid, Row } from "react-native-easy-grid";
 import BoxControl from '../../DataManagers/BoxControl';
-
+import Language from '../../DataManagers/Language';
 
 export default class Emoji extends React.Component {
     static propTypes = {
@@ -37,25 +37,25 @@ export default class Emoji extends React.Component {
                         <Row size={1}>
                             <Col size = {1} style={styles.inner}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.Emo1} size = {50}
-                                    text={{content: "Huýt Sáo", layout: 2}} textStyle={styles.textEmoji}
+                                    text={{content: Language.Strings.effect.huyt, layout: 2}} textStyle={styles.textEmoji}
                                     onPress={this.effectClick.bind(this,GLOBALS.EMOJI.HuytSao)}
                                     />
                             </Col>
                             <Col size = {1} style={styles.inner}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.Emo2} size = {50}
-                                    text={{content: "Nụ Hôn", layout: 2}} textStyle={styles.textEmoji}
+                                    text={{content: Language.Strings.effect.kiss, layout: 2}} textStyle={styles.textEmoji}
                                     onPress={this.effectClick.bind(this,GLOBALS.EMOJI.Kiss)}
                                     />
                             </Col>
                             <Col size = {1} style={styles.inner}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.Emo3} size = {50}
-                                    text={{content: "Cười", layout: 2}} textStyle={styles.textEmoji} 
+                                    text={{content: Language.Strings.effect.smile, layout: 2}} textStyle={styles.textEmoji} 
                                     onPress={this.effectClick.bind(this,GLOBALS.EMOJI.Smile)}
                                     />
                             </Col>
                             <Col size = {1} style={styles.inner}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.Emo4} size = {50}
-                                    text={{content: "Hò Reo", layout: 2}} textStyle={styles.textEmoji}
+                                    text={{content: Language.Strings.effect.horeo, layout: 2}} textStyle={styles.textEmoji}
                                     onPress={this.effectClick.bind(this,GLOBALS.EMOJI.HoRep)}
                                     />
                             </Col>
@@ -63,25 +63,25 @@ export default class Emoji extends React.Component {
                         <Row size={1}>
                             <Col size = {1} style={styles.inner}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.Emo5} size = {50}
-                                    text={{content: "Chấm Điểm", layout: 2}} textStyle={styles.textEmoji} 
+                                    text={{content: Language.Strings.effect.diem, layout: 2}} textStyle={styles.textEmoji} 
                                     onPress={this.effectClick.bind(this,GLOBALS.EMOJI.ChamDiem)}
                                     />
                             </Col>
                             <Col size = {1} style={styles.inner}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.Emo6} size = {50}
-                                    text={{content: "Vỗ Tay", layout: 2}} textStyle={styles.textEmoji}
+                                    text={{content: Language.Strings.effect.votay, layout: 2}} textStyle={styles.textEmoji}
                                     onPress={this.effectClick.bind(this,GLOBALS.EMOJI.VoTay)}
                                     />
                             </Col>
                             <Col size = {1} style={styles.inner}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.Emo7} size = {50}
-                                    text={{content: "Tặng Hoa", layout: 2}} textStyle={styles.textEmoji}
+                                    text={{content: Language.Strings.effect.rose, layout: 2}} textStyle={styles.textEmoji}
                                     onPress={this.effectClick.bind(this,GLOBALS.EMOJI.TangHoa)}
                                     />
                             </Col>
                             <Col size = {1} style={styles.inner}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.Emo8} size = {50}
-                                    text={{content: "Triệu Like", layout: 2}} textStyle={styles.textEmoji}
+                                    text={{content: Language.Strings.effect.like, layout: 2}} textStyle={styles.textEmoji}
                                     onPress={this.effectClick.bind(this,GLOBALS.EMOJI.Like)}
                                     />
                             </Col>
@@ -96,49 +96,49 @@ export default class Emoji extends React.Component {
                         <Row size={1}>
                             <Col size = {1} style={styles.inner}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.Emo1} size = {90}
-                                    text={{content: "Huýt Sáo", layout: 2}} textStyle={styles.textEmoji1}
+                                    text={{content: Language.Strings.effect.huyt, layout: 2}} textStyle={styles.textEmoji1}
                                     onPress={this.effectClick.bind(this,GLOBALS.EMOJI.HuytSao)}
                                     />
                             </Col>
                             <Col size = {1} style={styles.inner}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.Emo2} size = {90}
-                                    text={{content: "Nụ Hôn", layout: 2}} textStyle={styles.textEmoji1}
+                                    text={{content: Language.Strings.effect.kiss, layout: 2}} textStyle={styles.textEmoji1}
                                     onPress={this.effectClick.bind(this,GLOBALS.EMOJI.Kiss)}
                                     />
                             </Col>
                             <Col size = {1} style={styles.inner}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.Emo3} size = {90}
-                                    text={{content: "Cười", layout: 2}} textStyle={styles.textEmoji1} 
+                                    text={{content:Language.Strings.effect.smile, layout: 2}} textStyle={styles.textEmoji1} 
                                     onPress={this.effectClick.bind(this,GLOBALS.EMOJI.Smile)}
                                     />
                             </Col>
                             <Col size = {1} style={styles.inner}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.Emo4} size = {90}
-                                    text={{content: "Hò Reo", layout: 2}} textStyle={styles.textEmoji1}
+                                    text={{content: Language.Strings.effect.horeo, layout: 2}} textStyle={styles.textEmoji1}
                                     onPress={this.effectClick.bind(this,GLOBALS.EMOJI.HoRep)}
                                     />
                             </Col>
                             <Col size = {1} style={styles.inner}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.Emo5} size = {90}
-                                    text={{content: "Chấm Điểm", layout: 2}} textStyle={styles.textEmoji1} 
+                                    text={{content: Language.Strings.effect.diem, layout: 2}} textStyle={styles.textEmoji1} 
                                     onPress={this.effectClick.bind(this,GLOBALS.EMOJI.ChamDiem)}
                                     />
                             </Col>
                             <Col size = {1} style={styles.inner}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.Emo6} size = {90}
-                                    text={{content: "Vỗ Tay", layout: 2}} textStyle={styles.textEmoji1}
+                                    text={{content: Language.Strings.effect.votay, layout: 2}} textStyle={styles.textEmoji1}
                                     onPress={this.effectClick.bind(this,GLOBALS.EMOJI.VoTay)}
                                     />
                             </Col>
                             <Col size = {1} style={styles.inner}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.Emo7} size = {90}
-                                    text={{content: "Tặng Hoa", layout: 2}} textStyle={styles.textEmoji1}
+                                    text={{content: Language.Strings.effect.rose, layout: 2}} textStyle={styles.textEmoji1}
                                     onPress={this.effectClick.bind(this,GLOBALS.EMOJI.TangHoa)}
                                     />
                             </Col>
                             <Col size = {1} style={styles.inner}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.Emo8} size = {90}
-                                    text={{content: "Triệu Like", layout: 2}} textStyle={styles.textEmoji1}
+                                    text={{content: Language.Strings.effect.diem, layout: 2}} textStyle={styles.textEmoji1}
                                     onPress={this.effectClick.bind(this,GLOBALS.EMOJI.Like)}
                                     />
                             </Col>

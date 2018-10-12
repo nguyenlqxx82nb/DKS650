@@ -3,6 +3,7 @@ import {StyleSheet,TextInput, View} from "react-native";
 import GLOBALS from "../../DataManagers/Globals";
 import PropTypes from 'prop-types';
 import IconRippe from '../../Components/IconRippe';
+import Language from '../../DataManagers/Language';
 
 export default class ButtonAdmin extends React.Component
 {   
@@ -11,7 +12,7 @@ export default class ButtonAdmin extends React.Component
         onPress : PropTypes.func,
     };
     static defaultProps = {
-        title : "Lưu lại"
+        title : Language.Strings.admin.save
     }
 
     constructor(props) {

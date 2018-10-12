@@ -28,23 +28,10 @@ const BOX_COMMAND ={
 
 class BoxControl {
  
-    static syncPlaybackQueue(){
-        console.warn("ping 0 ");
-        
-        setTimeout(()=>{
-            console.warn("ping 1 ");
-            this.ping();
-        },1000);
-    }
-
-    static ping(){
-        
-        setTimeout(()=>{
-            this.ping();
-        }, 1000);
-    }
-
     static play(){
+        if(!GLOBALS.IS_BOX_CONNECTED)
+            return;
+
         if(DATA_INFO.PLAYBACK_INFO.IsPlaying)
             BTE_LIB.sendRequestControlBox2(BOX_COMMAND.BYTE_PLAY_OR_PAUSE,1);
         else
@@ -52,6 +39,9 @@ class BoxControl {
     }
 
     static mute(){
+        if(!GLOBALS.IS_BOX_CONNECTED)
+            return;
+
         if(DATA_INFO.PLAYBACK_INFO.IsMute)
             BTE_LIB.sendRequestControlBox2(BOX_COMMAND.BYTE_MUTE,1);
         else
@@ -59,38 +49,65 @@ class BoxControl {
     }
 
     static volumeChange(value){
+        if(!GLOBALS.IS_BOX_CONNECTED)
+            return;
+
         BTE_LIB.sendRequestControlBox3(BOX_COMMAND.BYTE_SET_VOLUME,1,value*100);
     }
 
     static selectSong(songId){
+        if(!GLOBALS.IS_BOX_CONNECTED)
+            return;
+
         BTE_LIB.addSongToEndOfList(songId);
     }
 
     static selectYoutubeSong(videoId,videoName,videoType){
+        if(!GLOBALS.IS_BOX_CONNECTED)
+            return;
+
         BTE_LIB.addYoutubeToEndOfList(videoId,videoName,videoType);
     }
 
     static selectYoutubeSong2(videoId,videoName){
+        if(!GLOBALS.IS_BOX_CONNECTED)
+            return;
+
         BTE_LIB.addYoutubeToEndOfList2(videoId,videoName);
     }
 
     static playNow(songId){
+        if(!GLOBALS.IS_BOX_CONNECTED)
+            return;
+
         BTE_LIB.playNow(songId);
     }
 
     static priority(songId){
+        if(!GLOBALS.IS_BOX_CONNECTED)
+            return;
+
         BTE_LIB.priority(songId);
     }
 
     static rePlay(){
+        if(!GLOBALS.IS_BOX_CONNECTED)
+            return;
+
         BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_REPLAY);
     }
 
     static nextSong(){
+        if(!GLOBALS.IS_BOX_CONNECTED)
+            return;
+
         BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_NEXT_SONG);
     }
 
-    static fetchSystemInfo(){
+    static fetchSystemInfo(callback){
+        if(!GLOBALS.IS_BOX_CONNECTED)
+            return;
+
         BTE_LIB.fetchSystemInfo((stb_videoput,stb_audioput,stb_revolvint1,stb_databasetype
             ,stb_downdomain,stb_delesongpwd,stb_netmode,stb_lantype,
             stb_ipadd,stb_gateway,stb_wlanid,stb_wlanpwd,stb_ssidid,
@@ -112,26 +129,30 @@ class BoxControl {
                 DATA_INFO.SYSTEM_INFO.stb_ssidpwd = stb_ssidpwd;
                 DATA_INFO.SYSTEM_INFO.stb_publicsong = stb_publicsong;
 
-                console.warn(DATA_INFO.SYSTEM_INFO.stb_videoput + " \n " + 
-                            DATA_INFO.SYSTEM_INFO.stb_audioput + " \n" + 
-                            DATA_INFO.SYSTEM_INFO.stb_revolvint1 + " \n " + 
-                            DATA_INFO.SYSTEM_INFO.stb_databasetype + " \n " + 
-                            DATA_INFO.SYSTEM_INFO.stb_downdomain + " ,\n " + 
-                            DATA_INFO.SYSTEM_INFO.stb_delesongpwd + " \n " + 
-                            DATA_INFO.SYSTEM_INFO.stb_lantype + " \n " + 
-                            DATA_INFO.SYSTEM_INFO.stb_netmode + " \n " + 
-                            DATA_INFO.SYSTEM_INFO.stb_gateway + " \n " + 
-                            DATA_INFO.SYSTEM_INFO.stb_ipadd + " \n " + 
-                            DATA_INFO.SYSTEM_INFO.stb_wlanid + " \n " + 
-                            DATA_INFO.SYSTEM_INFO.stb_wlanpwd + " \n " + 
-                            DATA_INFO.SYSTEM_INFO.stb_ssidid + " \n " + 
-                            DATA_INFO.SYSTEM_INFO.stb_ssidpwd + " \n " + 
-                            DATA_INFO.SYSTEM_INFO.stb_publicsong + " \n ");
+                // console.warn(DATA_INFO.SYSTEM_INFO.stb_videoput + " \n " + 
+                //             DATA_INFO.SYSTEM_INFO.stb_audioput + " \n" + 
+                //             DATA_INFO.SYSTEM_INFO.stb_revolvint1 + " \n " + 
+                //             DATA_INFO.SYSTEM_INFO.stb_databasetype + " \n " + 
+                //             DATA_INFO.SYSTEM_INFO.stb_downdomain + " ,\n " + 
+                //             DATA_INFO.SYSTEM_INFO.stb_delesongpwd + " \n " + 
+                //             DATA_INFO.SYSTEM_INFO.stb_lantype + " \n " + 
+                //             DATA_INFO.SYSTEM_INFO.stb_netmode + " \n " + 
+                //             DATA_INFO.SYSTEM_INFO.stb_gateway + " \n " + 
+                //             DATA_INFO.SYSTEM_INFO.stb_ipadd + " \n " + 
+                //             DATA_INFO.SYSTEM_INFO.stb_wlanid + " \n " + 
+                //             DATA_INFO.SYSTEM_INFO.stb_wlanpwd + " \n " + 
+                //             DATA_INFO.SYSTEM_INFO.stb_ssidid + " \n " + 
+                //             DATA_INFO.SYSTEM_INFO.stb_ssidpwd + " \n " + 
+                //             DATA_INFO.SYSTEM_INFO.stb_publicsong + " \n ");
+                if(callback != null)
+                    callback();
         });
     }
 
     static downloadSong(id,callback) {
-        //console.warn("Download song id = "+id);
+        if(!GLOBALS.IS_BOX_CONNECTED)
+            return;
+
         BTE_LIB.stbset(BOX_COMMAND.BYTE_DOWNLOAD_SONG,id+",",(errorCode)=>{
             //console.warn("Download errorCode = "+errorCode);
             if(errorCode == 0){
@@ -151,6 +172,9 @@ class BoxControl {
     }   
 
     static effect(type){
+        if(!GLOBALS.IS_BOX_CONNECTED)
+            return;
+
         switch(type){
             case GLOBALS.EMOJI.HuytSao:
                 BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_WHISTLE);
@@ -182,6 +206,9 @@ class BoxControl {
     }
 
     static getDownloadQueue(){
+        if(!GLOBALS.IS_BOX_CONNECTED)
+            return;
+            
         DatabaseManager.getDownloadQueue(
             (datas)=>{
                 if(datas != null){
@@ -212,6 +239,12 @@ class BoxControl {
         )
     }
 
+    static stbset(cmd,url,callback){
+        //console.warn(cmd +" , "+url);
+        BTE_LIB.stbset(cmd,url,(error)=>{
+            callback(error);
+        });
+    }
 }
 
 export default BoxControl;

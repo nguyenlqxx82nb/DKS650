@@ -7,6 +7,7 @@ import BoxControl from '../../DataManagers/BoxControl'
 import { EventRegister  } from 'react-native-event-listeners';
 import ListItem from '../../Components/ListItem';
 import CustomIcon from '../../Components/CustomIcon';
+import Language from '../../DataManagers/Language';
 
 export default class SongMenu extends React.Component {
     static propTypes = {
@@ -21,7 +22,6 @@ export default class SongMenu extends React.Component {
     }; 
     constructor(props) {
         super(props);
-        
     }
 
     _close = () =>{
@@ -43,6 +43,13 @@ export default class SongMenu extends React.Component {
                 this._close();
                 break;
             case GLOBALS.SONG_ACTION.ADD_AUTO:
+                BoxControl.stbset(GLOBALS.ADMIN_CMD.ADD_AUTO,songId+",",(error)=>{
+                    if(error == 0){
+                        EventRegister.emit("ShowToast",{message:Language.Strings.addAuto});
+                        BoxControl.fetchSystemInfo();
+                        this._close();
+                    }
+                });
                 break;
             case GLOBALS.SONG_ACTION.SINGER:
                 EventRegister.emit("OpenSingerSong",{name:actor.toUpperCase()});

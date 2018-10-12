@@ -5,9 +5,10 @@ import IconRippe from '../Components/IconRippe.js'
 import { Col, Grid, Row } from "react-native-easy-grid";
 import GLOBALS from '../DataManagers/Globals.js';
 import PassInput from './PassInput';
-import Header from '../Screens/Header/header1';
+import Header from '../Screens/Header/header3';
 import {EventRegister} from 'react-native-event-listeners';
 import Utils from '../Utils/Utils';
+import Language from '../DataManagers/Language';
 
 export default class Secure extends React.Component {
     static propTypes = {
@@ -18,7 +19,6 @@ export default class Secure extends React.Component {
     }
     constructor(props) {
         super(props);
-
     }
     
     _handleAddNumber = (number)=>{
@@ -30,10 +30,10 @@ export default class Secure extends React.Component {
     render = () => {
         var maxSize = Math.max(Utils.Width(),Utils.Height());
         var inputSize = {};
-        var containerSize = {};
+        var containerSize = {},title={},textNumber={};
 
         if(!GLOBALS.LANDSCAPE){
-            if(maxSize < 800){
+            if(!GLOBALS.MOBILE_SMALL){
                 inputSize.width = 290;
                 inputSize.height = 60;
 
@@ -41,19 +41,27 @@ export default class Secure extends React.Component {
                 containerSize.height=250;
             }
             else{
-                inputSize.width = 280;
-                inputSize.height = 45;
+                inputSize.width = 270;
+                inputSize.height = 50;
 
-                containerSize.width= 280;
-                containerSize.height=230;
+                containerSize.width= 270;
+                containerSize.height=220;
+                title={fontSize:22};
+                textNumber={fontSize:25};
             }
             
             return (
-                <View style={{flex:1, marginBottom: GLOBALS.FOOTER_HEIGHT}}>
-                    <Header style={{height:45}} title={"Mật Khẩu"} onBack={()=>{this.props.onBack()}} />
-
+                <View style={{flex:1}}>
+                    <View style={{height:45, width:"100%",justifyContent:"center",alignItems:"center"}}>
+                        <Header 
+                            onBack={()=>{this.props.onBack()}} 
+                            style = {{height:GLOBALS.HEADER_HEIGHT}}
+                            left = {<Text style={[GLOBALS.TITLE]}>
+                                        {Language.Strings.mk.toUpperCase()}
+                                    </Text>}  />
+                    </View>    
                     <View style={{ flex: 1,backgroundColor:"transparent",justifyContent:"center",alignItems:"center"}}>
-                        <Text style={styles.title}>NHẬP MẬT KHẨU</Text>
+                        <Text style={[styles.title,title]}>{Language.Strings.nmk.toUpperCase()}</Text>
                         <View style={inputSize}>
                             <PassInput 
                                     ref = {ref=>(this._passInput = ref)}
@@ -75,21 +83,21 @@ export default class Secure extends React.Component {
                                     <Col size={1}>
                                         <View style={styles.buttonContainer}>
                                             <IconRippe name={""}
-                                                text={{content: "1", layout: 1}} textStyle={styles.textNumber}
+                                                text={{content: "1", layout: 1}} textStyle={[styles.textNumber,textNumber]}
                                                 onPress={this._handleAddNumber.bind(this,"1")} />
                                         </View>
                                     </Col>
                                     <Col size={1}>
                                         <View style={styles.buttonContainer}>
                                             <IconRippe name={""}
-                                                text={{content: "2", layout: 1}} textStyle={styles.textNumber} 
+                                                text={{content: "2", layout: 1}} textStyle={[styles.textNumber,textNumber]} 
                                                 onPress={this._handleAddNumber.bind(this,"2")} />
                                         </View>
                                     </Col>
                                     <Col size={1}>
                                         <View style={styles.buttonContainer}>
                                             <IconRippe name={""}
-                                                text={{content: "3", layout: 1}} textStyle={styles.textNumber} 
+                                                text={{content: "3", layout: 1}} textStyle={[styles.textNumber,textNumber]} 
                                                 onPress={this._handleAddNumber.bind(this,"3")} />
                                         </View>
                                     </Col>
@@ -98,21 +106,21 @@ export default class Secure extends React.Component {
                                     <Col size={1}>
                                         <View style={styles.buttonContainer}>
                                             <IconRippe name={""}
-                                                text={{content: "4", layout: 1}} textStyle={styles.textNumber} 
+                                                text={{content: "4", layout: 1}} textStyle={[styles.textNumber,textNumber]} 
                                                 onPress={this._handleAddNumber.bind(this,"4")} />
                                         </View>
                                     </Col>
                                     <Col size={1}>
                                         <View style={styles.buttonContainer}>
                                             <IconRippe name={""}
-                                                text={{content: "5", layout: 1}} textStyle={styles.textNumber}
+                                                text={{content: "5", layout: 1}} textStyle={[styles.textNumber,textNumber]}
                                                 onPress={this._handleAddNumber.bind(this,"5")} />
                                         </View>
                                     </Col>
                                     <Col size={1}>
                                         <View style={styles.buttonContainer}>
                                             <IconRippe name={""}
-                                                text={{content: "6", layout: 1}} textStyle={styles.textNumber} 
+                                                text={{content: "6", layout: 1}} textStyle={[styles.textNumber,textNumber]} 
                                                 onPress={this._handleAddNumber.bind(this,"6")} />
                                         </View>
                                     </Col>
@@ -121,21 +129,21 @@ export default class Secure extends React.Component {
                                     <Col size={1}>
                                         <View style={styles.buttonContainer}>
                                             <IconRippe name={""}
-                                                text={{content: "7", layout: 1}} textStyle={styles.textNumber} 
+                                                text={{content: "7", layout: 1}} textStyle={[styles.textNumber,textNumber]} 
                                                 onPress={this._handleAddNumber.bind(this,"7")} />
                                         </View>
                                     </Col>
                                     <Col size={1}>
                                         <View style={styles.buttonContainer}>
                                             <IconRippe name={""}
-                                                text={{content: "8", layout: 1}} textStyle={styles.textNumber}
+                                                text={{content: "8", layout: 1}} textStyle={[styles.textNumber,textNumber]}
                                                 onPress={this._handleAddNumber.bind(this,"8")}  />
                                         </View>
                                     </Col>
                                     <Col size={1}>
                                         <View style={styles.buttonContainer}>
                                             <IconRippe name={""}
-                                                text={{content: "9", layout: 1}} textStyle={styles.textNumber} 
+                                                text={{content: "9", layout: 1}} textStyle={[styles.textNumber,textNumber]} 
                                                 onPress={this._handleAddNumber.bind(this,"9")} />
                                         </View>
                                     </Col>
@@ -149,14 +157,14 @@ export default class Secure extends React.Component {
                                     <Col size={1}>
                                         <View style={styles.buttonContainer}>
                                             <IconRippe name={""}
-                                                text={{content: "0", layout: 1}} textStyle={styles.textNumber} 
+                                                text={{content: "0", layout: 1}} textStyle={[styles.textNumber,textNumber]} 
                                                 onPress={this._handleAddNumber.bind(this,"9")}/>
                                         </View>
                                     </Col>
                                     <Col size={1}>
                                         <View style={styles.buttonContainer}>
                                             <IconRippe name={""}
-                                                text={{content: "Xóa", layout: 1}} textStyle={styles.textNumber}
+                                                text={{content: Language.Strings.remove, layout: 1}} textStyle={[styles.textNumber,textNumber]}
                                                 onPress={this._removeText}/>
                                         </View>
                                     </Col>
@@ -177,11 +185,11 @@ export default class Secure extends React.Component {
             containerSize.height=230;
             
             return (
-                <View style={{flex:1, marginBottom: GLOBALS.FOOTER_HEIGHT}}>
-                    <Header title={"MẬT KHẨU"} onBack={()=>{this.props.onBack()}} />
+                <View style={{flex:1}}>
+                    <Header title={Language.Strings.mk} onBack={()=>{this.props.onBack()}} />
 
                     <View style={{ flex: 1,backgroundColor:"transparent",justifyContent:"center",alignItems:"center"}}>
-                        <Text style={styles.title}>NHẬP MẬT KHẨU</Text>
+                        <Text style={[styles.title]}>{Language.Strings.nmk}</Text>
                         <View style={inputSize}>
                             <PassInput 
                                     ref = {ref=>(this._passInput = ref)}
@@ -195,7 +203,6 @@ export default class Secure extends React.Component {
                                     }}
                                 />
                         </View>
-                        
 
                         <View style={[styles.numberContainer,containerSize]}>
                             <Grid >
@@ -284,7 +291,7 @@ export default class Secure extends React.Component {
                                     <Col size={1}>
                                         <View style={styles.buttonContainer}>
                                             <IconRippe name={""}
-                                                text={{content: "Xóa", layout: 1}} textStyle={styles.textNumber}
+                                                text={{content: Language.Strings.remove, layout: 1}} textStyle={styles.textNumber}
                                                 onPress={this._removeText}/>
                                         </View>
                                     </Col>
@@ -311,7 +318,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer:{
         flex:1,
-        margin:6,
+        margin:(GLOBALS.MOBILE_SMALL)?4:6,
         borderRadius:10,
         backgroundColor:GLOBALS.COLORS.MAIN,
         shadowColor: '#000',
@@ -320,7 +327,7 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     title: {
-        fontSize: 20,
+        fontSize:20,
         //fontWeight: '300',
         color:"#fff",
         fontFamily:GLOBALS.FONT.BOLD,

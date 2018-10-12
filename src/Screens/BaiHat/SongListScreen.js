@@ -101,6 +101,7 @@ export default class SongListScreen extends BaseScreen {
     updateSinger = (name)=>{
         if(name != this.state.title){
             this._allowLoad = true;
+            this._searchHeader.setSearchHolder(name +" ...");
             this.setState({
                 singerName:name,
                 title: name
@@ -118,6 +119,7 @@ export default class SongListScreen extends BaseScreen {
     }
     updateSongType = (type,name)=>{
         if(type != this.state.songType){
+            this._searchHeader.setSearchHolder(name+" ...");
             this._allowLoad = true;
             this.setState({
                 songType:type,

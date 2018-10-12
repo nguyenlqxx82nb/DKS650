@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Alert,Animated, View,Text } from "react-native";
-import BaseScreen from "../ScreenBase.js"
+import BaseScreen from '../ScreenBase.js'
 import PropTypes from 'prop-types';
 import IconRippe from '../../Components/IconRippe.js'
 import GLOBALS from '../../DataManagers/Globals.js';
@@ -78,7 +78,6 @@ export default class SongTabScreen extends BaseScreen {
     }
     _onChangeTab = (page) =>{
         if(this._isVisible){
-            //console.warn("_onChangeTab");
             this._songTabs.loadData(this._searchTerm);
             this._handleListViewScroll(this._songTabs.getCurrentScrollOffset());
     

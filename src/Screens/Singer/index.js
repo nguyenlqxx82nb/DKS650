@@ -11,6 +11,7 @@ import SongListScreen from '../BaiHat/SongListScreen.js';
 import MusicOnline from '../../Views/MusicOnlineButton';
 import Header2 from '../Header/header2';
 import Header4 from '../Header/header4';
+import Language from "../../DataManagers/Language.js";
 
 export default class SingerScreen extends BaseScreen {
     _sex = GLOBALS.SINGER_SEX.ALL;
@@ -150,7 +151,7 @@ export default class SingerScreen extends BaseScreen {
                             onSearch={this._onSearch}
                             onSearchChange = {this._onSearchChange}
                             onBack = {this._onBack}
-                            left={<Text style={[styles.title]}>CA SỸ</Text>}
+                            left={<Text style={[styles.title]}>{Language.Strings.caidat}</Text>}
                         />
                     </Animated.View>
     

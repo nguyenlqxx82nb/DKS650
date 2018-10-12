@@ -22,9 +22,11 @@ export default class SearchInput extends React.Component {
         holder :"Tìm kiếm ..."
     };
     _showIndicator = false;
+    _holder = "";
     constructor(props) {
         super(props);
         this.height = 35;
+        this._holder = this.props.holder;
         this.state={
             value: "",
             showRemoveBtn : false
@@ -114,27 +116,41 @@ export default class SearchInput extends React.Component {
             this.setState({});
         }
     }
+    setHoler = (holder)=>{
+        if(holder != this._holder){
+            this._holder = holder;
+            this.setState({});
+        }
+    }
     render = () => {
         const {showRemoveBtn} =this.state;
         const {style,holder} = this.props;
         //console.warn("LANDSCAPE = "+GLOBALS.LANDSCAPE);
-        var conteinerStyle = {};
+        var conteinerStyle = {},indicator={};
         if(GLOBALS.LANDSCAPE){
             conteinerStyle = {
                 marginRight:0,
                 marginLeft: 0,
             }
         }
+        var inputStyle = {};
+        if (GLOBALS.MOBILE_SMALL){
+            inputStyle = {
+                fontSize : 14,
+                marginLeft:5,
+                marginRight:5
+            }
+        }
         return (
             <View style={[styles.container,conteinerStyle,style]}>
                 <CustomIcon size={15} name="search" style={{ color: "#9197CC", marginLeft: 10 }} />
                 <TextInput
-                   // secureTextEntry = {true}
+                    numberOfLines={1}
                     ref = {ref => (this._searchInput = ref)}
                     underlineColorAndroid={'transparent'}
                     placeholderTextColor={'#9192C6'}
-                    style={[styles.input]}
-                    placeholder={holder}
+                    style={[styles.input,inputStyle]}
+                    placeholder={this._holder}
                     onFocus = {this._handleTextFocus}
                     onBlur = {this._handleBlur}
                     onSubmitEditing = {this._handleTextSubmit}

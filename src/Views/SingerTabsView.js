@@ -6,8 +6,7 @@ import CustomScrollableTabBar from '../Components/CustomScrollableTabBar.js'
 import GLOBALS from '../DataManagers/Globals.js';
 import { EventRegister  } from 'react-native-event-listeners';
 import SingerListView from './SingerListView.js';
-import Globals from "../DataManagers/Globals.js";
-
+import Language from '../DataManagers/Language';
 
 export default class SingerTabsView extends React.Component {
     static propTypes = {
@@ -28,6 +27,18 @@ export default class SingerTabsView extends React.Component {
 
     constructor(props) {
         super(props);
+
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.vn] = Language.Strings.lanTab.vn;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.en] = Language.Strings.lanTab.en;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.cn] = Language.Strings.lanTab.cn;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.ja] = Language.Strings.lanTab.jp;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.kr] = Language.Strings.lanTab.kr;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.hk] = Language.Strings.lanTab.hk;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.hot] = Language.Strings.lanTab.hot;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.ml] = Language.Strings.lanTab.ma;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.taiwan] = Language.Strings.lanTab.tw;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.tl] = Language.Strings.lanTab.lao;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.ca] = Language.Strings.lanTab.ca;
     }
 
     componentWillMount() {
@@ -99,12 +110,12 @@ export default class SingerTabsView extends React.Component {
                             underlineStyle={{ backgroundColor: "#0ECAB1", height:30,bottom:5, borderRadius:15 }}
                             activeTextColor={"#0ECAB1"}
                             inactiveTextColor={"#fff"}
-                            textStyle={{ fontSize: 14, color: "#fff", fontFamily:Globals.FONT.BOLD }}
+                            textStyle={{ fontSize: (GLOBALS.MOBILE_SMALL)?12:14, color: "#fff", fontFamily:GLOBALS.FONT.BOLD }}
                             style={{ borderWidth: 0, }}
                             isTabRound = {true}
                             tabContainerStyle = {{height:30,borderRadius:15, marginLeft:5}}
                             style ={{height:40,top:this.props.tabTop}}
-                            tabWidth={100}
+                            tabWidth={(GLOBALS.MOBILE_SMALL)?80:100}
                         />}
                     >
                     {this.props.lanTabs.map((lan, index) => {

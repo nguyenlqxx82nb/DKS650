@@ -2,6 +2,8 @@
 import GLOBALS from './Globals';
 import BTElib from 'react-native-bte-lib';
 import DATA_INFO from '../DataManagers/DataInfo';
+import MixCloudAPI from './MixCloudAPI';
+import YoutubeAPI from './YoutubeAPI';
 
 var SQLite = require('react-native-sqlite-storage')
 var db = SQLite.openDatabase({name: 'testDB', createFromLocation: '~songbook.db'})
@@ -42,11 +44,26 @@ export default class MySQLMagager {
             //var songIds = "";
             let size = DATA_INFO.PLAY_QUEUE.length;
             for(i = 0; i< size; i++){
-                ids += DATA_INFO.PLAY_QUEUE[i];
-                if(i < size - 1){
+                //console.warn("songid = "+DATA_INFO.PLAY_QUEUE[i]);
+                if(!isNaN(DATA_INFO.PLAY_QUEUE[i])){
+                    ids += DATA_INFO.PLAY_QUEUE[i]+",";
+                }
+            }
+
+            if(ids.length >0)
+                ids = ids.slice(0, -1);
+        }
+        else if(listType == GLOBALS.SONG_LIST_TYPE.AUTO){
+            //var songIds = "";
+            let autoIds = DATA_INFO.SYSTEM_INFO.stb_publicsong.split(",");
+            let size = autoIds.length;
+            for(i = 0; i< size -1; i++){
+                ids += autoIds[i];
+                if(i < size - 2){
                     ids += ",";
                 }
             }
+            //console.warn("stb_publicsong = "+DATA_INFO.SYSTEM_INFO.stb_publicsong+", length= "+size);
         }
         else if(listType == GLOBALS.SONG_LIST_TYPE.DOWNLOADING){
             var size = 0,i=0;
@@ -96,18 +113,25 @@ export default class MySQLMagager {
             }
         }
         //console.warn("temp = "+temp +" , type = "+type+" , sort "+sort+", kwd= "+kwd+" , page = "+page+",ids = "+ids);
-        if((listType == GLOBALS.SONG_LIST_TYPE.SELECTED && ids == "")
-            || (listType == GLOBALS.SONG_LIST_TYPE.DOWNLOADING && ids == "")){
-            callback([]);
+        if((listType == GLOBALS.SONG_LIST_TYPE.DOWNLOADING && ids == "")
+            || (listType == GLOBALS.SONG_LIST_TYPE.SELECTED && ids == "")
+                || (listType == GLOBALS.SONG_LIST_TYPE.AUTO && ids == "")){
+            if(listType == GLOBALS.SONG_LIST_TYPE.SELECTED){
+                //console.warn("getSelectVideoOnline");
+                this.getSelectVideoOnline([],callback);
+            }
+            else 
+                callback([]);
         }
         else{
             BTElib.fetchSongs(type,type_val,actor,sort,temp,kwd,ids,page,pageCount,(datas)=>{
                 //console.warn("length songs = "+datas);
                 var songs = this.covertSongDatas(datas);
                 if(listType == GLOBALS.SONG_LIST_TYPE.SELECTED){
-                    songs = this.sortSelectSong(songs);
+                    this.getSelectVideoOnline(songs,callback);
                 }
-                callback(songs);
+                else
+                    callback(songs);
             });
         }
     }
@@ -152,15 +176,57 @@ export default class MySQLMagager {
         return datas;
     }
 
+    static getSelectVideoOnline(songs,callback){
+        let size = DATA_INFO.PLAY_QUEUE.length,_ids = "";
+        for(i = 0; i< size; i++){
+            if(isNaN(DATA_INFO.PLAY_QUEUE[i])){
+
+                _ids += DATA_INFO.PLAY_QUEUE[i]+",";
+            }
+        }
+        console.warn("ids = "+_ids);
+        if(_ids.length > 0){
+            YoutubeAPI.fetchOnlineSongsById(_ids,(videos)=>{
+                //console.warn("videos = "+videos.length);
+                for(var i=0; i<videos.length; i++){
+                    var item = {
+                        id: videos[i].id,
+                        name : videos[i].snippet.title,
+                        actor : "Youtube",
+                        singerName: "Youtube",
+                        status: GLOBALS.SING_STATUS.NORMAL,
+                        index: ""
+                    }
+    
+                    songs.push(item);
+                }
+                //console.warn("songs = "+songs.length)
+                songs = this.sortSelectSong(songs);
+                //console.warn("songs 2 = "+songs.length)
+                callback(songs);
+            },
+            (error)=>{
+    
+            });
+        }
+        else{
+            songs = this.sortSelectSong(songs);
+            //console.warn("songs 2 = "+songs.length)
+            callback(songs);
+        }
+    }
+
     static sortSelectSong(datas){
         var newDatas = [];
         var temps = {};
         for(var i=0; i<datas.length; i++){
+            //console.warn("video id = "+datas[i].id);
             temps[datas[i].id] = datas[i];
         }
 
         for(var j=0; j<DATA_INFO.PLAY_QUEUE.length; j++){
-            if(temps[DATA_INFO.PLAY_QUEUE[j]]!= null){
+            //console.warn("video id 2 = "+DATA_INFO.PLAY_QUEUE[j]);
+            if(temps[DATA_INFO.PLAY_QUEUE[j]] != null){
                 newDatas.push(temps[DATA_INFO.PLAY_QUEUE[j]]);
             }
         }

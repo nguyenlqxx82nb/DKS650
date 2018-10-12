@@ -348,6 +348,44 @@ export default {
         SONG_TYPE:2
     },
 
-    FOOTER_HEIGHT:60,
+    FOOTER_HEIGHT:0,
     HEADER_HEIGHT:40,
+
+    MOBILE_SMALL : false,
+
+    TABLET_SMALL : false,
+    TABLET_MEDIUM : false,
+    TABLET_LARGE : false,
+
+    TITLE: {
+        fontSize: 20,
+        marginLeft:5,
+        color:"#fff",
+        fontFamily:'SF-Pro-Text-Bold'
+    },
+
+    LAN : '',
+    PASS : '',
+
+    ADMIN_CMD : {
+        CHUCHAY : 242,
+        VIDEO : 236,
+        REMOVE_AUTO : 248,
+        ADD_AUTO : 247,
+        LAN : 236,
+        DOMAIN : 234,
+        WIFI : 237,
+        WLAN : 238,
+        SHUTDOWN : 246,
+        RESTART : 245,
+        SAN_MUSIC : 232,
+        DATA : 233,
+    },
+
+    TOAST_TYPE : {
+        INFO : 1,
+        WARNING : 2,
+        ERROR :3
+    }
+
 };

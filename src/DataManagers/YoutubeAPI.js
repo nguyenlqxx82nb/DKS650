@@ -5,6 +5,8 @@ const API_KEY = "AIzaSyB5JMptWGXqC7IJT3fTNdbMfthO9YsYkkY";
 const CHANNEL_ID = "UCKo00d6hS17XvaJL9-Wzlww";
 var SEARCH_API = "https://www.googleapis.com/youtube/v3/search?part=snippet";
 var CHANNEL_API = "https://www.googleapis.com/youtube/v3/channels?";
+var VIDEO_API = "https://www.googleapis.com/youtube/v3/videos/?part=snippet";
+
 const channelIds = [
     "UChWbouyyeaF9hk-QRgmYfMQ",
     "UCUVIGR0c8KmIgLy9hXHCkaw",
@@ -74,6 +76,20 @@ export default class YoutubeAPI {
             }
 
             return datas;
+        }
+    }
+
+    static async fetchOnlineSongsById(ids,callback,errorCallback){
+        var query = VIDEO_API;
+        query += "&id="+ids;
+        query += "&key="+API_KEY;
+        try {
+            let response = await fetch(query);
+            let responseJson = await response.json();
+            callback(responseJson.items);
+        } catch (error) {
+           // console.warn(error);
+           errorCallback(error);
         }
     }
 

@@ -7,7 +7,8 @@ import { Grid, Col, Row } from "react-native-easy-grid";
 import LinearGradient from 'react-native-linear-gradient';
 import GLOBALS from '../../DataManagers/Globals.js';
 import { EventRegister } from 'react-native-event-listeners';
-import Header from '../Header/header1';
+import Header from '../Header/header3';
+import Language from '../../DataManagers/Language';
 //import SongListScreen from '../BaiHat/SongListScreen';
 
 export default class TheloaiScreen extends BaseScreen {
@@ -44,15 +45,23 @@ export default class TheloaiScreen extends BaseScreen {
         }
     }
     renderContentView = () => {
+        var button = {}, textButton = {};
+        if(GLOBALS.MOBILE_SMALL){
+            textButton.fontSize = 17;
+            button.margin = 8;
+        }
+
+
         return (
             <View style={{ flex: 1, position: "relative" }}>
                 <View style={{ flex: 1 }}>
                     <View style={styles.headerContainer}>
                         <Header 
-                            style={{height:45}}
-                            title={"THỂ LOẠI"} 
                             onBack={()=>{this.props.onBack()}} 
                             style = {{height:GLOBALS.HEADER_HEIGHT}}
+                            left = {<Text style={[GLOBALS.TITLE]}>
+                                        {Language.Strings.tl.toUpperCase()}
+                                    </Text>}
                         />
                     </View>
 
@@ -60,97 +69,109 @@ export default class TheloaiScreen extends BaseScreen {
                         <Grid>
                             <Row size={1}>
                                 <Col size={1}>
-                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#07E2BF', '#35A1D1', '#6C54E7', '#9F0BFC']} style={[styles.button]}>
+                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} 
+                                            colors={['#07E2BF', '#35A1D1', '#6C54E7', '#9F0BFC']} style={[styles.button,button]}>
                                         <IconRippe vector={true} name={""}
-                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.DJ, "DJ Hot")}
-                                            text={{ content: "DJ Hot", layout: 1 }} textStyle={styles.textButton} />
+                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.DJ, Language.Strings.theloai.remix)}
+                                            text={{ content: Language.Strings.theloai.remix, layout: 1 }} textStyle={[styles.textButton,textButton]} />
                                     </LinearGradient>
                                 </Col>
                                 <Col size={1}>
-                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#37FAFD', '#809FD8', '#C14EB8', '#F60C9E']} style={[styles.button]}>
+                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} 
+                                    colors={['#37FAFD', '#809FD8', '#C14EB8', '#F60C9E']} style={[styles.button,button]}>
                                         <IconRippe vector={true} name={""}
-                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.TRE, "Nhạc Trẻ")}
-                                            text={{ content: "Nhạc Trẻ", layout: 1 }} textStyle={styles.textButton} />
-                                    </LinearGradient>
-                                </Col>
-                            </Row>
-                            <Row size={1}>
-                                <Col size={1}>
-                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#FFD800', '#FFB900', '#FF7D00', '#FF6500']} style={[styles.button]}>
-                                        <IconRippe vector={true} name={""}
-                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.VANG, "Nhạc Vàng")}
-                                            text={{ content: "Nhạc Vàng", layout: 1 }} textStyle={styles.textButton} />
-                                    </LinearGradient>
-                                </Col>
-                                <Col size={1}>
-                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#FFA794', '#FF7E80', '#FF4261', '#FF1048']} style={[styles.button]}>
-                                        <IconRippe vector={true} name={""}
-                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.DO, "Nhạc Đỏ")}
-                                            text={{ content: "Nhạc Đỏ", layout: 1 }} textStyle={styles.textButton} />
+                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.TRE, Language.Strings.theloai.nhactre)}
+                                            text={{ content: Language.Strings.theloai.nhactre, layout: 1 }} textStyle={[styles.textButton,textButton]} />
                                     </LinearGradient>
                                 </Col>
                             </Row>
                             <Row size={1}>
                                 <Col size={1}>
-                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#52E96C', '#37D38D', '#13B5B9', '#05A9CB']} style={[styles.button]}>
+                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} 
+                                    colors={['#FFD800', '#FFB900', '#FF7D00', '#FF6500']} style={[styles.button,button]}>
                                         <IconRippe vector={true} name={""}
-                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.SONGCA, "Song Ca")}
-                                            text={{ content: "Song Ca", layout: 1 }} textStyle={styles.textButton} />
+                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.VANG, Language.Strings.theloai.nhacvang)}
+                                            text={{ content: Language.Strings.theloai.nhacvang, layout: 1 }} textStyle={[styles.textButton,textButton]} />
                                     </LinearGradient>
                                 </Col>
                                 <Col size={1}>
-                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#2A9BFB', '#6196E6', '#B48DC5', '#D78AB8']} style={[styles.button]}>
+                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} 
+                                    colors={['#FFA794', '#FF7E80', '#FF4261', '#FF1048']} style={[styles.button,button]}>
                                         <IconRippe vector={true} name={""}
-                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.TN, "Thiếu Nhi")}
-                                            text={{ content: "Thiếu Nhi", layout: 1 }} textStyle={styles.textButton} />
-                                    </LinearGradient>
-                                </Col>
-                            </Row>
-                            <Row size={1}>
-                                <Col size={1}>
-                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#C3209B', '#B61FAF', '#9F1ED1', '#861CF7']} style={[styles.button]}>
-                                        <IconRippe vector={true} name={""}
-                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.LK, "Liên Khúc")}
-                                            text={{ content: "Liên Khúc", layout: 1 }} textStyle={styles.textButton} />
-                                    </LinearGradient>
-                                </Col>
-                                <Col size={1}>
-                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#F36010', '#C7584B', '#864DA1', '#4B42F0']} style={[styles.button]}>
-                                        <IconRippe vector={true} name={""}
-                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.SN, "Sinh Nhật")}
-                                            text={{ content: "Sinh Nhật", layout: 1 }} textStyle={styles.textButton} />
+                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.DO, Language.Strings.theloai.nhacdo)}
+                                            text={{ content: Language.Strings.theloai.nhacdo, layout: 1 }} textStyle={[styles.textButton,textButton]} />
                                     </LinearGradient>
                                 </Col>
                             </Row>
                             <Row size={1}>
                                 <Col size={1}>
-                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#FF8BE2', '#FF99B2', '#FFAC73', '#FFCB09']} style={[styles.button]}>
+                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} 
+                                    colors={['#52E96C', '#37D38D', '#13B5B9', '#05A9CB']} style={[styles.button,button]}>
                                         <IconRippe vector={true} name={""}
-                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.XUAN, "Nhạc Xuân")}
-                                            text={{ content: "Nhạc Xuân", layout: 1 }} textStyle={styles.textButton} />
+                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.SONGCA, Language.Strings.theloai.songca)}
+                                            text={{ content: Language.Strings.theloai.songca, layout: 1 }} textStyle={[styles.textButton,textButton]} />
                                     </LinearGradient>
                                 </Col>
                                 <Col size={1}>
-                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#B56CFE', '#C24EB9', '#D2275C', '#E1040B']} style={[styles.button]}>
+                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} 
+                                        colors={['#2A9BFB', '#6196E6', '#B48DC5', '#D78AB8']} style={[styles.button,button]}>
                                         <IconRippe vector={true} name={""}
-                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.TRINH, "Nhạc Trịnh")}
-                                            text={{ content: "Nhạc Trịnh", layout: 1 }} textStyle={styles.textButton} />
+                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.TN,Language.Strings.theloai.thieunhi)}
+                                            text={{ content: Language.Strings.theloai.thieunhi, layout: 1 }} textStyle={[styles.textButton,textButton]} />
                                     </LinearGradient>
                                 </Col>
                             </Row>
                             <Row size={1}>
                                 <Col size={1}>
-                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#13C7AB', '#5E9CC2', '#A774D7', '#F14BED']} style={[styles.button]}>
+                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} 
+                                    colors={['#C3209B', '#B61FAF', '#9F1ED1', '#861CF7']} style={[styles.button,button]}>
                                         <IconRippe vector={true} name={""}
-                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.NHACTRINH, "Cải Lương")}
-                                            text={{ content: "Cải Lương", layout: 1 }} textStyle={styles.textButton} />
+                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.LK, Language.Strings.theloai.lienkhuc)}
+                                            text={{ content: Language.Strings.theloai.lienkhuc, layout: 1 }} textStyle={[styles.textButton,textButton]} />
                                     </LinearGradient>
                                 </Col>
                                 <Col size={1}>
-                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#00CBFF', '#1AA5F2', '#367CE4', '#613ACE']} style={[styles.button]}>
+                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} 
+                                    colors={['#F36010', '#C7584B', '#864DA1', '#4B42F0']} style={[styles.button,button]}>
                                         <IconRippe vector={true} name={""}
-                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.DC, "Dân Ca")}
-                                            text={{ content: "Dân Ca", layout: 1 }} textStyle={styles.textButton} />
+                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.SN, Language.Strings.theloai.sinhnhat)}
+                                            text={{ content: Language.Strings.theloai.sinhnhat, layout: 1 }} textStyle={[styles.textButton,textButton]} />
+                                    </LinearGradient>
+                                </Col>
+                            </Row>
+                            <Row size={1}>
+                                <Col size={1}>
+                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} 
+                                    colors={['#FF8BE2', '#FF99B2', '#FFAC73', '#FFCB09']} style={[styles.button,button]}>
+                                        <IconRippe vector={true} name={""}
+                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.XUAN, Language.Strings.theloai.nhacxuan)}
+                                            text={{ content: Language.Strings.theloai.nhacxuan, layout: 1 }} textStyle={[styles.textButton,textButton]} />
+                                    </LinearGradient>
+                                </Col>
+                                <Col size={1}>
+                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} 
+                                    colors={['#B56CFE', '#C24EB9', '#D2275C', '#E1040B']} style={[styles.button,button]}>
+                                        <IconRippe vector={true} name={""}
+                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.TRINH, Language.Strings.theloai.nhactrinh)}
+                                            text={{ content: Language.Strings.theloai.nhactrinh, layout: 1 }} textStyle={[styles.textButton,textButton]} />
+                                    </LinearGradient>
+                                </Col>
+                            </Row>
+                            <Row size={1}>
+                                <Col size={1}>
+                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} 
+                                    colors={['#13C7AB', '#5E9CC2', '#A774D7', '#F14BED']} style={[styles.button,button]}>
+                                        <IconRippe vector={true} name={""}
+                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.NHACTRINH, Language.Strings.theloai.cailuong)}
+                                            text={{ content: Language.Strings.theloai.cailuong, layout: 1 }} textStyle={[styles.textButton,textButton]} />
+                                    </LinearGradient>
+                                </Col>
+                                <Col size={1}>
+                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} 
+                                    colors={['#00CBFF', '#1AA5F2', '#367CE4', '#613ACE']} style={[styles.button,button]}>
+                                        <IconRippe vector={true} name={""}
+                                            onPress={this._openTheloaiSong.bind(this, GLOBALS.SONG_TYPE.DC, Language.Strings.theloai.danca)}
+                                            text={{ content: Language.Strings.theloai.danca, layout: 1 }} textStyle={[styles.textButton,textButton]} />
                                     </LinearGradient>
                                 </Col>
                             </Row>
@@ -165,7 +186,7 @@ export default class TheloaiScreen extends BaseScreen {
 const styles = StyleSheet.create({
     headerContainer: {
         flexDirection: "row",
-        height: 50
+        height: 45
     },
     button: {
         margin: 10,

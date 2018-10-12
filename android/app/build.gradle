@@ -148,6 +148,7 @@ android {
 }
 
 dependencies {
+	compile project(':react-native-localization')
     compile project(':react-native-orientation')
 	compile project(':react-native-sqlite-storage')
 	compile project(':react-native-bte-lib')

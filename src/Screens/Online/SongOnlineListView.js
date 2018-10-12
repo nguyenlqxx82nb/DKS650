@@ -219,6 +219,12 @@ export default class SongOnlineListView extends React.Component {
             <View style={{ height: 1, width: '100%' }} />;
     }
 
+    _onPress = (id,title,type) =>{
+        BoxControl.selectYoutubeSong(id,title,"0");
+    }
+    _onPlayPress = (id) =>{
+        BoxControl.playNow(id);
+    }
     _rowRenderer = (type, item) => {
         const {thumb,id,title,channelTitle} = item;
        // console.warn("title "+title +" , channelTitle = "+channelTitle);
@@ -230,10 +236,8 @@ export default class SongOnlineListView extends React.Component {
                 thumbnail={thumb} 
                 id ={id} title={title}
                 channel={channelTitle} 
-                onPress = {()=>{
-                    console.warn("OnlineItem2 id = "+id+" , title = "+title+"video Type = 0");
-                    BoxControl.selectYoutubeSong(id,title,"0");
-                }}
+                onPress = {this._onPress.bind(this,id,title,"0")}
+                onPlayPress = {this._onPlayPress.bind(this,id)}
                 />
         );
     };

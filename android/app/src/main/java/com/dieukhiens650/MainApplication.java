@@ -13,6 +13,7 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.oblador.vectoricons.VectorIconsPackage;
 import org.pgsqlite.SQLitePluginPackage;
+import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,7 +34,8 @@ public class MainApplication extends Application implements ReactApplication {
             new LinearGradientPackage(),
             new MyPackage(),
             new VectorIconsPackage(),
-			      new SQLitePluginPackage()
+			new SQLitePluginPackage(),
+			new ReactNativeLocalizationPackage()
       );
     }
 

@@ -84,6 +84,10 @@ export default class MusicOnlineButton extends React.Component {
             );
         }
         else{
+            var icon_sizes = [60,105,105];
+            if(GLOBALS.MOBILE_SMALL){
+                icon_sizes = [60,90,90];
+            }
             return (
                 <Animated.View style={[styles.onlineContainer,this.props.style,onlContainer,
                         {transform: [{ translateY: this.state.scrollY}]}]}>
@@ -93,7 +97,7 @@ export default class MusicOnlineButton extends React.Component {
                                 <Col>
                                     <LinearGradient colors={['#FF2626', '#FF2626', '#FF2626']}
                                         style={[styles.onlineButton]}>
-                                        <IconRippe vector={true} name="youtube3" size={80} 
+                                        <IconRippe vector={true} name="youtube3" size={icon_sizes[0]} 
                                             onPress = {this._onOpenOnline.bind(this,GLOBALS.SONG_ONLINE.YOUTUBE)}
                                         />
                                     </LinearGradient>
@@ -101,7 +105,7 @@ export default class MusicOnlineButton extends React.Component {
                                 <Col>
                                     <LinearGradient colors={['#F78B10', '#F78B10', '#F8570E']}
                                         style={[styles.onlineButton]}>
-                                        <IconRippe vector={true} name="soundcloud" size={120} 
+                                        <IconRippe vector={true} name="soundcloud" size={icon_sizes[1]} 
                                             onPress = {this._onOpenOnline.bind(this,GLOBALS.SONG_ONLINE.SOUNDCLOUD)}
                                         />
                                     </LinearGradient>
@@ -109,7 +113,7 @@ export default class MusicOnlineButton extends React.Component {
                                 <Col>
                                     <LinearGradient colors={['#3481D3', '#3481D3', '#3481D3']}
                                         style={[styles.onlineButton]}>
-                                        <IconRippe vector={true} name="mixcloud" size={110} 
+                                        <IconRippe vector={true} name="mixcloud" size={icon_sizes[2]} 
                                             onPress = {this._onOpenOnline.bind(this,GLOBALS.SONG_ONLINE.MIXCLOUD)}
                                         />
                                     </LinearGradient>

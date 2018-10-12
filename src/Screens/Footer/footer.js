@@ -50,8 +50,11 @@ export default class FooterHome extends React.Component {
         });
 
         this._listenerSongUpdateEvent = EventRegister.addEventListener('SongUpdate', (data) => {
-            if(GLOBALS.IS_BOX_CONNECTED)
-                this._listBtn.updateBagde(DATA_INFO.PLAY_QUEUE.length);
+            if(GLOBALS.IS_BOX_CONNECTED){
+
+                this._listBtn.updateBagde(this._getSelectNumber());
+            }
+                
         });
 
         this._listenerConnectToBoxEvent = EventRegister.addEventListener('ConnectToBox', (data) => {
@@ -64,7 +67,20 @@ export default class FooterHome extends React.Component {
         EventRegister.removeEventListener(this._listenerSongUpdateEvent);
         EventRegister.removeEventListener(this._listenerConnectToBoxEvent);
     }
-
+    _getSelectNumber = ()=>{
+        var number = 0;
+        for(var i=0; i< DATA_INFO.PLAY_QUEUE.length - 1; i++){
+            if(isNaN(DATA_INFO.PLAY_QUEUE[i])){
+                if(DATA_INFO.PLAY_QUEUE[i].length >3){
+                    number += 1;
+                }
+            }
+            else{
+                number += 1;
+            }
+        }
+        return number;
+    }
     _onPlayPress = () => {
         const { onTest } = this.props;
         // BTELib.getPlaybackInfo((volume)=>{
@@ -136,12 +152,12 @@ export default class FooterHome extends React.Component {
 
         var playIconType = (DATA_INFO.PLAYBACK_INFO.IsPlaying) ? 2 : 1;
         var micIconType = (DATA_INFO.PLAYBACK_INFO.IsMute) ? 2 : 1;
-        let songNumber = DATA_INFO.PLAY_QUEUE.length;
+        let songNumber = this._getSelectNumber();
         var status = (GLOBALS.IS_NO_WIFI_CHECKED || !GLOBALS.IS_BOX_CONNECTED)?GLOBALS.ICON_STATUS.OFFLINE:GLOBALS.ICON_STATUS.ONLINE;
         return (
             <Animated.View
                 ref={ref => (this._container = ref)}
-                style={[styles.footerContainer, {zIndex:maxZindex, transform: [{ translateY: bottomValue }] }]}>
+                style={[styles.footerContainer, {zIndex:maxZindex,height:GLOBALS.FOOTER_HEIGHT, transform: [{ translateY: bottomValue }] }]}>
                 <View style={styles.container}>
                     <Grid>
                         <Row>
@@ -193,56 +209,16 @@ const styles = StyleSheet.create({
     footerContainer: {
         position: "absolute",
         width: Utils.Width(),
-        height: 60,
+        height: 50,
         zIndex: 2,
         bottom: 0,
-        
     },
     container : {
-        position: "absolute",
-        width: Utils.Width(),
-        height:60,
-        top:0,
+        flex:1,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 5},
         shadowOpacity: 0.2,
         elevation: 5,
         backgroundColor: "#444083",
-        paddingTop: 5,
-        paddingBottom: 5,
     },
-    container2: {
-        width: 55, height: 55,marginTop:15
-    },
-    container3: {
-        flex: 1,
-        // justifyContent: "center",
-        // alignItems: "center",
-        borderRadius: 5,
-        margin: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        elevation: 2,
-    },
-    topContainer:{
-        width:"100%",
-        height:40,
-        position:"absolute",
-        top:0,
-        justifyContent:"center",
-        alignItems:"center"
-    },
-    iconTopLeft:{
-        width : 40,
-        height: 40,
-        marginLeft:10,
-        marginRight:30,
-    },
-    iconTopRight:{
-        width : 40,
-        height: 40,
-        marginRight:10,
-        marginLeft:30
-    }
 })
