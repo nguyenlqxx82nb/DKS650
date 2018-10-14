@@ -75,7 +75,7 @@ export default class SingerScreen extends BaseScreen {
         }
     }
     _showOptOverlay = () =>{
-        EventRegister.emit('ShowOptOverlay', {overlayType:GLOBALS.SING_OVERLAY.SINGER,data:{height:250}});
+        EventRegister.emit('ShowOptOverlay', {overlayType:GLOBALS.SING_OVERLAY.SINGER,data:{height:200}});
     }
     
     scrollExtendComponent = (top) =>{

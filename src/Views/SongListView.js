@@ -103,7 +103,7 @@ export default class SongListView extends React.Component {
         );
 
         this._loadData = this._loadData.bind(this);
-        this._actionButtons = this.generateSongActions();
+        //this._actionButtons = this.generateSongActions();
     }
     
     componentWillMount() {
@@ -309,15 +309,15 @@ export default class SongListView extends React.Component {
             this.setState({});
         }
     }
-    _showOptOverlay = (id,overlayType,actor) =>{
+    _showOptOverlay = (id,overlayType,actor,_actionButtons) =>{
         const {listType}=this.props;
-        var _height = this._actionButtons.length*50+10;
+        var _height = _actionButtons.length*50+10;
         
         EventRegister.emit('ShowOptOverlay', 
                 {overlayType:overlayType,
                 data:{
                     songId:id,
-                    buttons: this._actionButtons,
+                    buttons: _actionButtons,
                     height:_height,
                     actor:actor}
                 });
@@ -366,12 +366,13 @@ export default class SongListView extends React.Component {
     }
     _renderActionButton = (songId,overlayType,actor)=>{
         const {listType} = this.props;
-        if(this._actionButtons.length == 0)
+        let _actionButtons = this.generateSongActions(songId);
+        if(_actionButtons.length == 0)
             return;
-        else if(this._actionButtons.length == 1){
+        else if(_actionButtons.length == 1){
             return(
                 <View style={{ width: 40, height: 40 }}>
-                            <IconRippe vector={true} name={this._actionButtons[0].icon} size={20} 
+                            <IconRippe vector={true} name={_actionButtons[0].icon} size={20} 
                                 onPress={this.doAction.bind(this,songId,actor)} 
                             />
                         </View>
@@ -381,7 +382,7 @@ export default class SongListView extends React.Component {
             return(
                 <View style={{ width: 40, height: 40 }}>
                     <IconRippe vector={true} name={GLOBALS.LANDSCAPE?"tuychon2":"tuychon"} size={20} 
-                        onPress={this._showOptOverlay.bind(this,songId,overlayType,actor)} 
+                        onPress={this._showOptOverlay.bind(this,songId,overlayType,actor,_actionButtons)} 
                     />
                 </View>
             );
@@ -481,7 +482,7 @@ export default class SongListView extends React.Component {
         );
     }
 
-    generateSongActions = () =>{
+    generateSongActions = (songId) =>{
         var buttons = [];
         const {listType} = this.props
         if(listType == GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD){
@@ -528,11 +529,15 @@ export default class SongListView extends React.Component {
                     name: Language.Strings.casy
                 });
             }
-            buttons.push({
-                icon : "auto",
-                type: GLOBALS.SONG_ACTION.ADD_AUTO,
-                name: Language.Strings.auto
-            });
+
+            if(!isNaN(songId)){
+                buttons.push({
+                    icon : "auto",
+                    type: GLOBALS.SONG_ACTION.ADD_AUTO,
+                    name: Language.Strings.auto
+                });
+            }
+            
         }
         //console.warn("buttons length = "+buttons.length);
         return buttons;

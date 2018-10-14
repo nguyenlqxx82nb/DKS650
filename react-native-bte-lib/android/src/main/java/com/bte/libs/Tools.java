@@ -480,19 +480,22 @@ public class Tools {
                     SocketAddress socketAddress = new InetSocketAddress(Constants.HOST_IP, Constants.HOST_PORT);
                     socket.connect(socketAddress, 3000);
                     writes = socket.getOutputStream();
+                    String id = VideoId;
                     byte[] buff = new byte[2048];
                     if (Global.playQueue.contains(VideoId)) {
                         //XLog.d("---------------> contain");
                         buff[3] = (byte) 151;
                         flag = true;
+                        id += ",";
                     } else {
                         buff[3] = (byte) 150;
                         flag = false;
-                        System.arraycopy(VideoId.getBytes(), 0, buff, 4, VideoId.getBytes().length);
-                        System.arraycopy(youtubename.getBytes(), 0, buff, 16, youtubename.getBytes().length);
-                        System.arraycopy(VideoType.getBytes(), 0, buff, 144, VideoType.getBytes().length);
-                        writes.write(buff);
                     }
+
+                    System.arraycopy(id.getBytes(), 0, buff, 4, id.getBytes().length);
+                    System.arraycopy(youtubename.getBytes(), 0, buff, 16, youtubename.getBytes().length);
+                    System.arraycopy(VideoType.getBytes(), 0, buff, 144, VideoType.getBytes().length);
+                    writes.write(buff);
 
                     writes.flush();
                 } catch (Exception e) {
@@ -516,14 +519,14 @@ public class Tools {
         }).start();
     }
 
-    public static void addYoutubeToEndOfList2(final String VideoId,final String youtubename) {
+    //living VideoType "1"  normal VideoType "0"
+    public static void AheadYoutubeToEndOfList(final String VideoId,final String youtubename,final String  VideoType) {
         new Thread(new Runnable() {
             public void run() {
                 Socket socket = null;
                 OutputStream writes = null;
                 Boolean flag = false;
-                while(Constants.HOST_IP.length()<5)
-                {
+                while (Constants.HOST_IP.length() < 5) {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -537,22 +540,19 @@ public class Tools {
                     socket.connect(socketAddress, 3000);
                     writes = socket.getOutputStream();
                     byte[] buff = new byte[2048];
-                    if (Global.playQueue.contains(VideoId)) {
-                        //XLog.d("---------------> contain");
-                        buff[3] = (byte) 151;
-                        flag = true;
-                    } else {
-                        buff[3] = (byte) 150;
-                        flag = false;
-                    }
+
+                    buff[3] = (byte) 152;
+                    flag = true;
+
                     System.arraycopy(VideoId.getBytes(), 0, buff, 4, VideoId.getBytes().length);
                     System.arraycopy(youtubename.getBytes(), 0, buff, 16, youtubename.getBytes().length);
+                    System.arraycopy(VideoType.getBytes(), 0, buff, 144, VideoType.getBytes().length);
                     writes.write(buff);
                     writes.flush();
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
-                    // threadAlert("         ⣬      ָ    wifi!");
+                    // threadAlert("         ?      ?    wifi!");
                 } finally {
                     try {
                         socket.close();
@@ -562,16 +562,76 @@ public class Tools {
                         e.printStackTrace();
                     }
                     if (flag) {
-                       // XLog.d("-------------------------> add song success");
-                        // threadAlert("  ȡ  ");
+                        //XLog.d("-------------------------> add song success");
+                        // threadAlert("  ?  ");
                     } else {
-                       // XLog.d("-------------------------> add song fail");
-                        // threadAlert(" ѵ㲥");
+                        //XLog.d("-------------------------> add song fail");
+                        // threadAlert(" ??");
                     }
                 }
             }
         }).start();
     }
+
+//    public static void addYoutubeToEndOfList2(final String VideoId,final String youtubename) {
+//        new Thread(new Runnable() {
+//            public void run() {
+//                Socket socket = null;
+//                OutputStream writes = null;
+//                Boolean flag = false;
+//                while(Constants.HOST_IP.length()<5)
+//                {
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        // TODO Auto-generated catch block
+//                        e.printStackTrace();
+//                    }
+//                }
+//                try {
+//                    socket = new Socket();
+//                    SocketAddress socketAddress = new InetSocketAddress(Constants.HOST_IP, Constants.HOST_PORT);
+//                    socket.connect(socketAddress, 3000);
+//                    writes = socket.getOutputStream();
+//                    byte[] buff = new byte[2048];
+//                    String id = VideoId;
+//                    if (Global.playQueue.contains(VideoId)) {
+//                        //XLog.d("---------------> contain");
+//                        buff[3] = (byte) 151;
+//                        flag = true;
+//                        id += ",";
+//                    } else {
+//                        buff[3] = (byte) 150;
+//                        flag = false;
+//                    }
+//                    System.arraycopy(id.getBytes(), 0, buff, 4, id.getBytes().length);
+//                    System.arraycopy(youtubename.getBytes(), 0, buff, 16, youtubename.getBytes().length);
+//                    writes.write(buff);
+//                    writes.flush();
+//                } catch (Exception e) {
+//                    // TODO Auto-generated catch block
+//                    e.printStackTrace();
+//                    // threadAlert("         ⣬      ָ    wifi!");
+//                } finally {
+//                    try {
+//                        socket.close();
+//                        writes.close();
+//                    } catch (Exception e) {
+//                        // TODO Auto-generated catch block
+//                        e.printStackTrace();
+//                    }
+//                    if (flag) {
+//                       // XLog.d("-------------------------> add song success");
+//                        // threadAlert("  ȡ  ");
+//                    } else {
+//                       // XLog.d("-------------------------> add song fail");
+//                        // threadAlert(" ѵ㲥");
+//                    }
+//                }
+//            }
+//        }).start();
+//    }
+
 
     public static void priority(final String songId) {
         new Thread(new Runnable() {

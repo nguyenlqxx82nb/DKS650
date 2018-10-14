@@ -9,8 +9,8 @@ const tukhoas = [
     "Chạy ngay đi - Sơn Tùng MTP",
     "Đừng như thói quen - Saralưu",
     "Đừng quên tên anh - Hoa Vinh",
-    "Chạm đáy nỗi đau - Nguyên LÊ",
-    "Đừng như thói quen - Saralưu",
+    "Em gái mưa - Hương Tràm",
+    "Tình đơn phương - ACOUSTIC COVER",
 ]
 
 export default class TuKhoaHot extends React.Component {

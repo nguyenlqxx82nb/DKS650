@@ -10,73 +10,72 @@ import Utils from "../Utils/Utils";
 import Language from '../DataManagers/Language';
 
 const logo = require("../../assets/logo.png");
-const datas = [
-    {
-        title:Language.Strings.chuatai,
-        icon:"chua-tai",
-        event:"OpenSecondScreen",
-        color:"#00ECBB",
-        screenType: GLOBALS.SECOND_SCREEN.UNDOWNLOAD
-    },
-    {
-        title:Language.Strings.dangtai,
-        icon:"tuychon",
-        event:"OpenSecondScreen",
-        color:"#00ECBB",
-        screenType: GLOBALS.SECOND_SCREEN.DOWNLOADING
-    },
-    // {
-    //     title:"Đã hát",
-    //     icon:"mic2",
-    //     event:"OpenSecondScreen",
-    //     color:"#00ECBB",
-    //     screenType: GLOBALS.SECOND_SCREEN.SING
-    // },
-    {
-        title:Language.Strings.usb,
-        icon:"usb",
-        event:"OpenSecondScreen",
-        color:"#00ECBB",
-        screenType: GLOBALS.SECOND_SCREEN.USB
-    },
-    {
-        title:Language.Strings.ngon,
-        icon:"ngonngu",
-        event:"OpenSecondScreen",
-        color:"#00ECBB",
-        screenType: GLOBALS.SECOND_SCREEN.NGONNGU
-    },
-    {
-        title:Language.Strings.caidat,
-        icon:"setting",
-        event:"OpenSecondScreen",
-        color:"#00ECBC",
-        screenType: GLOBALS.SECOND_SCREEN.SECURE
-    },
-    // {
-    //     title:"Khởi động lại",
-    //     icon:"restart",
-    //     event:"Restart",
-    //     color:"#0093FF",
-    //     screenType: GLOBALS.SECOND_SCREEN.NONE
-    // },
-    // {
-    //     title:"Tắt máy",
-    //     icon:"shutdown",
-    //     event:"Shutdown",
-    //     color:"#FF2626",
-    //     screenType: GLOBALS.SECOND_SCREEN.NONE
-    // },
-];
 export default class SideBar extends React.Component
 {
     constructor() {
         super();
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-          dataSource: ds.cloneWithRows(datas),
+          dataSource: ds.cloneWithRows(this.getDatas()),
         };
-      }
+    }
+    componentWillMount() {
+        // Hide Footer
+        this._listenerChangeLanguageEvent = EventRegister.addEventListener('ChangeLanguage', (data) => {
+            this.setState({dataSource: ds.cloneWithRows(this.getDatas())});
+        });
+    }
+    componentWillUnmount(){
+        EventRegister.removeEventListener(this._listenerChangeLanguageEvent);
+    }
+    getDatas = () =>{
+        const datas = [
+            {
+                title:Language.Strings.chuatai,
+                icon:"chua-tai",
+                event:"OpenSecondScreen",
+                color:"#00ECBB",
+                screenType: GLOBALS.SECOND_SCREEN.UNDOWNLOAD
+            },
+            {
+                title:Language.Strings.dangtai,
+                icon:"tuychon",
+                event:"OpenSecondScreen",
+                color:"#00ECBB",
+                screenType: GLOBALS.SECOND_SCREEN.DOWNLOADING
+            },
+            // {
+            //     title:"Đã hát",
+            //     icon:"mic2",
+            //     event:"OpenSecondScreen",
+            //     color:"#00ECBB",
+            //     screenType: GLOBALS.SECOND_SCREEN.SING
+            // },
+            {
+                title:Language.Strings.usb,
+                icon:"usb",
+                event:"OpenSecondScreen",
+                color:"#00ECBB",
+                screenType: GLOBALS.SECOND_SCREEN.USB
+            },
+            {
+                title:Language.Strings.ngon,
+                icon:"ngonngu",
+                event:"OpenSecondScreen",
+                color:"#00ECBB",
+                screenType: GLOBALS.SECOND_SCREEN.NGONNGU
+            },
+            {
+                title:Language.Strings.caidat,
+                icon:"setting",
+                event:"OpenSecondScreen",
+                color:"#00ECBC",
+                screenType: GLOBALS.SECOND_SCREEN.SECURE
+            },
+        ];
+
+        return datas;
+    }
     renderRow =(item)=>{
         const {title,icon,color,event,screenType} =item;
         return(
@@ -105,6 +104,7 @@ export default class SideBar extends React.Component
     }
 
     render(){
+        
         return(
             <View style={{flex:1}}>
                 <View style={styles.headerContainer}>

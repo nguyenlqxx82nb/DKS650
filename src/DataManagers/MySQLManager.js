@@ -21,7 +21,7 @@ export default class MySQLMagager {
             ids = "";
         if(listType == GLOBALS.SONG_LIST_TYPE.USB){
             BTElib.fetchUsbSong((datas)=>{
-                console.warn("length Usb songs = "+datas);
+                //console.warn("length Usb songs = "+datas);
                 var songs =[];
                 if(datas != "" && datas.indexOf(".") != -1){
                     var items = datas.split(",");
@@ -103,6 +103,7 @@ export default class MySQLMagager {
             }
             else if(listType == GLOBALS.SONG_LIST_TYPE.HOT){
                 type="hot";
+                //sort= "hot";
             }
             else if(listType == GLOBALS.SONG_LIST_TYPE.FAVORITE){
                 sort="hot";
@@ -184,7 +185,7 @@ export default class MySQLMagager {
                 _ids += DATA_INFO.PLAY_QUEUE[i]+",";
             }
         }
-        console.warn("ids = "+_ids);
+        DATA_INFO.VIDEOS = {};
         if(_ids.length > 0){
             YoutubeAPI.fetchOnlineSongsById(_ids,(videos)=>{
                 //console.warn("videos = "+videos.length);
@@ -197,7 +198,11 @@ export default class MySQLMagager {
                         status: GLOBALS.SING_STATUS.NORMAL,
                         index: ""
                     }
-    
+                    DATA_INFO.VIDEOS[videos[i].id]={
+                        name : videos[i].snippet.title,
+                        id: videos[i].id,
+                        type:"0"
+                    }
                     songs.push(item);
                 }
                 //console.warn("songs = "+songs.length)
@@ -206,7 +211,6 @@ export default class MySQLMagager {
                 callback(songs);
             },
             (error)=>{
-    
             });
         }
         else{

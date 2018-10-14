@@ -48,6 +48,16 @@ class BoxControl {
             BTE_LIB.sendRequestControlBox2(BOX_COMMAND.BYTE_MUTE,0);
     }
 
+    static tachloi(){
+        if(!GLOBALS.IS_BOX_CONNECTED)
+            return;
+
+        if(DATA_INFO.PLAYBACK_INFO.IsOriginal == 1)
+            BTE_LIB.sendRequestControlBox2(BOX_COMMAND.BYTE_SWITCH_PLAY_TYPE,1);
+        else
+            BTE_LIB.sendRequestControlBox2(BOX_COMMAND.BYTE_SWITCH_PLAY_TYPE,0);
+    }
+
     static volumeChange(value){
         if(!GLOBALS.IS_BOX_CONNECTED)
             return;
@@ -69,12 +79,12 @@ class BoxControl {
         BTE_LIB.addYoutubeToEndOfList(videoId,videoName,videoType);
     }
 
-    static selectYoutubeSong2(videoId,videoName){
-        if(!GLOBALS.IS_BOX_CONNECTED)
-            return;
+    // static selectYoutubeSong2(videoId,videoName){
+    //     if(!GLOBALS.IS_BOX_CONNECTED)
+    //         return;
 
-        BTE_LIB.addYoutubeToEndOfList2(videoId,videoName);
-    }
+    //     BTE_LIB.addYoutubeToEndOfList2(videoId,videoName);
+    // }
 
     static playNow(songId){
         if(!GLOBALS.IS_BOX_CONNECTED)
@@ -90,6 +100,15 @@ class BoxControl {
         BTE_LIB.priority(songId);
     }
 
+    static AheadYoutubeToEndOfList(videoId){
+        if(DATA_INFO.VIDEOS[videoId] != null){
+            let videoName = DATA_INFO.VIDEOS[videoId].name;
+            let type = DATA_INFO.VIDEOS[videoId].type;
+            console.warn("video id: "+videoId+" , name = "+videoName+", type = "+type);
+            BTE_LIB.AheadYoutubeToEndOfList(videoId,videoName,type,()=>{
+            });
+        }
+    }
     static rePlay(){
         if(!GLOBALS.IS_BOX_CONNECTED)
             return;

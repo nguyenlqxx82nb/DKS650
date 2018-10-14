@@ -115,7 +115,7 @@ export default class SingerTabsView extends React.Component {
                             isTabRound = {true}
                             tabContainerStyle = {{height:30,borderRadius:15, marginLeft:5}}
                             style ={{height:40,top:this.props.tabTop}}
-                            tabWidth={(GLOBALS.MOBILE_SMALL)?80:100}
+                            tabWidth={(GLOBALS.MOBILE_SMALL)?80:95}
                         />}
                     >
                     {this.props.lanTabs.map((lan, index) => {

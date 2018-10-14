@@ -44,7 +44,7 @@ export default class FooterHome extends React.Component {
         // Update playback info
         this._listenerPlaybackInfoEvent = EventRegister.addEventListener('PlaybackInfoChange', (data) => {
             this._playBtn.setIconType(DATA_INFO.PLAYBACK_INFO.IsPlaying ? 2 : 1);
-            this._micBtn.setIconType(DATA_INFO.PLAYBACK_INFO.IsMute ? 2 : 1);
+            this._micBtn.setIconType((DATA_INFO.PLAYBACK_INFO.IsOriginal == 0) ? 2 : 1);
             //console.warn("volume = "+DATA_INFO.PLAYBACK_INFO.Volume);
             //this.setState({volume:DATA_INFO.PLAYBACK_INFO.Volume});
         });
@@ -68,18 +68,19 @@ export default class FooterHome extends React.Component {
         EventRegister.removeEventListener(this._listenerConnectToBoxEvent);
     }
     _getSelectNumber = ()=>{
-        var number = 0;
-        for(var i=0; i< DATA_INFO.PLAY_QUEUE.length - 1; i++){
-            if(isNaN(DATA_INFO.PLAY_QUEUE[i])){
-                if(DATA_INFO.PLAY_QUEUE[i].length >3){
-                    number += 1;
-                }
-            }
-            else{
-                number += 1;
-            }
-        }
-        return number;
+        // var number = 0;
+        // for(var i=0; i< DATA_INFO.PLAY_QUEUE.length - 1; i++){
+        //     if(isNaN(DATA_INFO.PLAY_QUEUE[i])){
+        //         if(DATA_INFO.PLAY_QUEUE[i].length >3){
+        //             number += 1;
+        //         }
+        //     }
+        //     else{
+        //         number += 1;
+        //     }
+        // }
+        // return number;
+        return DATA_INFO.PLAY_QUEUE.length;
     }
     _onPlayPress = () => {
         const { onTest } = this.props;
@@ -90,7 +91,7 @@ export default class FooterHome extends React.Component {
     }
 
     _onMicPress = () => {
-        BoxControl.mic();
+        BoxControl.tachloi();
     }
 
     _onEmojiPress = () => {
@@ -151,7 +152,7 @@ export default class FooterHome extends React.Component {
         const { maxZindex } = this.props;
 
         var playIconType = (DATA_INFO.PLAYBACK_INFO.IsPlaying) ? 2 : 1;
-        var micIconType = (DATA_INFO.PLAYBACK_INFO.IsMute) ? 2 : 1;
+        var micIconType = (DATA_INFO.PLAYBACK_INFO.IsOriginal == 0) ? 2 : 1;
         let songNumber = this._getSelectNumber();
         var status = (GLOBALS.IS_NO_WIFI_CHECKED || !GLOBALS.IS_BOX_CONNECTED)?GLOBALS.ICON_STATUS.OFFLINE:GLOBALS.ICON_STATUS.ONLINE;
         return (
@@ -191,9 +192,7 @@ export default class FooterHome extends React.Component {
                                 <Col size={1} style={[styles.container_center]}>
                                     <IconRippe status={status} ref={ref => (this._micBtn = ref)} vector={true} size={23} 
                                             name="micOn" name1="micOff" iconType={micIconType} 
-                                            onPress={()=>{
-                                                BoxControl.mute();
-                                            }}
+                                            onPress={this._onMicPress}
                                             />
                                 </Col>
                             </Grid>

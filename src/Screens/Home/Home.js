@@ -71,27 +71,9 @@ export default class HomeScreen extends ScreenBase {
     componentDidMount() {
         //console.warn(" componentWillMount HomeScreen");
     }
-    renderContentView = () => {
-        const { onOpenSearch,onOpenSinger } = this.props;
-        return (
-            <View style={{ flex: 1,width:"100%"}}>
-                <View style={{ flexDirection: "row", marginTop: 0, height: 45 }}>
-                    <Header 
-                        back={false}
-                        left={<View style={{ width: 40, height: 40, marginLeft: 0 }}>
-                                <IconRippe vector={true} name="menu" size={20} color="#fff"
-                                    onPress={() =>{
-                                        //this.props.navigation.navigate("DrawerOpen");
-                                        if(this.props.onOpenMenu != null)
-                                            this.props.onOpenMenu();
-                                    }} />
-                            </View>}
-                        center  = {
-                            <AutoHeightImage source={logo} width={70} ></AutoHeightImage>    
-                        }
-                    />          
-                </View>
-
+    renderContent = () =>{
+        if(this.props.preLoad){
+            return (
                 <View style={[this._home_style]}>
                     <Grid>
                         <Row size={1}>
@@ -160,6 +142,32 @@ export default class HomeScreen extends ScreenBase {
                         </Row>
                     </Grid>
                 </View>
+            );
+        }
+    }
+    renderContentView = () => {
+        const { onOpenSearch,onOpenSinger } = this.props;
+        return (
+            <View style={{ flex: 1,width:"100%"}}>
+                <View style={{ flexDirection: "row", marginTop: 0, height: 45 }}>
+                    <Header 
+                        back={false}
+                        left={<View style={{ width: 40, height: 40, marginLeft: 0 }}>
+                                <IconRippe vector={true} name="menu" size={20} color="#fff"
+                                    onPress={() =>{
+                                        //this.props.navigation.navigate("DrawerOpen");
+                                        if(this.props.onOpenMenu != null)
+                                            this.props.onOpenMenu();
+                                    }} />
+                            </View>}
+                        center  = {
+                            <AutoHeightImage source={logo} width={70} ></AutoHeightImage>    
+                        }
+                    />          
+                </View>
+                
+                {this.renderContent()}
+                
             </View>
         );
     }

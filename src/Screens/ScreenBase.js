@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
 import GLOBALS from '../DataManagers/Globals.js';
 import Utils from '../Utils/Utils';
+import {EventRegister} from 'react-native-event-listeners'
 
 class BaseScreen extends React.Component {
     static propTypes = {
@@ -40,6 +41,7 @@ class BaseScreen extends React.Component {
     _headerTopY = 0;
     _allowLoad = false;
     _bottom = 0;
+    _index = 0;
     constructor(props) {
         super(props);
 
@@ -190,7 +192,7 @@ class BaseScreen extends React.Component {
             });
             Animated.parallel([
                 Animated.timing(this.animate.posX, {
-                    toValue: 100,
+                    toValue: 200,
                     useNativeDriver: Platform.OS === 'android',
                     duration: duration,
                     easing: Easing.bezier(0.0, 0.0, 0.2, 1),
@@ -240,14 +242,21 @@ class BaseScreen extends React.Component {
     setVisible = (isVisible)=>{
         this._isVisible = isVisible;
     }
+    getIndex = ()=>{
+        return this._index;
+    }
+    setIndex = (index) =>{
+        this._index = index;
+    }
     showCompleted = () =>{
         this._processing = false;
-        
+        EventRegister.emit("ShowScreen",{obj:this});
         this._showCompleted();
     }
     _showCompleted = () =>{}
     hideCompleted = () =>{
         this._processing = false;
+        EventRegister.emit("HideScreen",{obj:this});
         this._hideCompleted();
     }
     _hideCompleted = () =>{}

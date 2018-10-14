@@ -82,13 +82,7 @@ const styles = StyleSheet.create({
         color:"#fff"
     },
     singerText : {
-        fontSize: 14,
+        fontSize: 16,
         marginLeft:25
-    },
-    textEmoji:{
-        fontFamily: GLOBALS.FONT.MEDIUM,
-        fontSize: 12, 
-        marginTop: 2,
-        color:"#fff"
     }
 })

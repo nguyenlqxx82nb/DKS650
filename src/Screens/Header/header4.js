@@ -133,6 +133,9 @@ export default class Header extends React.Component {
     showIndicator = (value)=>{
         this._searchInput.showIndicator(value);
     }
+    setSearchValue = (value)=>{
+        this._searchInput.setValue(value);
+    }
     _onEmojiPress = () => {
         EventRegister.emit('ShowOptOverlay', 
             {   overlayType:GLOBALS.SING_OVERLAY.EMOJI,

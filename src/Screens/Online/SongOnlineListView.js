@@ -9,6 +9,8 @@ import SongOnlineItem from './SongOnlineItem';
 import OnlineItem2 from './onlineItem.lanscape';
 import Utils from '../../Utils/Utils';
 import BoxControl from '../../DataManagers/BoxControl';
+import DataInfo from '../../DataManagers/DataInfo';
+import {EventRegister} from 'react-native-event-listeners';
 
 //let height = Utils.Width()*18/32 + 90;
 export default class SongOnlineListView extends React.Component {
@@ -87,8 +89,6 @@ export default class SongOnlineListView extends React.Component {
             );
         }
 
-        
-
         this._loadData = this._loadData.bind(this);
     }
     searchData = (term)=>{
@@ -127,10 +127,59 @@ export default class SongOnlineListView extends React.Component {
         }
     }
 
+    componentWillMount() {
+        this._listenerSongUpdateEvent = EventRegister.addEventListener('SongUpdate', (data) => {
+            this.hasChanged = true;
+        });
+    }
+    
+    componentWillUnmount() {
+        EventRegister.removeEventListener(this._listenerSongUpdateEvent);
+    }
+
+    updateSong = () =>{
+        this.hasChanged = false;
+        var isChange = false;
+        var newDs = [];
+        //newDs = //this.state.datas.slice();
+        for(i = 0; i < this.state.datas.length; i++){
+            let selectIndex = DataInfo.PLAY_QUEUE.indexOf(this.state.datas[i].id);
+            if(selectIndex > -1){
+                if(this.state.datas[i].isSelected != 1){
+                    this.state.datas[i].isSelected = 1;
+                    //this.state.datas[i].id= "100";
+                    isChange = true;
+                }
+            }
+            else if(this.state.datas[i].isSelected){
+                this.state.datas[i].isSelected = 0;
+                isChange = true;
+            }
+            
+        }
+        
+        if(isChange){
+            this.setState({
+                dataProvider: this.state.dataProvider.cloneWithRows(this.state.datas),
+                datas:this.state.datas
+            });
+            // newDs[0].id = id;
+            // this.setState({
+            //     dataProvider: this.state.dataProvider.cloneWithRows(newDs),
+            //     datas:newDs
+            // });
+        }
+            
+    }
+
     loadData = (term) => {
         if(this._loading)
             return;
         if (this._loaded && this._searchTerm == term) {
+            if(this.hasChanged)
+                setTimeout(() => {
+                    this.updateSong();
+                }, 50);
             return;
         }
        // console.warn("loadData "+term);
@@ -226,7 +275,7 @@ export default class SongOnlineListView extends React.Component {
         BoxControl.playNow(id);
     }
     _rowRenderer = (type, item) => {
-        const {thumb,id,title,channelTitle} = item;
+        const {thumb,id,title,channelTitle,isSelected} = item;
        // console.warn("title "+title +" , channelTitle = "+channelTitle);
         return (
             <OnlineItem2  
@@ -236,6 +285,7 @@ export default class SongOnlineListView extends React.Component {
                 thumbnail={thumb} 
                 id ={id} title={title}
                 channel={channelTitle} 
+                isSelected = {isSelected}
                 onPress = {this._onPress.bind(this,id,title,"0")}
                 onPlayPress = {this._onPlayPress.bind(this,id)}
                 />
@@ -243,7 +293,7 @@ export default class SongOnlineListView extends React.Component {
     };
 
     _rowRenderer2 = (type, item) => {
-        const {thumb,id,title,channelTitle} = item;
+        const {thumb,id,title,channelTitle,isSelected} = item;
         // console.warn("width2 "+this.width2 +" , height2 = "+this.height2);
         return (
             <OnlineItem2  
@@ -253,6 +303,7 @@ export default class SongOnlineListView extends React.Component {
                 thumbnail={thumb} 
                 id ={id} title={title}
                 channel={channelTitle} 
+                isSelected = {isSelected}
                 onPress = {()=>{
                     console.warn("OnlineItem2 id = "+id+" , title = "+title+"video Type = 0");
                     BoxControl.selectYoutubeSong(id,title,0);
@@ -280,6 +331,7 @@ export default class SongOnlineListView extends React.Component {
             <View style={[{ flex: 1 },containerStyle]}>
                 <RecyclerListView
                     style={{ flex: 1 }}
+                    ref = {ref=>(this._listview = ref)}
                     //contentContainerStyle={{ margin: 3 }}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
@@ -290,6 +342,7 @@ export default class SongOnlineListView extends React.Component {
                     renderFooter={this._renderFooter}
                     onScroll = {this._handleScroll}
                     externalScrollView={this.renderScroll}
+                    extendedState={this.state.dataProvider}
                     scrollThrottle = {16}
                     renderAheadOffset = {GLOBALS.LANDSCAPE? 300: 250}
                     //extendedState={this.state.dataProvider} 

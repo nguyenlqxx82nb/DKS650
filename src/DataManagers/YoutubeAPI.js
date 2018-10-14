@@ -1,7 +1,7 @@
 import GLOBALS from "./Globals";
 import DataInfo from './DataInfo';
 
-const API_KEY = "AIzaSyB5JMptWGXqC7IJT3fTNdbMfthO9YsYkkY";
+const API_KEY = "AIzaSyCKkzbPU_2Oq_d3vRavFt6Y-mYIhxiWW4U";//"AIzaSyB5JMptWGXqC7IJT3fTNdbMfthO9YsYkkY";
 const CHANNEL_ID = "UCKo00d6hS17XvaJL9-Wzlww";
 var SEARCH_API = "https://www.googleapis.com/youtube/v3/search?part=snippet";
 var CHANNEL_API = "https://www.googleapis.com/youtube/v3/channels?";
@@ -71,7 +71,12 @@ export default class YoutubeAPI {
                     thumb : snippet.thumbnails.high.url,
                     channelTitle : snippet.channelTitle
                 };
-                
+                if(DataInfo.PLAY_QUEUE.indexOf(data.id) > -1){
+                    data.isSelected = 1;
+                }
+                else{
+                    data.isSelected = 0;
+                }
                 datas.push(data);
             }
 

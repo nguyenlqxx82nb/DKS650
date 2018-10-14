@@ -12,6 +12,7 @@ import Header2 from '../Header/header2';
 import Header4 from '../Header/header4';
 import TuKhoaHot from '../../Views/TukhoaHot';
 import ChannelList from '../../Views/channels';
+import Language from '../../DataManagers/Language';
 
 export default class OnlineScreen extends BaseScreen {
     static propTypes = {
@@ -32,20 +33,20 @@ export default class OnlineScreen extends BaseScreen {
 
         this._scroll2 = new Animated.Value(0);
     }
-    // componentWillMount() {
-    //     // selected song changed
-    //     this._listenerSongUpdateEvent = EventRegister.addEventListener('SongUpdate', (data) => {
-    //         if(this._isVisible){
-    //             this._songList.refreshData("");
-    //         }
-    //         else{
-    //             this.songChanged = true;
-    //         }
-    //     });
-    // }
-    // componentWillUnmount() {
-    //     EventRegister.removeEventListener(this._listenerSongUpdateEvent);
-    // }
+    componentWillMount() {
+        // selected song changed
+        this._listenerSongUpdateEvent = EventRegister.addEventListener('SongUpdate', (data) => {
+            if(this._isVisible){
+                this._songList.updateSong();
+            }
+            else{
+                this.songChanged = true;
+            }
+        });
+    }
+    componentWillUnmount() {
+        EventRegister.removeEventListener(this._listenerSongUpdateEvent);
+    }
     focus = (term) => {
         this._term = term;
         //this._searchHeader.showSearchInput();
@@ -114,9 +115,10 @@ export default class OnlineScreen extends BaseScreen {
     }
 
     selectChannel(channel) {
-        this._term = channel;
+        //this._term = channel;
         //this._a.setValue(this._term);
-        this._header.focusSearch(this._term);
+        this._header.setSearchValue(channel);
+        this._onSearch(channel);
     }
 
     renderContentView = () => {

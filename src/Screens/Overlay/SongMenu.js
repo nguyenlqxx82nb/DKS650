@@ -39,7 +39,10 @@ export default class SongMenu extends React.Component {
                 this._close();
                 break;
             case GLOBALS.SONG_ACTION.PRIORITY:
-                BoxControl.priority(songId);
+                if(isNaN(songId))
+                    BoxControl.AheadYoutubeToEndOfList(songId);
+                else
+                    BoxControl.priority(songId);
                 this._close();
                 break;
             case GLOBALS.SONG_ACTION.ADD_AUTO:
@@ -56,7 +59,11 @@ export default class SongMenu extends React.Component {
                 this._close();
                 break;
             case GLOBALS.SONG_ACTION.REMOVE_SELECT:
-                BoxControl.selectSong(songId);
+                if(isNaN(songId))
+                    BoxControl.selectYoutubeSong(songId,"","");
+                else    
+                    BoxControl.selectSong(songId);
+
                 this._close();
                 break;
             default : 
@@ -65,11 +72,14 @@ export default class SongMenu extends React.Component {
     }
    
     render = () =>{
-        const {buttons} = this.props;
+        const {buttons,songId} = this.props;
         //let isSinger = (menuType == GLOBALS.SONG_MENU_TYPE.SINGER);
         return(
             <View style={styles.innerContainer}>
                 {buttons.map((button, index) => {
+                    // if(isNaN(songId) && button.type == GLOBALS.SONG_LIST_TYPE.AUTO){
+                    //     continue;
+                    // }
                     return(
                         <ListItem key={index} style={{height:50,width:'100%',flexDirection:"row"}}
                             onPress={this._doAction.bind(this,button.type)}

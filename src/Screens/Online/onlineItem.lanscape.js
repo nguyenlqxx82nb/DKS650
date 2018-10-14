@@ -21,16 +21,18 @@ export default class SongOnlineItem extends React.Component {
     onPress : PropTypes.func,
     onPlayPress : PropTypes.func,
     height2 : PropTypes.number,
-    width: PropTypes.number
+    width: PropTypes.number,
+    isSelected: PropTypes.number,
   }
 
   static defaultProps = {
-    maxOpacity: 0.25
+    maxOpacity: 0.25,
+    isSelected: false
   }
 
-  shouldComponentUpdate(newProps) {
-    return this.props.id !== newProps.id;
-  }
+  // shouldComponentUpdate(newProps) {
+  //   return this.props.isSelected !== newProps.isSelected;
+  // }
   constructor(props, context) {
     super(props, context);
 
@@ -82,15 +84,15 @@ export default class SongOnlineItem extends React.Component {
 //   }
   render() {
     //console.warn(" url = "+GLOBALS.SINGER_SEX[1]);
-    const {width,height2,thumbnail,id} = this.props;
+    const {width,height2,thumbnail,id,isSelected} = this.props;
     var _h = height2 - 25;
     var imageHeight = width*18/32;
     var container = {};
     if(GLOBALS.LANDSCAPE)
       container = {marginLeft:5, marginRight:5};
 
-    var _isSelected = (DATA_INFO.PLAY_QUEUE.indexOf(id) > 0)?true:false;
-    //console.warn("select = "+_isSelected+" , id = "+id);
+    //var _isSelected = (DATA_INFO.PLAY_QUEUE.indexOf(id) > 0)?true:false;
+    //console.warn("select = "+isSelected+" , id = "+id);
     //_isSelected = true;
     return (
       <View style={[{flex:1},container]}>
@@ -143,9 +145,9 @@ export default class SongOnlineItem extends React.Component {
                     <CustomIcon name="play" color="#14DCC4" size={40} />
                  </ListItem> 
           </View>
-          {_isSelected &&
-            <View style={{position:"absolute",top:10,right:10,width:40,height:40,zIndex:5}}> 
-                <CustomIcon name="mkDung" color="#14DCC4" size={35} /></View>}
+          {(isSelected == 1) &&
+            <View style={{position:"absolute",top:10,right:10,width:45,height:45,zIndex:5}}> 
+                <CustomIcon name="mkDung" color="#F77E0D" size={45} /></View>}
       </View>
     );
   }

@@ -48,6 +48,9 @@ export default class SelectedSong extends BaseScreen {
             this._songList.refreshData("");
             this.songChanged = false;
         }
+        else{
+            this._songList.loadData();
+        }
     }
     renderContentView = () => {
         //const { maxZindex } = this.props;
@@ -83,7 +86,7 @@ export default class SelectedSong extends BaseScreen {
                             style={{top:55,height:40}} 
                             ref={ref =>(this._musicOnline = ref)}
                             onOpenOnline = {()=>{
-                                //this._searchInput.blur();
+                                this.hide();
                             }} />
 
                     <View style={{ flex: 1}}>

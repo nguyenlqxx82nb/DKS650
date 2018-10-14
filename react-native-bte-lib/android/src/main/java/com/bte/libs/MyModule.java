@@ -79,16 +79,28 @@ public class MyModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void TryConnectToBox(){
+        Tools.checkWifiStatus(mReactContext);
+    }
+
+    @ReactMethod
     public void checkConnectToBox(){
-        ConnectivityManager manager = (ConnectivityManager) mReactContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netinfo = manager.getActiveNetworkInfo();
-        if (netinfo != null && netinfo.isConnected() && netinfo.isAvailable()
-                && netinfo.getType() == ConnectivityManager.TYPE_WIFI) {
-            Tools.checkWifiStatus(mReactContext);
-        } else {
-            WritableMap params = Arguments.createMap();
-            params.putBoolean("isConnected",false);
-            sendEvent("ConnectToBox",params);
+        try{
+            ConnectivityManager manager = (ConnectivityManager) mReactContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netinfo = manager.getActiveNetworkInfo();
+            if (netinfo != null && netinfo.isConnected() && netinfo.isAvailable()
+                    && netinfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                Tools.checkWifiStatus(mReactContext);
+            } else {
+                WritableMap params = Arguments.createMap();
+                params.putBoolean("isConnected",false);
+                sendEvent("ConnectToBox",params);
+            }
+        }
+        catch (Exception ex){
+//            WritableMap params = Arguments.createMap();
+//            params.putBoolean("isConnected",false);
+//            sendEvent("ConnectToBox",params);
         }
     }
 
@@ -103,10 +115,10 @@ public class MyModule extends ReactContextBaseJavaModule {
         Tools.addYoutubeToEndOfList(videoId,videoName,videoType);
     }
 
-    @ReactMethod
-    public void addYoutubeToEndOfList2(String videoId,String videoName){
-        Tools.addYoutubeToEndOfList2(videoId,videoName);
-    }
+    //@ReactMethod
+//    public void addYoutubeToEndOfList2(String videoId,String videoName){
+//        Tools.addYoutubeToEndOfList2(videoId,videoName);
+//    }
 
     @ReactMethod
     public void playNow(String songId){
@@ -159,6 +171,10 @@ public class MyModule extends ReactContextBaseJavaModule {
     public void fetchUsbSong(Callback callback){
         Tools.fetchSongsFromUsb(callback);
     }
+    @ReactMethod
+    public void AheadYoutubeToEndOfList(final String VideoId,final String youtubename,final String  VideoType,Callback callback){
+        Tools.AheadYoutubeToEndOfList(VideoId,youtubename,VideoType);
+    }
     private void sendEvent(String eventName, @Nullable WritableMap params) {
         mReactContext
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
@@ -166,21 +182,18 @@ public class MyModule extends ReactContextBaseJavaModule {
     }
 
     private void listenNetworkInfoChange() {
-        IntentFilter filter;
-//        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
-//            filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-//        }
-//        else{
-//            filter = new IntentFilter("RNNetInfoChange");
-//        }
-       //filter.addAction("android.intent.action.LOCKED_BOOT_COMPLETED");
-        filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        mReactContext.registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                checkConnectToBox();
-            }
-        },filter);
+        try {
+            IntentFilter filter;
+            filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+            mReactContext.registerReceiver(new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    checkConnectToBox();
+                }
+            },filter);
+        }
+        catch(Exception ex){
+        }
     }
 
 

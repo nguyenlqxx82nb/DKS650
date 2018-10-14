@@ -22,100 +22,13 @@ import Language from '../../DataManagers/Language';
 import BoxControl from '../../DataManagers/BoxControl';
 import DATA_INFO from '../../DataManagers/DataInfo';
 
-const datas = [
-    {
-        title:Language.Strings.admin.chuchay,
-        icon:"chu-chay",
-        event:"OpenSecondScreen",
-        color:"#00ECBB",
-        screenType: GLOBALS.ADMIN_SCREEN.CHU_CHAY
-    },
-    {
-        title:Language.Strings.admin.auto,
-        icon:"auto",
-        event:"OpenSecondScreen",
-        color:"#00ECBB",
-        screenType: GLOBALS.ADMIN_SCREEN.AUTO_PLAY
-    },
-    {
-        title:Language.Strings.admin.video,
-        icon:"ngo-ra-video",
-        event:"OpenSecondScreen",
-        color:"#00ECBB",
-        screenType: GLOBALS.ADMIN_SCREEN.NGO_VIDEO
-    },
-    {
-        title:Language.Strings.admin.matkhau,
-        icon:"password",
-        event:"OpenSecondScreen",
-        color:"#00ECBB",
-        screenType: GLOBALS.ADMIN_SCREEN.MAT_KHAU
-    },
-    {
-        title:Language.Strings.admin.wifi,
-        icon:"wifi",
-        event:"OpenSecondScreen",
-        color:"#00ECBC",
-        screenType: GLOBALS.ADMIN_SCREEN.WIFI
-    },
-    {
-        title:Language.Strings.admin.lan,
-        icon:"lan",
-        event:"OpenSecondScreen",
-        color:"#00ECBC",
-        screenType: GLOBALS.ADMIN_SCREEN.LAN
-    },
-    {
-        title:Language.Strings.admin.wlan,
-        icon:"airplay",
-        event:"OpenSecondScreen",
-        color:"#00ECBC",
-        screenType: GLOBALS.ADMIN_SCREEN.WLAN
-    },
-    {
-        title:Language.Strings.admin.domain,
-        icon:"musicOnline",
-        event:"OpenSecondScreen",
-        color:"#00ECBC",
-        screenType: GLOBALS.ADMIN_SCREEN.SERVER
-    },
-    {
-        title:Language.Strings.admin.san,
-        icon:"Scan-song-01",
-        event:"OpenSecondScreen",
-        color:"#00ECBC",
-        screenType: GLOBALS.ADMIN_SCREEN.SAN_MUSIC
-    },
-    {
-        title:Language.Strings.admin.data,
-        icon:"update",
-        event:"OpenSecondScreen",
-        color:"#00ECBC",
-        screenType: GLOBALS.ADMIN_SCREEN.DATA
-    },
-    {
-        title:Language.Strings.admin.restart,
-        icon:"restart",
-        event:"Restart",
-        color:"#0093FF",
-        screenType: GLOBALS.ADMIN_SCREEN.RESTART
-    },
-    
-    {
-        title:Language.Strings.admin.tatmay,
-        icon:"shutdown",
-        event:"Shutdown",
-        color:"#FF2626",
-        screenType: GLOBALS.ADMIN_SCREEN.SHUTDOWN
-    },
-];
 export default class AdminScreen extends BaseScreen
 {
     constructor(props) {
         super(props);
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-          dataSource: ds.cloneWithRows(datas),
+          dataSource: ds.cloneWithRows(this.getDatas()),
         };
     }
     showSubContent = (title,element,isFull = false) =>{
@@ -127,6 +40,97 @@ export default class AdminScreen extends BaseScreen
     _showCompleted = () =>{
         if(GLOBALS.LANDSCAPE)
             this.showSubContent(Language.Strings.admin.chuchay,<Chuchay />);
+    }
+    getDatas = () =>{
+        const datas = [
+            {
+                title:Language.Strings.admin.chuchay,
+                icon:"chu-chay",
+                event:"OpenSecondScreen",
+                color:"#00ECBB",
+                screenType: GLOBALS.ADMIN_SCREEN.CHU_CHAY
+            },
+            {
+                title:Language.Strings.admin.auto,
+                icon:"auto",
+                event:"OpenSecondScreen",
+                color:"#00ECBB",
+                screenType: GLOBALS.ADMIN_SCREEN.AUTO_PLAY
+            },
+            {
+                title:Language.Strings.admin.video,
+                icon:"ngo-ra-video",
+                event:"OpenSecondScreen",
+                color:"#00ECBB",
+                screenType: GLOBALS.ADMIN_SCREEN.NGO_VIDEO
+            },
+            {
+                title:Language.Strings.admin.matkhau,
+                icon:"password",
+                event:"OpenSecondScreen",
+                color:"#00ECBB",
+                screenType: GLOBALS.ADMIN_SCREEN.MAT_KHAU
+            },
+            {
+                title:Language.Strings.admin.wifi,
+                icon:"wifi",
+                event:"OpenSecondScreen",
+                color:"#00ECBC",
+                screenType: GLOBALS.ADMIN_SCREEN.WIFI
+            },
+            {
+                title:Language.Strings.admin.lan,
+                icon:"lan",
+                event:"OpenSecondScreen",
+                color:"#00ECBC",
+                screenType: GLOBALS.ADMIN_SCREEN.LAN
+            },
+            {
+                title:Language.Strings.admin.wlan,
+                icon:"airplay",
+                event:"OpenSecondScreen",
+                color:"#00ECBC",
+                screenType: GLOBALS.ADMIN_SCREEN.WLAN
+            },
+            {
+                title:Language.Strings.admin.domain,
+                icon:"musicOnline",
+                event:"OpenSecondScreen",
+                color:"#00ECBC",
+                screenType: GLOBALS.ADMIN_SCREEN.SERVER
+            },
+            {
+                title:Language.Strings.admin.san,
+                icon:"Scan-song-01",
+                event:"OpenSecondScreen",
+                color:"#00ECBC",
+                screenType: GLOBALS.ADMIN_SCREEN.SAN_MUSIC
+            },
+            {
+                title:Language.Strings.admin.data,
+                icon:"update",
+                event:"OpenSecondScreen",
+                color:"#00ECBC",
+                screenType: GLOBALS.ADMIN_SCREEN.DATA
+            },
+            {
+                title:Language.Strings.admin.restart,
+                icon:"restart",
+                event:"Restart",
+                color:"#0093FF",
+                screenType: GLOBALS.ADMIN_SCREEN.RESTART
+            },
+            
+            {
+                title:Language.Strings.admin.tatmay,
+                icon:"shutdown",
+                event:"Shutdown",
+                color:"#FF2626",
+                screenType: GLOBALS.ADMIN_SCREEN.SHUTDOWN
+            },
+        ];
+
+        return datas;
     }
     renderRow =(item)=>{
         const {title,icon,color,event,screenType} =item;

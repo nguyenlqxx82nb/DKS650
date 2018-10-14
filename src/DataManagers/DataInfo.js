@@ -45,5 +45,9 @@ export default {
         stb_publicsong:"",
         
         stb_usbsongs : "",
+    },
+
+    VIDEOS : {
+
     }
   };

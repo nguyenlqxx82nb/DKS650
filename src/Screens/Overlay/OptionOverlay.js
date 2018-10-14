@@ -8,6 +8,7 @@ import SingerMenu from "./SingerMenu";
 import SongMenu from "./SongMenu";
 import Volume from './Volume';
 import Utils from "../../Utils/Utils";
+import {EventRegister} from 'react-native-event-listeners';
 
 export default class OptionOverlay extends React.Component {
     static propTypes = {
@@ -16,8 +17,8 @@ export default class OptionOverlay extends React.Component {
         onClose: PropTypes.func,
         //duration : PropTypes.number
     };
-
     overlayType = GLOBALS.SING_OVERLAY.NONE;
+    _index  = 0;
     constructor(props) {
         super(props);
         this._isVisible = false;
@@ -27,8 +28,14 @@ export default class OptionOverlay extends React.Component {
             yPos : new Animated.Value(240),
             scaleX : new Animated.Value(0),
             scaleY : new Animated.Value(0),
-            opacity2 : new Animated.Value(0.8),
+            opacity2 : new Animated.Value(0.65),
         }
+    }
+    getIndex = ()=>{
+        return this._index;
+    }
+    setIndex = (index) =>{
+        this._index = index;
     }
     _onClose =() => {
         if(!this._isVisible)
@@ -76,6 +83,7 @@ export default class OptionOverlay extends React.Component {
     show = () => {
         const {maxZindex} = this.props;
         this._isVisible = true;
+        var that = this;
         this._container.setNativeProps({
             style: {
                 zIndex: maxZindex,
@@ -102,7 +110,7 @@ export default class OptionOverlay extends React.Component {
                     duration: 100,
                 }),
             ]).start(function onComplete() {
-                //this.setState({});
+                that._showComplete();
             });
         }
         else{
@@ -123,15 +131,20 @@ export default class OptionOverlay extends React.Component {
                         duration: 100,
                     }),
                 ]).start(function onComplete() {
-                    //this.setState({});
+                    that._showComplete();
                 });
             }
             else{
                 this.state.opacityValue.setValue(0.75);
+                that._showComplete();
             }
         }
-        
     }
+
+    _showComplete = ()=>{
+        EventRegister.emit("ShowScreen",{obj:this});
+    }
+
     hide = () => {
         const {maxZindex,onClose} = this.props;
         let container = this._container;
@@ -168,7 +181,8 @@ export default class OptionOverlay extends React.Component {
                 });
                 that.state.scaleX.setValue(0);
                 that.state.scaleY.setValue(0);
-                that.state.opacity2.setValue(0.8);
+                that.state.opacity2.setValue(0.65);
+                that._hideCompleted();
             });
         }
         else{
@@ -199,6 +213,7 @@ export default class OptionOverlay extends React.Component {
                 that.state.scaleX.setValue(0);
                 that.state.scaleY.setValue(0);
                 that.state.opacity2.setValue(0.8);
+                that._hideCompleted();
             });
         }
         
@@ -206,6 +221,10 @@ export default class OptionOverlay extends React.Component {
         if(onClose != null){
             onClose();
         }
+    }
+
+    _hideCompleted = () =>{
+        EventRegister.emit("HideScreen",{obj:this});
     }
 
     render = () => {
