@@ -62,6 +62,7 @@ export default class OnlineScreen extends BaseScreen {
         }
     }
     _showCompleted = () => {
+        this._header.setSearchHolder(Language.Strings.tim);
         if (this._term == "") {
             //let term = this._searchInput.getValue();
             // console.warn("_showCompleted = "+term);
@@ -149,7 +150,7 @@ export default class OnlineScreen extends BaseScreen {
                                 onSearchChange = {this._onSearchChange}
                                 onBack = {this._onBack}
                                 left={this._renderOnlineIcon()}
-                                searchHolder = {"Tìm kiếm ... "}
+                                searchHolder = {Language.Strings.tim}
                             />
                     </Animated.View>
                     {this.renderContent()}

@@ -25,7 +25,7 @@ export default class ButtonAdmin extends React.Component
             <View style={{marginTop:20,borderRadius:20,
                 height:50,width:"100%",backgroundColor:"#444083"}}>
                       <IconRippe vector={true} name={""} fit = {true}
-                              text={{content:title, layout: 1}} 
+                              text={{content:Language.Strings.admin.save, layout: 1}} 
                               textStyle={styles.textButton}
                               onPress = {()=>{
                                   if(this.props.onPress != null)

@@ -82,6 +82,9 @@ export default class SingerScreen extends BaseScreen {
         this._singerTabs.setScrollTabTop(top);
         this._musicOnline.setTopValue(top);
     }
+    updateHolder = (title) =>{
+        this._header.setSearchHolder(title+" ...");
+    }
     renderContent = () =>{
         if(!this.props.preLoad || this._allowLoad){
             if(GLOBALS.LANDSCAPE){
@@ -96,7 +99,8 @@ export default class SingerScreen extends BaseScreen {
     
                         <MusicOnline 
                             style = {{top:85}}
-                            ref={ref =>(this._musicOnline = ref)} />
+                            ref={ref =>(this._musicOnline = ref)}
+                        />
                     </View>
                 )
             }
@@ -113,7 +117,8 @@ export default class SingerScreen extends BaseScreen {
     
                         <MusicOnline 
                             style = {{top:93,height:40}}
-                            ref={ref =>(this._musicOnline = ref)} />
+                            ref={ref =>(this._musicOnline = ref)}
+                         />
                     </View>
                 )
             }

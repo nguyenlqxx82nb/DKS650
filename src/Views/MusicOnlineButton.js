@@ -24,8 +24,10 @@ export default class MusicOnlineButton extends React.Component {
         this._term = term;
     }  
     _onOpenOnline = (type) =>{
-        (this.props.onOpenOnline != null)
-            this.props.onOpenOnline();
+        const {onOpenOnline} =this.props;
+        if(onOpenOnline != null)
+            onOpenOnline();
+            
         EventRegister.emit("ShowOnlineScreen",{type:type, term:this._term})
     } 
     setTopValue=(value)=>{

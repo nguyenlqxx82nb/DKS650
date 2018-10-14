@@ -348,9 +348,9 @@ export default {
         jp: {
             dachon:"選択した曲",
             baihat:"曲",
-            baihot:"ホット・ソング",
+            baihot:"顕著な歌",
             casy:"歌手",
-            tl:"歌のジャンル",
+            tl:"曲のジャンル",
             online:"音楽オンライン",
             noSong:"歌なし.",
             notFound:"曲が見つかりませんでした.",
@@ -426,7 +426,7 @@ export default {
             caidat:"設定",
             mk:"パスワード",
             nmk:"パスワードを入力する",
-            remove: "消去する",
+            remove: "削除",
             admin : {
                 chuchay:"タイトルラン",
                 auto:"自動再生",

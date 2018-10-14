@@ -34,18 +34,6 @@ export default class SongTabsView extends React.Component {
     _isVisible = false;
     constructor(props) {
         super(props);
-
-        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.vn] = Language.Strings.lanTab.vn;
-        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.en] = Language.Strings.lanTab.en;
-        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.cn] = Language.Strings.lanTab.cn;
-        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.ja] = Language.Strings.lanTab.jp;
-        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.kr] = Language.Strings.lanTab.kr;
-        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.hk] = Language.Strings.lanTab.hk;
-        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.hot] = Language.Strings.lanTab.hot;
-        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.ml] = Language.Strings.lanTab.ma;
-        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.taiwan] = Language.Strings.lanTab.tw;
-        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.tl] = Language.Strings.lanTab.lao;
-        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.ca] = Language.Strings.lanTab.ca;
     }
 
     componentWillMount() {
@@ -129,6 +117,18 @@ export default class SongTabsView extends React.Component {
     }
 
     render() {
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.vn] = Language.Strings.lanTab.vn;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.en] = Language.Strings.lanTab.en;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.cn] = Language.Strings.lanTab.cn;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.ja] = Language.Strings.lanTab.jp;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.kr] = Language.Strings.lanTab.kr;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.hk] = Language.Strings.lanTab.hk;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.hot] = Language.Strings.lanTab.hot;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.ml] = Language.Strings.lanTab.ma;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.taiwan] = Language.Strings.lanTab.tw;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.tl] = Language.Strings.lanTab.lao;
+        GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.ca] = Language.Strings.lanTab.ca;
+        
         const {tabTop}= this.props;
         var tabContent = {};
         if(GLOBALS.LANDSCAPE){

@@ -26,10 +26,7 @@ export default class AdminScreen extends BaseScreen
 {
     constructor(props) {
         super(props);
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        this.state = {
-          dataSource: ds.cloneWithRows(this.getDatas()),
-        };
+        this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     }
     showSubContent = (title,element,isFull = false) =>{
         this._subScreen.setContent(title,element,(GLOBALS.LANDSCAPE)?isFull:true); 
@@ -257,6 +254,7 @@ export default class AdminScreen extends BaseScreen
         );
     }
     renderContentView = () => {
+        this._dataSource = this.ds.cloneWithRows(this.getDatas())
         if(GLOBALS.LANDSCAPE){
             return(
                 <View style={{flex:1,flexDirection:"row"}} >
@@ -269,7 +267,7 @@ export default class AdminScreen extends BaseScreen
         
                         <View style={{flex:1}}>
                             <ListView
-                                dataSource = {this.state.dataSource}
+                                dataSource = {this._dataSource}
                                 contentContainerStyle = {{ marginTop: 0 }}
                                 renderRow={this.renderRow}
                             /> 
@@ -300,7 +298,7 @@ export default class AdminScreen extends BaseScreen
                         }} /> */}
                        
                         <ListView
-                            dataSource = {this.state.dataSource}
+                            dataSource = {this._dataSource}
                             contentContainerStyle = {{ paddingTop: 60}}
                             renderRow={this.renderRow}
                         /> 
@@ -337,7 +335,7 @@ const styles = StyleSheet.create({
     },
     listItem :{
         flex:1, 
-        marginLeft:25,
+        marginLeft:10,
         marginRight:10,
         justifyContent:"center",
         alignItems:"center",

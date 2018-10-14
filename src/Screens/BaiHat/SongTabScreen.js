@@ -108,6 +108,9 @@ export default class SongTabScreen extends BaseScreen {
         this._songTabs.setScrollTabTop(top);
         this._musicOnline.setTopValue(top);
     }
+    updateHolder = (title) =>{
+        this._header.setSearchHolder(title +" ...");
+    }
     renderContent = () =>{
         if(!this.props.preLoad || this._allowLoad){
             if(GLOBALS.LANDSCAPE)

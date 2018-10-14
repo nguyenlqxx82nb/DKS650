@@ -14,15 +14,15 @@ export default class SideBar extends React.Component
 {
     constructor() {
         super();
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-          dataSource: ds.cloneWithRows(this.getDatas()),
+          dataSource: this.ds.cloneWithRows(this.getDatas()),
         };
     }
     componentWillMount() {
         // Hide Footer
         this._listenerChangeLanguageEvent = EventRegister.addEventListener('ChangeLanguage', (data) => {
-            this.setState({dataSource: ds.cloneWithRows(this.getDatas())});
+            this.setState({dataSource: this.ds.cloneWithRows(this.getDatas())});
         });
     }
     componentWillUnmount(){

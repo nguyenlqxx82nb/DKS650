@@ -98,6 +98,9 @@ export default class SongListScreen extends BaseScreen {
         this._songList.searchData(value);
         this._musicOnline.setTerm(value);
     }
+    updateHolder = (title) =>{
+        this._searchHeader.setSearchHolder(title +" ...");
+    }
     updateSinger = (name)=>{
         if(name != this.state.title){
             this._allowLoad = true;
