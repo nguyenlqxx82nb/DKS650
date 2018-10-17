@@ -2,7 +2,7 @@ import React from "react";
 import {StyleSheet,TextInput, View} from "react-native";
 import GLOBALS from "../../DataManagers/Globals";
 import PropTypes from 'prop-types';
-
+import {EventRegister} from 'react-native-event-listeners';
 export default class InputAdmin extends React.Component
 {   
     static propTypes = {
@@ -27,22 +27,30 @@ export default class InputAdmin extends React.Component
     blur = () =>{
         this._input.blur();
     }
+    _handleBlur = ()=>{
+        EventRegister.emit("ShowFooter",{});
+    }
+    _handleFocus = ()=>{
+        EventRegister.emit("HideFooter",{});
+    }
     constructor(props) {
         super(props);
     }
     
     render() {
         const {placeholder} = this.props;
+        var height = GLOBALS.HEADER_HEIGHT;
+        
         return(
             <TextInput 
                 ref = {ref => (this._input = ref)}
                 underlineColorAndroid={'transparent'}
                 placeholderTextColor={'#9192C6'}
-                style={[styles.input]}
+                style={[styles.input,{height:height,borderRadius:height/2}]}
                 placeholder={placeholder}
-                
-            // onFocus = {this._handleTextFocus}
-                //onBlur = {this._handleBlur}
+                disableFullscreenUI={true}
+                onFocus = {this._handleFocus}
+                onBlur = {this._handleBlur}
                 //onSubmitEditing = {this._handleTextSubmit}
             // onChangeText={this._handleTextChanged}
                 //value={this.state.value}

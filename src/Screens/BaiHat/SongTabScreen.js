@@ -55,8 +55,15 @@ export default class SongTabScreen extends BaseScreen {
         this._hasOnlineButton = (this.props.hasOnlineButton != null)?this.props.hasOnlineButton: true;
         this.tabType = (this.props.tabType != null)?this.props.tabType:GLOBALS.SONG_TAB.LANGUAGE;
 
-        if(GLOBALS.LANDSCAPE)
-            this.MAX_SCROLL_HEIGHT = 135;
+        if(GLOBALS.LANDSCAPE){
+            this.MAX_SCROLL_HEIGHT = 140;
+            if(GLOBALS.LANDSCAPE_NORMAL){
+                this.MAX_SCROLL_HEIGHT = 160;
+            }
+            else if(GLOBALS.LANDSCAPE_LARGE){
+                this.MAX_SCROLL_HEIGHT = 180;
+            }
+        }
         else
             this.MAX_SCROLL_HEIGHT = 150;
     }
@@ -109,11 +116,18 @@ export default class SongTabScreen extends BaseScreen {
         this._musicOnline.setTopValue(top);
     }
     updateHolder = (title) =>{
-        this._header.setSearchHolder(title +" ...");
+        this._header.setSearchHolder(title);
     }
     renderContent = () =>{
         if(!this.props.preLoad || this._allowLoad){
-            if(GLOBALS.LANDSCAPE)
+            var mTop = 85;
+            if(GLOBALS.LANDSCAPE){
+                if(GLOBALS.LANDSCAPE_NORMAL){
+                    mTop = 105;
+                }
+                else if(GLOBALS.LANDSCAPE_LARGE){
+                    mTop = 115;
+                }
                 return (
                     <View style={{flex:1}}>
                         <SongTabsView 
@@ -124,15 +138,16 @@ export default class SongTabScreen extends BaseScreen {
                             tabType = {this.tabType}
                             onScroll = {this._handleListViewScroll} 
                             top={this.MAX_SCROLL_HEIGHT}
-                            // onSearch = {(value)=>{
-                            //     this._onSearch(value);
-                            // }}
+                            tabTop = {GLOBALS.HEADER_HEIGHT + 5}
+                            onSearch = {(value)=>{
+                                this._header.showIndicator(value);
+                            }}
                             />
                         { 
                             this._hasOnlineButton && 
                             <MusicOnline 
                                 ref={ref =>(this._musicOnline = ref)}
-                                style = {{top:85}}
+                                style = {{top:mTop}}
                                 onOpenOnline = {()=>{
                                     //this._searchInput.blur();
                                 }}
@@ -140,6 +155,7 @@ export default class SongTabScreen extends BaseScreen {
                         }
                     </View>
                 )
+            }
             else{
                 return (
                     <View style={{flex:1}}>
@@ -149,7 +165,7 @@ export default class SongTabScreen extends BaseScreen {
                             songListType = {this._listType}
                             onChangeTab = {this._onChangeTab} 
                             tabType = {this.tabType}
-                            tabTop = {50}
+                            tabTop = {GLOBALS.HEADER_HEIGHT + 5}
                             onScroll = {this._handleListViewScroll} 
                             top={this.MAX_SCROLL_HEIGHT}
                             onSearch = {(value)=>{
@@ -178,14 +194,14 @@ export default class SongTabScreen extends BaseScreen {
         if(GLOBALS.LANDSCAPE)
             return (
                 <View style={{ flex: 1 }}>
-                    <Animated.View style={[styles.headerContainer, { transform: [{ translateY: this._scrollY }]}]}>
+                    <Animated.View style={[styles.headerContainer, { height:GLOBALS.HEADER_HEIGHT,transform: [{ translateY: this._scrollY }]}]}>
                         <Header2
                             ref={ref=>(this._header = ref)}
-                            h = {40}
+                            h = {GLOBALS.HEADER_HEIGHT}
                             onSearch={this._onSearch}
                             onSearchChange = {this._onSearchChange}
                             onBack = {this._onBack}
-                            left={<Text style={[styles.title]}>{this.props.title}</Text>}
+                            left={<Text numbers={1} style={[styles.title]}>{this.props.title}</Text>}
                             searchHolder = {searchHolder}
                         />
                     </Animated.View>
@@ -195,7 +211,7 @@ export default class SongTabScreen extends BaseScreen {
         else{
             return (
                 <View style={{ flex: 1 }}>
-                    <Animated.View style={[styles.headerContainer, {height:45, transform: [{ translateY: this._scrollY }]}]}>
+                    <Animated.View style={[styles.headerContainer, {height:GLOBALS.HEADER_HEIGHT, transform: [{ translateY: this._scrollY }]}]}>
                         <Header4
                             ref={ref=>(this._header = ref)}
                             onSearch={this._onSearch}

@@ -47,14 +47,12 @@ export default class SingerListView extends React.Component {
         super(props);
         
         if(GLOBALS.LANDSCAPE){
-            var colNumbers = 6;
-            if(colNumbers < 1000){
-                colNumbers = 5;
+            var colNumbers = 5;
+            if(GLOBALS.LANDSCAPE_LARGE 
+                || GLOBALS.LANDSCAPE_NORMAL){
+                    colNumbers = 6;
             }
-            // else if(colNumbers < 1000){
-            //     colNumbers = 5;
-            // }
-            this._width = (width-20 -1) /colNumbers;
+            this._width = (width-30 -1) /colNumbers;
             this._layoutProvider2 = new LayoutProvider(
                 index => {
                     return "FULL";
@@ -105,7 +103,7 @@ export default class SingerListView extends React.Component {
 
 
     searchData = (term,sex)=>{
-        if(this._loading)
+        if(this._loading || !GLOBALS.IS_DATABASE_CONNECTED)
             return;
         //console.warn("searchData term = "+term+", sex = "+sex);
         if(sex != this._sex || term != this._searchTerm){
@@ -119,7 +117,7 @@ export default class SingerListView extends React.Component {
 
     refreshData = (term) =>{
         //console.warn("type = "+this.props.type);
-        if (!this._loading) {
+        if (!this._loading && GLOBALS.IS_DATABASE_CONNECTED) {
             this._searchTerm = term;
             this._loaded = false;
             this._page = 0;
@@ -129,7 +127,7 @@ export default class SingerListView extends React.Component {
     }
 
     loadData = (term,sex) => {
-        if(this._loading)
+        if(this._loading || !GLOBALS.IS_DATABASE_CONNECTED)
             return;
         if (this._loaded && this._searchTerm == term
             && sex == this._sex) {
@@ -263,7 +261,7 @@ export default class SingerListView extends React.Component {
 
     render = () => {
         return (
-            <View style={{ flex: 1,marginLeft:10, marginRight:(GLOBALS.LANDSCAPE)?10:5}}>
+            <View style={{ flex: 1,marginLeft:(GLOBALS.LANDSCAPE)?15:10, marginRight:(GLOBALS.LANDSCAPE)?15:5}}>
                 <RecyclerListView
                     ref = {ref=>(this._listView = ref)}
                     style={{ flex: 1}}

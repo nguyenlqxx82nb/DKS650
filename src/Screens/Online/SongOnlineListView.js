@@ -66,8 +66,9 @@ export default class SongOnlineListView extends React.Component {
             );
         }
         else{
-            this.width2 = (Utils.Width()-32)/3;
-            this.height2 = this.width2*18/32 + 100;
+            var numbers = (GLOBALS.LANDSCAPE_SMALL)?3:4;
+            this.width2 = (Utils.Width()-32)/numbers;
+            this.height2 = (GLOBALS.LANDSCAPE_SMALL)?this.width2*18/32 + 100 : this.width2*18/32 + 105;
             //let height2 = Utils.Width()*18/32 + 90;
         // console.warn("width2 = "+this.width2 +", height2 = "+this.height2);
             this._layoutProvider2 = new LayoutProvider(
@@ -269,6 +270,7 @@ export default class SongOnlineListView extends React.Component {
     }
 
     _onPress = (id,title,type) =>{
+        //console.warn("id = "+id+","+title+" , "+type);
         BoxControl.selectYoutubeSong(id,title,"0");
     }
     _onPlayPress = (id) =>{
@@ -304,10 +306,8 @@ export default class SongOnlineListView extends React.Component {
                 id ={id} title={title}
                 channel={channelTitle} 
                 isSelected = {isSelected}
-                onPress = {()=>{
-                    console.warn("OnlineItem2 id = "+id+" , title = "+title+"video Type = 0");
-                    BoxControl.selectYoutubeSong(id,title,0);
-                }}
+                onPress = {this._onPress.bind(this,id,title,"0")}
+                onPlayPress = {this._onPlayPress.bind(this,id)}
                 />
         );
     };

@@ -97,8 +97,21 @@ export default class SingerTabsView extends React.Component {
         GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.taiwan] = Language.Strings.lanTab.tw;
         GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.tl] = Language.Strings.lanTab.lao;
         GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.ca] = Language.Strings.lanTab.ca;
-        
+
         var tabContent = {};
+        var height = 40;
+        var tabWidth = (GLOBALS.MOBILE_SMALL)?80:100;
+        var fontSize = (GLOBALS.MOBILE_SMALL)?12:14;
+        if(GLOBALS.LANDSCAPE_NORMAL){
+            height = 45;
+            tabWidth = 115;
+            fontSize = 15;
+        }
+        else if(GLOBALS.LANDSCAPE_LARGE){
+            height = 50;
+            tabWidth = 140;
+            fontSize = 16;
+        }
         return (
             <ScrollableTabView
                         style={{ marginTop: 0, }}
@@ -107,15 +120,15 @@ export default class SingerTabsView extends React.Component {
                         renderTabBar={() => 
                         <CustomScrollableTabBar
                             ref = {ref=>{this._scrollTab = ref}}
-                            underlineStyle={{ backgroundColor: "#0ECAB1", height:30,bottom:5, borderRadius:15 }}
+                            underlineStyle={{ backgroundColor: "#0ECAB1", height:height-10,bottom:5, borderRadius:(height-10)/2 }}
                             activeTextColor={"#0ECAB1"}
                             inactiveTextColor={"#fff"}
-                            textStyle={{ fontSize: (GLOBALS.MOBILE_SMALL)?12:14, color: "#fff", fontFamily:GLOBALS.FONT.BOLD }}
+                            textStyle={{ fontSize: fontSize, color: "#fff", fontFamily:GLOBALS.FONT.BOLD }}
                             style={{ borderWidth: 0, }}
                             isTabRound = {true}
-                            tabContainerStyle = {{height:30,borderRadius:15, marginLeft:5}}
-                            style ={{height:40,top:this.props.tabTop}}
-                            tabWidth={(GLOBALS.MOBILE_SMALL)?80:95}
+                            tabContainerStyle = {{height:height-10,borderRadius:(height-10)/2, marginLeft:5}}
+                            style ={{height:height,top:this.props.tabTop}}
+                            tabWidth={tabWidth}
                         />}
                     >
                     {this.props.lanTabs.map((lan, index) => {

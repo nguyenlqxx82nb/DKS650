@@ -6,6 +6,8 @@ import { Grid, Col ,Row} from "react-native-easy-grid";
 import LinearGradient from 'react-native-linear-gradient';
 import { EventRegister  } from 'react-native-event-listeners';
 import GLOBALS from '../DataManagers/Globals'
+import Utils from "../Utils/Utils.js";
+import Language from "../DataManagers/Language.js";
 
 export default class MusicOnlineButton extends React.Component {
     static propTypes = {
@@ -27,8 +29,12 @@ export default class MusicOnlineButton extends React.Component {
         const {onOpenOnline} =this.props;
         if(onOpenOnline != null)
             onOpenOnline();
-            
-        EventRegister.emit("ShowOnlineScreen",{type:type, term:this._term})
+        if(GLOBALS.SONG_ONLINE.YOUTUBE == type){
+            EventRegister.emit("ShowOnlineScreen",{type:type, term:this._term})
+        }
+        else{
+            EventRegister.emit("ShowToast",{message:Language.Strings.onlMessage,type:GLOBALS.TOAST_TYPE.WARNING})
+        }
     } 
     setTopValue=(value)=>{
         this.state.scrollY.setValue(value);
@@ -37,46 +43,61 @@ export default class MusicOnlineButton extends React.Component {
         var containerStyle = {};
         var buttonStyle = {};
         var onlContainer = {};
+        var icon_sizes1 = [80,120,110];
         if(GLOBALS.LANDSCAPE){
-            containerStyle = {
-                width:430,
+            var width = 430;
+            var left = 0;
+            var height = 45;
+            var margin = 5;
+            if(GLOBALS.LANDSCAPE_NORMAL){
+                height = 50;
+                width = 550;
+                margin = 7;
+                icon_sizes1 = [90, 135,135];
+            }
+            else if(GLOBALS.LANDSCAPE_LARGE){
+                height = 55;
+                width = 680;
+                margin = 10;
+                icon_sizes1 = [100, 170,170];
+            }
+
+            left = (Utils.Width() - width)/2;
+            onlContainer = {
+                width:width,
+                left: left,
+                height: height
             }
 
             buttonStyle = {
-                borderRadius: 20,
-                // marginRight: 5,
-                // marginLeft:5
+                borderRadius: (height-5)/2,
+                marginRight:margin,
             }
 
-            onlContainer = {
-               // top:85
-            }
-
-        
             return (
                     <Animated.View style={[styles.onlineContainer,this.props.style,onlContainer,
                             {transform: [{ translateY: this.state.scrollY}]}]}>
-                        <View style={[{flex:1,flexDirection:"row",justifyContent: 'center',alignItems: 'center',},containerStyle]}>
-                                <View style={styles.container}>
+                        <View style={[{flex:1,flexDirection:"row",justifyContent: 'center',alignItems: 'center',}]}>
+                                <View style={styles.container1}>
                                     <LinearGradient colors={['#FF2626', '#FF2626', '#FF2626']}
                                         style={[styles.onlineButton,buttonStyle]}>
-                                        <IconRippe vector={true} name="youtube3" size={80} 
+                                        <IconRippe vector={true} name="youtube3" size={icon_sizes1[0]} 
                                             onPress = {this._onOpenOnline.bind(this,GLOBALS.SONG_ONLINE.YOUTUBE)}
                                         />
                                     </LinearGradient>
                                 </View>
-                                <View style={styles.container}>
+                                <View style={styles.container1}>
                                     <LinearGradient colors={['#F78B10', '#F78B10', '#F8570E']}
                                         style={[styles.onlineButton,buttonStyle]}>
-                                        <IconRippe vector={true} name="soundcloud" size={120} 
+                                        <IconRippe vector={true} name="soundcloud" size={icon_sizes1[1]} 
                                             onPress = {this._onOpenOnline.bind(this,GLOBALS.SONG_ONLINE.SOUNDCLOUD)}
                                         />
                                     </LinearGradient>
                                 </View>
-                                <View style={styles.container}>
+                                <View style={styles.container1}>
                                     <LinearGradient colors={['#3481D3', '#3481D3', '#3481D3']}
                                         style={[styles.onlineButton,buttonStyle]}>
-                                        <IconRippe vector={true} name="mixcloud" size={110} 
+                                        <IconRippe vector={true} name="mixcloud" size={icon_sizes1[2]} 
                                             onPress = {this._onOpenOnline.bind(this,GLOBALS.SONG_ONLINE.MIXCLOUD)}
                                         />
                                     </LinearGradient>
@@ -136,6 +157,11 @@ const styles = StyleSheet.create({
         width:"33.33%",
     },
     
+    container1 : {
+        height:"100%",
+        width:"33.33%",
+    },
+
     onlineButton: {
         flex: 1,
         borderRadius: 5,

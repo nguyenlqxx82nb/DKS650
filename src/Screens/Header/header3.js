@@ -30,20 +30,34 @@ export default class Header extends React.Component {
                 data:{height:60}
             });
     }
+
+    componentWillMount(){
+        this._listenerConnectToBoxEvent = EventRegister.addEventListener('ConnectToBox', (data) => {
+            if(GLOBALS.LANDSCAPE)
+                this.setState({});
+        });
+    }
+
+    componentWillUnmount(){
+        EventRegister.removeEventListener(this._listenerConnectToBoxEvent);
+    }
+
     render() {
         const {title,back} = this.props;
         var titleSytle = {};
+        var color = (GLOBALS.IS_BOX_CONNECTED)?GLOBALS.COLORS.SELECTED:GLOBALS.COLORS.ERROR;
+
         if(GLOBALS.MOBILE_SMALL)
             titleSytle = {
                 fontSize: 18,
-            };
+        };
         return (
             <View style={[styles.container,this.props.style]}>
                 <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
                     {this.props.center != null && this.props.center}
                 </View>
-                {back && <View style={{ width: 40, height: 40, marginLeft: 0 }}>
-                        <IconRippe vector={true} name="back" size={20} color="#fff"
+                {back && <View style={{ width: GLOBALS.ICON_SIZE*2.5, height: "100%", marginLeft: 0 }}>
+                        <IconRippe vector={true} name="back" size={GLOBALS.ICON_SIZE} color={"#fff"}
                             onPress={()=>{
                                 if(this.props.onBack != null){
                                     //this._searchInput.blur();
@@ -56,12 +70,11 @@ export default class Header extends React.Component {
                 <View
                     ref = {ref =>(this._centerView = ref)}
                     style={{flex:1}}>
-                        
                 </View>
                 
                 {!GLOBALS.LANDSCAPE && 
-                    <View style={{ width: 40, height: 40}}>
-                        <IconRippe vector={true} name="emoji" size={20} color="#fff"
+                    <View style={{ width: GLOBALS.ICON_SIZE*2.5, height: "100%"}}>
+                        <IconRippe vector={true} name="emoji" size={GLOBALS.ICON_SIZE} color="#fff"
                             onPress={()=>{
                                 this._onEmojiPress();
                             }}
@@ -69,15 +82,21 @@ export default class Header extends React.Component {
                     </View> }
                 
                 {!GLOBALS.LANDSCAPE &&
-                    <View style={{ width: 40, height: 40}}>
-                        <IconRippe vector={true} name="volumnOn" size={20} color="#fff"
+                    <View style={{ width: GLOBALS.ICON_SIZE*2.5, height: "100%"}}>
+                        <IconRippe vector={true} name="volumnOn" size={GLOBALS.ICON_SIZE} color="#fff"
                             onPress={()=>{
                                 this._onVolume();
                             }}
                         />
                     </View>
                 }
-                
+
+                {this.props.right != null && this.props.right}
+                {GLOBALS.LANDSCAPE &&
+                    <View style={{ width: GLOBALS.ICON_SIZE*2.5, height: "100%"}}>
+                        <IconRippe vector={true} name="wifi" size={GLOBALS.ICON_SIZE} color={color}   />
+                    </View>
+                }
             </View>
         );
     }

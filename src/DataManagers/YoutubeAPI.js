@@ -29,7 +29,7 @@ export default class YoutubeAPI {
             query += "&pageToken="+page;
         }
         if(term == ""){
-            query += "&q=karaoke";
+            query += "&q=Nonstop 2019";
         }
         else{
             query += "&q="+term;

@@ -24,8 +24,6 @@ import { DeviceEventEmitter } from 'react-native';
 import Utils from "../../Utils/Utils.js";
 import Language from "../../DataManagers/Language";
 import SplashScreen from 'react-native-splash-screen';
-
-//import Storage from 'react-native-key-value-store';
 import Toast, { DURATION } from 'react-native-easy-toast'
 
 export default class Taisao extends React.Component {
@@ -35,12 +33,15 @@ export default class Taisao extends React.Component {
     _screens = [];
     constructor(props) {
         super(props);
-        BTElib.TryConnectToBox();
+        
         console.disableYellowBox = true; // ['Warning: Stateless'];
         GLOBALS.INFO.VERSION = GLOBALS.BOX_VERSION.S650;
         //GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.HTTP;
         //GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.SQLITE;
         GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.MYSQL;
+        if(GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.SQLITE){
+            GLOBALS.IS_DATABASE_CONNECTED = true;
+        }
 
         GLOBALS.LANDSCAPE = false;
         GLOBALS.FOOTER_HEIGHT = 57;
@@ -89,6 +90,7 @@ export default class Taisao extends React.Component {
     }
 
     componentDidMount() {
+        BTElib.TryConnectToBox();
         BTElib.syncPlaybackQueue();
         BTElib.syncPlaybackInfo();
         BTElib.syncDownloadQueue();
@@ -99,7 +101,6 @@ export default class Taisao extends React.Component {
         DeviceEventEmitter.addListener('DownloadQueue', this.handleDownloadQueue);
 
         BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-
         SplashScreen.hide();
     }
     handleBackPress = () => {
@@ -113,6 +114,15 @@ export default class Taisao extends React.Component {
     handleConnectToBox = (e) => {
         GLOBALS.IS_BOX_CONNECTED = e['isConnected'];
         GLOBALS.IS_NO_WIFI_CHECKED = false;
+
+        if(GLOBALS.INFO.CONNECT != GLOBALS.DATABASE_CONNECT.SQLITE
+            && !GLOBALS.IS_BOX_CONNECTED){
+            GLOBALS.IS_DATABASE_CONNECTED = false;
+        }
+        else{
+            GLOBALS.IS_DATABASE_CONNECTED = true;
+        }
+
         // connect to box event
         EventRegister.emit("ConnectToBox", e);
         // Refresh song list
@@ -159,13 +169,15 @@ export default class Taisao extends React.Component {
     componentWillMount() {
         // Hide Footer
         this._listenerHideFooterEvent = EventRegister.addEventListener('HideFooter', (data) => {
-            this._footer.hide();
+            setTimeout(() => {
+                this._footer.hide();
+            }, 150);
         });
         // Show Footer
         this._listenerShowFooterEvent = EventRegister.addEventListener('ShowFooter', (data) => {
             setTimeout(() => {
                 this._footer.show();
-            }, 300);
+            }, 100);
         });
 
         // Show overlay
@@ -322,7 +334,7 @@ export default class Taisao extends React.Component {
         this._theloaiScreen.show();
     }
     _onOnlineScreen = () => {
-        this._onlineScreen.show();
+        this.youtubeSong.show();
     }
     _onOpenSelectedSong = () => {
         this._selectedSong.show();
@@ -480,16 +492,16 @@ export default class Taisao extends React.Component {
                         transition={GLOBALS.TRANSITION.SLIDE_TOP}
                         onBack={this._onCloseSelectedSong}
                     />
-                    <SingOptionOverlay
-                        opacity={0}
-                        maxZindex={10}
-                        ref={ref => (this._singOverlay = ref)}
-                        onClose={this._onSingOverlayClose}
-                    />
                     <Footer
                         ref={ref => (this._footer = ref)} maxZindex={15}
                         onSelectedSong={this._onOpenSelectedSong} />
-                        
+
+                    <SingOptionOverlay
+                        opacity={0}
+                        maxZindex={15}
+                        ref={ref => (this._singOverlay = ref)}
+                        onClose={this._onSingOverlayClose}
+                    />    
                     <StatusBar
                         backgroundColor={GLOBALS.COLORS.STATUS_BAR}
                         // translucent={true}

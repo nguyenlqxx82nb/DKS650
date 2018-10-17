@@ -28,7 +28,7 @@ export default class OptionOverlay extends React.Component {
             yPos : new Animated.Value(240),
             scaleX : new Animated.Value(0),
             scaleY : new Animated.Value(0),
-            opacity2 : new Animated.Value(0.65),
+            opacity2 : new Animated.Value(0.75),
         }
     }
     getIndex = ()=>{
@@ -93,6 +93,7 @@ export default class OptionOverlay extends React.Component {
         if(this.overlayType == GLOBALS.SING_OVERLAY.VOLUME){
             this.state.scaleX.setValue(0.75);
             this.state.scaleY.setValue(0.75);
+            this.state.opacity2.setValue(0.75);
             Animated.parallel([
                 Animated.timing(this.state.opacityValue, {
                     toValue: 0.75,
@@ -117,7 +118,7 @@ export default class OptionOverlay extends React.Component {
             this.state.scaleX.setValue(1);
             this.state.scaleY.setValue(1);
             this.state.yPos.setValue(60);
-
+            this.state.opacity2.setValue(0.75);
             if(this.overlayType != GLOBALS.SING_OVERLAY.KEYBROARD){
                 Animated.parallel([
                     Animated.timing(this.state.opacityValue, {
@@ -163,7 +164,7 @@ export default class OptionOverlay extends React.Component {
                     duration: 150,
                 }),
                 Animated.timing(this.state.scaleY, {
-                    toValue: 0.5,
+                    toValue: 0,
                     useNativeDriver: Platform.OS === 'android',
                     duration: 150,
                 }),
@@ -181,7 +182,7 @@ export default class OptionOverlay extends React.Component {
                 });
                 that.state.scaleX.setValue(0);
                 that.state.scaleY.setValue(0);
-                that.state.opacity2.setValue(0.65);
+                that.state.opacity2.setValue(0);
                 that._hideCompleted();
             });
         }
@@ -212,21 +213,18 @@ export default class OptionOverlay extends React.Component {
                 });
                 that.state.scaleX.setValue(0);
                 that.state.scaleY.setValue(0);
-                that.state.opacity2.setValue(0.8);
+                that.state.opacity2.setValue(0);
                 that._hideCompleted();
             });
         }
-        
         
         if(onClose != null){
             onClose();
         }
     }
-
     _hideCompleted = () =>{
         EventRegister.emit("HideScreen",{obj:this});
     }
-
     render = () => {
         var screenHeight = Utils.Height() - GLOBALS.STATUS_BAR_HEIGHT ;
         var top = {};

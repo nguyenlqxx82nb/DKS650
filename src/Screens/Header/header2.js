@@ -9,6 +9,7 @@ import GLOBALS from "../../DataManagers/Globals.js";
 import PropTypes from 'prop-types';
 import Utils from '../../Utils/Utils';
 import SearchInput from '../../Views/SearchInput';
+import {EventRegister} from 'react-native-event-listeners';
 
 //const AnimatedView = Animated.createAnimatedComponent(View);
 export default class Header2 extends React.Component {
@@ -25,25 +26,27 @@ export default class Header2 extends React.Component {
         super(props);
         this.isSearchVisible = false;
         this.fullSearch = false;
-        this._searchWidth = new Animated.Value(0.5);
+        this._searchWidth = new Animated.Value(0.6);
         this._opacity = new Animated.Value(1);
     }
-    // getSearchValue = () =>{
-    //     return this._searchInput.getValue();
-    // }
-    // _onSearch = (value) =>{
-    //     if(this.props.onSearch != null)
-    //         this.props.onSearch(value);
-    // }
-    // _onSearchChange = (value) =>{
-    //     if(this.props.onSearchChange != null)
-    //         this.props.onSearchChange(value);
-    // }
+    
+    componentWillMount(){
+        this._listenerConnectToBoxEvent = EventRegister.addEventListener('ConnectToBox', (data) => {
+            if(GLOBALS.LANDSCAPE)
+                this.setState({});
+        });
+    }
+
+    componentWillUnmount(){
+        EventRegister.removeEventListener(this._listenerConnectToBoxEvent);
+    }
+
     showSearchInput = ()=>{
         if(this.fullSearch)
             return;
 
         this.fullSearch = true;
+        this._searchWidth.setValue(0.95);
         Animated.parallel([
             Animated.timing(this._opacity,{
                 toValue: 0,
@@ -54,7 +57,7 @@ export default class Header2 extends React.Component {
             Animated.timing(this._searchWidth,{
                 toValue: 1,
                 //useNativeDriver: Platform.OS === 'android',
-                duration: 150,
+                duration: 100,
                 //easing: Easing.bezier(0.0, 0.0, 0.2, 1),
             })
         ]).start();
@@ -96,7 +99,7 @@ export default class Header2 extends React.Component {
                 //easing: Easing.bezier(0.0, 0.0, 0.2, 1),
             }),
             Animated.timing(this._searchWidth,{
-                toValue: 0.5,
+                toValue: 0.6,
                 //useNativeDriver: Platform.OS === 'android',
                 duration: 50,
                 //easing: Easing.bezier(0.0, 0.0, 0.2, 1),
@@ -113,21 +116,27 @@ export default class Header2 extends React.Component {
             style:{
                 zIndex:2}});
     }
+    setSearchHolder = (title)=>{
+        this._searchInput.setHoler(title);
+    }
+    setSearchValue = (term)=>{
+        this._searchInput.setValue(term);
+    }
+    showIndicator = (value)=>{
+        this._searchInput.showIndicator(value);
+    }
     render() {
         const {onSearch,onSearchChange,h} = this.props
-        // var searchWidth = Utils.Width() - 20;
-        // if(!this.fullSearch){
-        //     searchWidth = (Utils.Width() - 20)*0.6;
-        // }
+        var color = (GLOBALS.IS_BOX_CONNECTED)?GLOBALS.COLORS.SELECTED:GLOBALS.COLORS.ERROR;
         return (
             <View style={[styles.container,{height:h}]}>
                 <Animated.View 
                     ref={ref=>(this._left=ref)}
-                    style={{ width: "25%",height: h, left: 0,top:0, opacity:this._opacity,zIndex:2,
+                    style={{ width: "20%",height: h, left: 0,top:0, opacity:this._opacity,zIndex:2,
                             position: 'absolute',flexDirection:"row",
                             justifyContent:"flex-start", alignItems:"center" }}>
-                            <View style={{width:40,height:40}}>
-                                <IconRippe vector={true} name="back" size={20} color="#fff"
+                            <View style={{width:GLOBALS.ICON_SIZE*2.5,height:"100%"}}>
+                                <IconRippe vector={true} name="back" size={GLOBALS.ICON_SIZE} color="#fff"
                                         onPress={()=>{
                                             if(this.props.onBack != null){
                                                 //this._searchInput.blur();
@@ -141,12 +150,12 @@ export default class Header2 extends React.Component {
                 
                 <Animated.View 
                     ref={ref=>(this._right=ref)}
-                    style={{ width: "25%", height: h, right: 0,top:0, opacity:this._opacity,zIndex:2,
+                    style={{ width: "20%", height: h, right: 0,top:0, opacity:this._opacity,zIndex:2,
                             position: 'absolute'}}>
                             <View style={{ flex:1,flexDirection:"row",
                                             justifyContent:"flex-end", alignItems:"center" }}>
-                                <View style={{width:40,height:40}}>
-                                    <IconRippe vector={true} name="wifi" size={20} color="#fff"/>
+                                <View style={{width:GLOBALS.ICON_SIZE*2.5,height:"100%"}}>
+                                    <IconRippe vector={true} name="wifi" size={GLOBALS.ICON_SIZE} color={color}/>
                                 </View>
                                 { this.props.right != null && this.props.right}
                             </View>

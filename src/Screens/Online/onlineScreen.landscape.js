@@ -27,9 +27,15 @@ export default class OnlineScreen extends BaseScreen {
         
         this.selectChannel = this.selectChannel.bind(this);
         if(GLOBALS.LANDSCAPE)
-            this.MAX_SCROLL_HEIGHT = 145;
+            this.MAX_SCROLL_HEIGHT = 115;
+            if(GLOBALS.LANDSCAPE_NORMAL){
+                this.MAX_SCROLL_HEIGHT = 135;
+            }
+            else if(GLOBALS.LANDSCAPE_LARGE){
+                this.MAX_SCROLL_HEIGHT = 145;
+            }
         else
-            this.MAX_SCROLL_HEIGHT = 150;
+            this.MAX_SCROLL_HEIGHT = 115;
 
         this._scroll2 = new Animated.Value(0);
     }
@@ -80,13 +86,26 @@ export default class OnlineScreen extends BaseScreen {
     
     _renderOnlineIcon = () => {
         const { type } = this.props;
+        var height = 40;
+        var widths = [90,100,100];
+        var icons = [70,90,90];
+        if(GLOBALS.LANDSCAPE_NORMAL){
+            height = 45;
+            widths = [110,120,120];
+            icons = [80,110,110];
+        }
+        else if(GLOBALS.LANDSCAPE_LARGE){
+            height = 50;
+            widths = [130,140,140];
+            icons = [100,125,125];
+        }
         if (type == GLOBALS.SONG_ONLINE.YOUTUBE) {
             return (
                 <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                    style={{ marginLeft: 5, height: 40, width: 90, marginRight:10}}
+                    style={{ marginLeft: 5, height: height, width: widths[0], marginRight:10}}
                     colors={['#FF6565', '#FF4242', '#FF2C2C', '#FF0404']} >
                     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                        <CustomIcon name={"youtube3"} size={60} style={{ color: "#fff" }} />
+                        <CustomIcon name={"youtube3"} size={icons[0]} style={{ color: "#fff" }} />
                     </View>
                 </LinearGradient>
             );
@@ -94,10 +113,10 @@ export default class OnlineScreen extends BaseScreen {
         else if (type == GLOBALS.SONG_ONLINE.SOUNDCLOUD) {
             return (
                 <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                    style={{ marginLeft: 5, height: 40, width: 100, justifyContent: "center", alignItems: "center" }}
+                    style={{ marginLeft: 5, height: height, width: widths[1], justifyContent: "center", alignItems: "center" }}
                     colors={['#FFB223', '#FF9E1D', '#FF8315', '#FF4903']} >
                     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                        <CustomIcon name={"soundcloud"} size={90} style={{ color: "#fff" }} />
+                        <CustomIcon name={"soundcloud"} size={icons[1]} style={{ color: "#fff" }} />
                     </View>
                 </LinearGradient>
             );
@@ -105,10 +124,10 @@ export default class OnlineScreen extends BaseScreen {
         else if (type == GLOBALS.SONG_ONLINE.MIXCLOUD) {
             return (
                 <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                    style={{ marginLeft: 5, height: 40, width: 100, justifyContent: "center", alignItems: "center" }}
+                    style={{ marginLeft: 5, height: height, width: widths[2], justifyContent: "center", alignItems: "center" }}
                     colors={['#69A5E5', '#5D9CE1', '#4B90DB', '#3783D4']} >
                     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                        <CustomIcon name={"mixcloud"} size={90} style={{ color: "#fff" }} />
+                        <CustomIcon name={"mixcloud"} size={icons[2]} style={{ color: "#fff" }} />
                     </View>
                 </LinearGradient>
             );
@@ -126,14 +145,17 @@ export default class OnlineScreen extends BaseScreen {
         if(GLOBALS.LANDSCAPE){
             return (
                 <View style={{ flex: 1}}>
-                    <Animated.View style={[styles.headerContainer, { transform: [{ translateY: this._scrollY }] }]}>
+                    <Animated.View style={[styles.headerContainer, {height:GLOBALS.HEADER_HEIGHT, transform: [{ translateY: this._scrollY }] }]}>
                         <Header2
                             ref={ref => (this._header = ref)}
-                            h={40}
+                            h={GLOBALS.HEADER_HEIGHT}
                             onSearch={this._onSearch}
                             onSearchChange={this._onSearchChange}
                             onBack={this._onBack}
                             left={this._renderOnlineIcon()}
+                            // onSearch = {(value)=>{
+                            //     this._header.showIndicator(value);
+                            // }}
                         />
                     </Animated.View>
                     {this.renderContent()}
@@ -151,6 +173,9 @@ export default class OnlineScreen extends BaseScreen {
                                 onBack = {this._onBack}
                                 left={this._renderOnlineIcon()}
                                 searchHolder = {Language.Strings.tim}
+                                // onSearch = {(value)=>{
+                                //     this._header.showIndicator(value);
+                                // }}
                             />
                     </Animated.View>
                     {this.renderContent()}
@@ -168,7 +193,7 @@ export default class OnlineScreen extends BaseScreen {
                             onScroll={this._handleListViewScroll}
                             onlineType={this.props.type}
                             top={this.MAX_SCROLL_HEIGHT} />
-                        <Animated.View 
+                        {/* <Animated.View 
                             style={{ height: 40, position: "absolute", top: 45, width: "100%",
                                     transform: [{ translateY: this._scroll2}] }}
                             ref={ref=>(this._a = ref)}
@@ -176,9 +201,9 @@ export default class OnlineScreen extends BaseScreen {
                             <TuKhoaHot
                                 onSelectChannel={this.selectChannel}
                             />
-                        </Animated.View>
+                        </Animated.View> */}
                         <Animated.View 
-                            style={{ height: 50, position: "absolute", top: 85, width: "100%",
+                            style={{ height: GLOBALS.HEADER_HEIGHT+5, position: "absolute", top: GLOBALS.HEADER_HEIGHT+17, width: "100%",
                             transform: [{ translateY: this._scroll2}] }}
                             ref={ref=>(this._b = ref)}
                             >
@@ -197,7 +222,7 @@ export default class OnlineScreen extends BaseScreen {
                             onScroll={this._handleListViewScroll}
                             onlineType={this.props.type}
                             top={this.MAX_SCROLL_HEIGHT} />
-                        <Animated.View 
+                        {/* <Animated.View 
                             style={{ height: 40, position: "absolute", top: 50, width: "100%",
                                     transform: [{ translateY: this._scroll2}] }}
                             ref={ref=>(this._a = ref)}
@@ -205,9 +230,9 @@ export default class OnlineScreen extends BaseScreen {
                             <TuKhoaHot
                                 onSelectChannel={this.selectChannel}
                             />
-                        </Animated.View>
+                        </Animated.View> */}
                         <Animated.View 
-                            style={{ height: 50, position: "absolute", top: 90, width: "100%",
+                            style={{ height: GLOBALS.HEADER_HEIGHT+5, position: "absolute", top: GLOBALS.HEADER_HEIGHT+10, width: "100%",
                             transform: [{ translateY: this._scroll2}] }}
                             ref={ref=>(this._b = ref)}
                             >

@@ -9,6 +9,7 @@ import GLOBALS from "../../DataManagers/Globals.js";
 import PropTypes from 'prop-types';
 import Utils from '../../Utils/Utils';
 import SearchInput from '../../Views/SearchInput';
+import {EventRegister} from 'react-native-event-listeners';
 
 //const AnimatedView = Animated.createAnimatedComponent(View);
 export default class Header extends React.Component {
@@ -23,41 +24,46 @@ export default class Header extends React.Component {
 
     constructor(props) {
         super(props);
+        this._startWidth = 350;
+        if(GLOBALS.LANDSCAPE_NORMAL){
+            this._startWidth = 450;
+        }
+        else if(GLOBALS.LANDSCAPE_LARGE){
+            this._startWidth = 550;
+        }
         this.isSearchVisible = false;
         this.fullSearch = false;
-        this._searchWidth = new Animated.Value(350);
+        this._searchWidth = new Animated.Value(this._startWidth);
         this._opacity = new Animated.Value(1);
     }
-    // getSearchValue = () =>{
-    //     return this._searchInput.getValue();
-    // }
-    // _onSearch = (value) =>{
-    //     if(this.props.onSearch != null)
-    //         this.props.onSearch(value);
-    // }
-    // _onSearchChange = (value) =>{
-    //     if(this.props.onSearchChange != null)
-    //         this.props.onSearchChange(value);
-    // }
+    componentWillMount(){
+        this._listenerConnectToBoxEvent = EventRegister.addEventListener('ConnectToBox', (data) => {
+            if(GLOBALS.LANDSCAPE)
+                this.setState({});
+        });
+    }
+
+    componentWillUnmount(){
+        EventRegister.removeEventListener(this._listenerConnectToBoxEvent);
+    }
     showSearchInput = ()=>{
         if(this.fullSearch)
             return;
-
-        //LayoutAnimation.configureNext(CustomLayoutSpring);
        // this.state.searchWidth.setValue(800);
         this.fullSearch = true;
         //this.setState({});
+        this._searchWidth.setValue(Utils.Width()-100);
         Animated.parallel([
             Animated.timing(this._opacity,{
                 toValue: 0,
                 //easing: Easing.bezier(0.0, 0.0, 0.2, 1),
                 //useNativeDriver: Platform.OS === 'android',
-                duration: 100,
+                duration: 50,
             }),
             Animated.timing(this._searchWidth,{
                 toValue: Utils.Width()-30,
                 //useNativeDriver: Platform.OS === 'android',
-                duration: 250,
+                duration: 100,
                //easing: Easing.bezier(0.0, 0.0, 0.2, 1),
             })
         ]).start();
@@ -68,6 +74,12 @@ export default class Header extends React.Component {
     }
     clear = () =>{
         this._searchInput.clear();
+    }
+    setSearchHolder = (title)=>{
+        this._searchInput.setHoler(title);
+    }
+    showIndicator = (value)=>{
+        this._searchInput.showIndicator(value);
     }
     hideSearchInput = () =>{
         if(!this.fullSearch)
@@ -83,7 +95,7 @@ export default class Header extends React.Component {
                 //easing: Easing.bezier(0.0, 0.0, 0.2, 1),
             }),
             Animated.timing(this._searchWidth,{
-                toValue: 350,
+                toValue: this._startWidth,
                 //useNativeDriver: Platform.OS === 'android',
                 duration: 100,
                 //easing: Easing.bezier(0.0, 0.0, 0.2, 1),
@@ -92,16 +104,13 @@ export default class Header extends React.Component {
     }
     render() {
         const {onSearch,onSearchChange,h} = this.props
-        // var searchWidth = Utils.Width() - 20;
-        // if(!this.fullSearch){
-        //     searchWidth = (Utils.Width() - 20)*0.6;
-        // }
+        var color = (GLOBALS.IS_BOX_CONNECTED)?GLOBALS.COLORS.SELECTED:GLOBALS.COLORS.ERROR;
         return (
             <View style={[styles.container,{height:h}]}>
                 
                 <Animated.View 
-                    style={{ width: 40, height: 40, marginLeft: 0, opacity:this._opacity }}>
-                    <IconRippe vector={true} name="back" size={20} color="#fff"
+                    style={{ width: GLOBALS.ICON_SIZE*2.5, height: "100%", marginLeft: 0, opacity:this._opacity }}>
+                    <IconRippe vector={true} name="back" size={GLOBALS.ICON_SIZE} color="#fff"
                         onPress={()=>{
                             if(this.props.onBack != null){
                                 //this._searchInput.blur();
@@ -155,11 +164,9 @@ export default class Header extends React.Component {
                     />
                 </Animated.View>
                 <Animated.View 
-                    style={{ width: 40, height: 40, marginLeft: 0, opacity:this._opacity }}>
-                    <IconRippe vector={true} name="wifi" size={20} color="#fff"
-                        onPress={()=>{
-                            
-                        }}
+                    style={{ width:GLOBALS.ICON_SIZE*2.5, height: "100%", marginLeft: 0, opacity:this._opacity }}>
+                    <IconRippe vector={true} name="wifi" size={GLOBALS.ICON_SIZE} color={color}
+                        onPress={()=>{}}
                     />
                 </Animated.View>
             </View>

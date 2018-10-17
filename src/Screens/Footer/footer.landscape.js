@@ -45,8 +45,8 @@ export default class FooterLanscape extends React.Component {
         // Update playback info
         this._listenerPlaybackInfoEvent = EventRegister.addEventListener('PlaybackInfoChange', (data) => {
             this._playBtn.setIconType(DATA_INFO.PLAYBACK_INFO.IsPlaying ? 2 : 1);
-            this._micBtn.setIconType(DATA_INFO.PLAYBACK_INFO.IsMute ? 2 : 1);
-            //console.warn("volume = "+DATA_INFO.PLAYBACK_INFO.Volume);
+            this._micBtn.setIconType((DATA_INFO.PLAYBACK_INFO.IsOriginal == 0) ? 2 : 1);
+            
             this.setState({ volume: DATA_INFO.PLAYBACK_INFO.Volume });
         });
 
@@ -75,14 +75,21 @@ export default class FooterLanscape extends React.Component {
     }
 
     _onMicPress = () => {
-        BoxControl.mic();
+        BoxControl.tachloi();
     }
 
     _onEmojiPress = () => {
+        var height = 150;
+        if(GLOBALS.LANDSCAPE_NORMAL){
+            height = 170;
+        }
+        else if(GLOBALS.LANDSCAPE_LARGE){
+            height = 190;
+        }
         EventRegister.emit('ShowOptOverlay',
             {
                 overlayType: GLOBALS.SING_OVERLAY.EMOJI,
-                data: { height: 120 }
+                data: { height: height}
             });
     }
     _openSongList = () => {
@@ -211,90 +218,108 @@ export default class FooterLanscape extends React.Component {
         const { maxZindex } = this.props;
 
         var playIconType = (DATA_INFO.PLAYBACK_INFO.IsPlaying) ? 2 : 1;
-        var micIconType = (DATA_INFO.PLAYBACK_INFO.IsMute) ? 2 : 1;
+        var micIconType = (DATA_INFO.PLAYBACK_INFO.IsOriginal == 0) ? 2 : 1;
         let songNumber = DATA_INFO.PLAY_QUEUE.length;
 
         var status = (GLOBALS.IS_NO_WIFI_CHECKED || !GLOBALS.IS_BOX_CONNECTED) ? GLOBALS.ICON_STATUS.OFFLINE : GLOBALS.ICON_STATUS.ONLINE;
+        var button_style = {};
+        var icon_sizes = [];
+        var normal_size ;
+        var play_size 
+        if(GLOBALS.LANDSCAPE_SMALL){
+            button_style = {
+                width:62,
+            }
+            normal_size = 25;
+            play_size = 50;
+        }
+        else if(GLOBALS.LANDSCAPE_NORMAL){
+            button_style = {
+                width:80,
+            }
+
+            normal_size = 30;
+            play_size = 60;
+        }
+        else if(GLOBALS.LANDSCAPE_LARGE){
+            button_style = {
+                width:95,
+            }
+
+            normal_size = 35;
+            play_size = 70;
+        }
         return (
             <Animated.View
                 ref={ref => (this._container = ref)}
-                style={[styles.footerContainer, { zIndex: maxZindex, transform: [{ translateY: bottomValue }] }]}>
-                <View style={styles.container} >
-                <Grid>
-                    <Row>
-                        <Col size={0.9}>
-                            <View style={{flex:1,justifyContent:"flex-start",alignItems:"center",flexDirection: "row",
-                                    paddingLeft:10,paddingRight:20}}>
-                                <View style={styles.iconTopLeft}>
-                                    <IconRippe status={status} vector={true} size={25} name="volumn"
-                                            onPress ={this._closeVolumeView} />
-                                </View>
-                                <View style={{flex: 1,
-                                                height:40,
-                                                alignItems: 'stretch',
-                                                justifyContent: 'center',}}>
-                                    <Slider
-                                        thumbTintColor ="#fff"
-                                        minimumTrackTintColor = "#fff"
-                                        maximumTrackTintColor ="#69669C"
-                                        value={this.state.volume} 
-                                        onValueChange={(value) => this.setState({volume : value})}
-                                        onSlidingComplete = {this._onVolumeChange}
-                                        /> 
-                                </View>
-                                
-                                <View style={styles.iconTopRight}>
-                                    <IconRippe status={status} vector={true} size={25} name="volumnOn" 
-                                    onPress ={this._closeVolumeView} />
-                                </View>
-                            </View>
-                        </Col>
-                        <Col size={1.2}>
-                            <Row>
-                                <Col size={1} style={[styles.container_center]}>
-                                    <IconRippe status={status} vector={true} size={25} name="emoji" 
-                                        onPress={this._onEmojiPress} />
-                                </Col>
-                                <Col size={1} style={[styles.container_center]}>
-                                <IconRippe status={status} vector={true} size={25} name="replay"
-                                            onPress={() => {
-                                                BoxControl.rePlay();
-                                            }}
-                                        />
-                                </Col>
-                                <Col size={1}>
-                                    <IconRippe status={status} ref={ref => (this._playBtn = ref)} vector={true} size={45} name="play" name1="pause" iconType={playIconType} onPress={this._onPlayPress} />
-                                </Col>
-                                <Col size={1} style={[styles.container_center]}>
-                                    <IconRippe status={status} vector={true} size={23} name="next"
-                                            onPress={() => {
-                                                BoxControl.nextSong();
-                                            }}
-                                        />
-                                </Col>
-                                <Col size={1} style={[styles.container_center]}>
-                                    <IconRippe status={status} ref={ref => (this._micBtn = ref)} vector={true} size={23}
-                                            name="micOn" name1="micOff" iconType={micIconType}
-                                            onPress={() => {
-                                                BoxControl.mute();
-                                            }}
-                                        />
-                                </Col>
-                            </Row>
-                        </Col>
-                        <Col size={0.9}>
-                            <View style={{flex:1, flexDirection:"row",justifyContent:"flex-end",alignItems:"center",paddingRight:10,paddingLeft:30}}>
-                                <SongTextRun />
-                                <View style={styles.iconTopRight}>
-                                    <IconRippe status={status} vector={true} size={25} name="list" onPress={this._openSongList} badge={songNumber} ref={ref => (this._listBtn = ref)} />
-                                </View>
-                            </View>                    
-                        </Col>
-                    </Row>
+                style={[styles.footerContainer, {height:GLOBALS.FOOTER_HEIGHT, zIndex: maxZindex, transform: [{ translateY: bottomValue }] }]}>
+                    <View style={{width:"28%",justifyContent:"flex-start",alignItems:"center",flexDirection: "row",
+                            paddingLeft:10,paddingRight:5}}>
+                        <View style={{height:"100%",width:normal_size+25}}>
+                            <IconRippe 
+                                status={status} 
+                                vector={true} 
+                                size={normal_size} 
+                                name1="volumn" 
+                                name="volumnOn"
+                                iconType={1}
+                                onPress={()=>{}} />
+                        </View>
+                        <View style={{flex: 1,
+                                        height:40,
+                                        alignItems: 'stretch',
+                                        justifyContent: 'center',
+                                        marginRight:15}}>
+                            <Slider
+                                thumbTintColor ="#fff"
+                                minimumTrackTintColor = "#fff"
+                                maximumTrackTintColor ="#69669C"
+                                value={this.state.volume} 
+                                onValueChange={(value) => this.setState({volume : value})}
+                                onSlidingComplete = {this._onVolumeChange}
+                                /> 
+                        </View>
+                        
+                    </View>
 
-                </Grid>      
-                </View> 
-                
+                    <View style={{flex:1, flexDirection:"row", justifyContent:"center",alignItems:"center"}}>
+                            <View style={[styles.buttonControl,button_style]}>
+                                <IconRippe status={status} vector={true} 
+                                        size={normal_size} name="emoji" 
+                                            onPress={this._onEmojiPress} />
+                            </View>
+                            <View style={[styles.buttonControl,button_style]}>
+                                <IconRippe status={status} vector={true} size={normal_size} name="replay"
+                                                onPress={() => { BoxControl.rePlay();}} />
+                            </View>
+                            <View style={[styles.buttonControl,button_style]}>
+                            <IconRippe status={status} ref={ref => (this._playBtn = ref)} 
+                                    vector={true} size={play_size} name="play" name1="pause" iconType={playIconType}
+                                    onPress={this._onPlayPress} />
+                            </View>
+                            <View style={[styles.buttonControl,button_style]}>
+                                <IconRippe status={status} vector={true} size={normal_size-2} name="next"
+                                            onPress={() => { BoxControl.nextSong();}}/>
+                            </View>
+                            <View style={[styles.buttonControl,button_style]}>
+                                <IconRippe status={status} ref={ref => (this._micBtn = ref)} vector={true} 
+                                        size={normal_size-2}
+                                                name="micOn" name1="micOff" iconType={micIconType}
+                                                onPress={this._onMicPress}/>
+                            </View>
+                    </View>
+                    
+                    <View style={{width:"28%", flexDirection:"row",justifyContent:"flex-end",alignItems:"center",
+                        paddingRight:5,paddingLeft:10}}>
+                        <SongTextRun />
+                        <View style={{height:"100%",width:normal_size+20,marginRight:5,marginLeft:5}}>
+                            <IconRippe status={status} vector={true} 
+                                size={normal_size} name="list" 
+                                onPress={this._openSongList} badge={songNumber} 
+                                ref={ref => (this._listBtn = ref)} />
+                        </View>
+                    </View> 
+
             </Animated.View>
         );
     }
@@ -310,34 +335,25 @@ const styles = StyleSheet.create({
         width: Utils.Width(),
         height: 60,
         zIndex: 2,
-        bottom: 0
-    },
-    container: {
-        width: Utils.Width(),
-        height: 60,
-        marginTop:2,
-        paddingTop: 5,
-        paddingBottom: 5,
+        bottom: 0,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2},
         shadowOpacity: 0.2,
         elevation: 4,
         width:"100%",
         backgroundColor: "#444083",
+        flexDirection:"row"
     },
-    topContainer: {
-        width: "100%",
-        height: 40,
-        position: "absolute",
-        top: 0,
-        justifyContent: "center",
-        alignItems: "center"
+    buttonControl :{
+        height:"100%",
+        // justifyContent:"center",
+        // alignItems:"center",
+        // backgroundColor:"red"
+
     },
     iconTopLeft: {
         width: 40,
-        height: 40,
-        marginLeft: 10,
-        marginRight: 10,
+        height: "100%",
     },
     iconTopRight: {
         width: 40,

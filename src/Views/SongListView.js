@@ -54,7 +54,8 @@ export default class SongListView extends React.Component {
     _selectedList = true;
     _songTextSize = 19;
     _songSingerSize = 15;
-
+    _width = 0;
+    _height = 0;
     constructor(props) {
         super(props);
         if(GLOBALS.MOBILE_SMALL){
@@ -68,40 +69,57 @@ export default class SongListView extends React.Component {
                     || this.props.listType == GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD){
             this._selectedList = false;
         }
-        this._layoutProvider = new LayoutProvider(
-            index => {
-                return "FULL";
-            },
-            (type, dim) => {
-                switch (type) {
-                    case "FULL":
-                        dim.width = width;
-                        dim.height = 60;
-                        break;
-                    default:
-                        dim.width = width;
-                        dim.height = 60;
+        if(!GLOBALS.LANDSCAPE){
+            this._width = width;
+            this._height = 60;
+            this._layoutProvider = new LayoutProvider(
+                index => {
+                    return "FULL";
+                },
+                (type, dim) => {
+                    switch (type) {
+                        case "FULL":
+                            dim.width = this._width;
+                            dim.height = this._height;
+                            break;
+                        default:
+                            dim.width = width;
+                            dim.height = 60;
+                    }
                 }
+            );
+        }
+        else{
+            this._width = width-31;
+            this._height = 65;
+            if(GLOBALS.LANDSCAPE_NORMAL){
+                this._width = width-40;
+                this._height = 75;
             }
-        );
-
-        this._layoutProvider2 = new LayoutProvider(
-            index => {
-                return "FULL";
-            },
-            (type, dim) => {
-                switch (type) {
-                    case "FULL":
-                        dim.width = width-31;
-                        dim.height = 65;
-                        break;
-                    default:
-                        dim.width = width/2;
-                        dim.height = 65;
+            else if(GLOBALS.LANDSCAPE_LARGE){
+                this._width = width-40;
+                this._height = 85;
+            }
+            this._layoutProvider2 = new LayoutProvider(
+                index => {
+                    return "FULL";
+                },
+                (type, dim) => {
+                    switch (type) {
+                        case "FULL":
+                            dim.width = this._width;
+                            dim.height = this._height;
+                            break;
+                        default:
+                            dim.width = width/2;
+                            dim.height = 65;
+                    }
                 }
-            }
-        );
+            );
+    
+        }
 
+        
         this._loadData = this._loadData.bind(this);
         //this._actionButtons = this.generateSongActions();
     }
@@ -168,7 +186,7 @@ export default class SongListView extends React.Component {
     }
 
     searchData = (term)=>{
-        if(!GLOBALS.IS_BOX_CONNECTED && GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.HTTP)
+        if(!GLOBALS.IS_DATABASE_CONNECTED)
             return;
         if(this._loading || term == this._searchTerm)
             return;
@@ -186,8 +204,7 @@ export default class SongListView extends React.Component {
     }
 
     refreshData = (term) =>{
-        if(this._loading 
-            || (!GLOBALS.IS_BOX_CONNECTED && GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.HTTP))
+        if(this._loading || !GLOBALS.IS_DATABASE_CONNECTED)
             return;
         
         this.hasChanged = false;
@@ -215,8 +232,7 @@ export default class SongListView extends React.Component {
     }
 
     loadData = (term) => {
-        if(this._loading 
-                || (!GLOBALS.IS_BOX_CONNECTED && GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.HTTP))
+        if(this._loading || !GLOBALS.IS_DATABASE_CONNECTED)
             return;
         if (this._loaded && this._searchTerm == term) {
             if(this.hasChanged)
@@ -267,7 +283,7 @@ export default class SongListView extends React.Component {
                 EventRegister.emit("ShowToast",{message:Language.Strings.noSong});
             }
         }
-        
+        this._indicator.hide();
         if(this.props.listType !== GLOBALS.SONG_LIST_TYPE.SELECTED){
             if(datas.length <this._pageCount){
                 this._hasData = false;
@@ -275,12 +291,9 @@ export default class SongListView extends React.Component {
             else{
                 this._hasData = true;
             }
-
-            this._indicator.hide();
             this._loaded = true;
         }
         else{
-            this._indicator.hide();
             this._loaded = true;
             this._hasData = false;
         }
@@ -312,7 +325,16 @@ export default class SongListView extends React.Component {
     _showOptOverlay = (id,overlayType,actor,_actionButtons) =>{
         const {listType}=this.props;
         var _height = _actionButtons.length*50+10;
-        
+        if(GLOBALS.LANDSCAPE){
+            _height = 170;
+            if(GLOBALS.LANDSCAPE_LARGE){
+                _height = 200;
+            }
+            else if(GLOBALS.LANDSCAPE_NORMAL){
+                _height = 185;
+            }
+        }  
+
         EventRegister.emit('ShowOptOverlay', 
                 {overlayType:overlayType,
                 data:{
@@ -371,17 +393,23 @@ export default class SongListView extends React.Component {
             return;
         else if(_actionButtons.length == 1){
             return(
-                <View style={{ width: 40, height: 40 }}>
-                            <IconRippe vector={true} name={_actionButtons[0].icon} size={20} 
-                                onPress={this.doAction.bind(this,songId,actor)} 
-                            />
-                        </View>
+                <View style={{ width: GLOBALS.ICON_SIZE*2, height: GLOBALS.ICON_SIZE*2 }}>
+                    <IconRippe 
+                        vector={true} 
+                        name={_actionButtons[0].icon} 
+                        size={GLOBALS.ICON_SIZE} 
+                        onPress={this.doAction.bind(this,songId,actor)} 
+                    />
+                </View>
             );
         }
         else{
             return(
-                <View style={{ width: 40, height: 40 }}>
-                    <IconRippe vector={true} name={GLOBALS.LANDSCAPE?"tuychon2":"tuychon"} size={20} 
+                <View style={{ width: GLOBALS.ICON_SIZE*2, height: GLOBALS.ICON_SIZE*2 }}>
+                    <IconRippe 
+                        vector={true} 
+                        name={GLOBALS.LANDSCAPE?"tuychon2":"tuychon"} 
+                        size={GLOBALS.ICON_SIZE} 
                         onPress={this._showOptOverlay.bind(this,songId,overlayType,actor,_actionButtons)} 
                     />
                 </View>
@@ -452,25 +480,41 @@ export default class SongListView extends React.Component {
         // var hasOptionButton = (status  == GLOBALS.SING_STATUS.NO_DOWNLOADED
         //                         || status  == GLOBALS.SING_STATUS.DOWNLOADING)?false:true;
         //var buttons = this.generateSongActions(status);
-
+        var _heightItem = 55;
+        var paddings = [25,10];
+        var songSize = 20;
+        var singerSize = 17;
+        if(GLOBALS.LANDSCAPE_NORMAL){
+            _heightItem = this._height - 10;
+            paddings = [25,10];
+            songSize = 21;
+            singerSize = 18;
+        }
+        else if(GLOBALS.LANDSCAPE_LARGE){
+            _heightItem = this._height - 15;
+            paddings = [30,10];
+            songSize = 22;
+            singerSize = 19;
+        }
         return (
-            <View style={styles.listItem2}>
+            <View style={[styles.listItem2,{height:_heightItem}] }>
                 <ListItem
-                    style={{width:"100%",height:53}}
+                    style={{width:"100%",height:_heightItem - 2}}
                     rippleRound = {true}
-                        onPress={this._onPressSong.bind(this, id, status)}
-                    >
+                    onPress={this._onPressSong.bind(this, id, _status)}
+                    selected={this._selectedList}
+                >
                     <View style={{
                         flex: 1, flexDirection: "row", justifyContent: "center",alignItems:"center"}}>
                         <View  style={{ flex:1, flexDirection:"row"}}>
-                            <View style={{ flex:1, justifyContent:"center",alignItems:"flex-start", paddingLeft:15, paddingRight:10}}>
-                                <Text numberOfLines={2} style={[styles.songText, {color: singColor }]}>
+                            <View style={{ flex:1, justifyContent:"center",alignItems:"flex-start", paddingLeft:paddings[0], paddingRight:paddings[1]}}>
+                                <Text numberOfLines={2} style={[styles.songText, {color: singColor, fontSize:songSize}]}>
                                         {name  + singPrefix}
                                 </Text>
                             </View>
                             
-                            <View style={{ width:"30%", justifyContent:"center",alignItems:"flex-start", paddingRight:10}}>
-                                <Text numberOfLines={0} style={[styles.singerText, {color: singerColor,}]}>
+                            <View style={{ width:"30%", justifyContent:"center",alignItems:"flex-start", paddingRight:paddings[1]}}>
+                                <Text numberOfLines={0} style={[styles.singerText, {color: singerColor,fontSize:singerSize}]}>
                                     {singerName}
                                 </Text>
                             </View>
@@ -545,7 +589,25 @@ export default class SongListView extends React.Component {
 
     render = () => {
         var containerStyle = {};
-       
+        if(GLOBALS.LANDSCAPE){
+            containerStyle = {
+                marginLeft : 15,
+                marginRight : 15
+            }
+            if(GLOBALS.LANDSCAPE_NORMAL){
+                containerStyle = {
+                    marginLeft : 20,
+                    marginRight : 20
+                }
+            }
+            else if(GLOBALS.LANDSCAPE_LARGE){
+                containerStyle = {
+                    marginLeft : 20,
+                    marginRight : 20
+                }
+            }
+           
+        }
         return (
             <View style={{ flex: 1 }}>
                 <RecyclerListView

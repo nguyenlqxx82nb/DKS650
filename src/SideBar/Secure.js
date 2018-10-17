@@ -177,19 +177,41 @@ export default class Secure extends React.Component {
             );
         }
         else{
-            
-            inputSize.width = 280;
-            inputSize.height = 45;
-            
-            containerSize.width= 280;
-            containerSize.height=230;
+            if(GLOBALS.LANDSCAPE_SMALL){
+                inputSize.width = 320;
+                inputSize.height = 45;
+                
+                containerSize.width= 320;
+                containerSize.height=270;
+            }
+            else if(GLOBALS.LANDSCAPE_NORMAL){
+                inputSize.width = 350;
+                inputSize.height = 50;
+                
+                containerSize.width= 350;
+                containerSize.height=300;
+            }
+            else if(GLOBALS.LANDSCAPE_LARGE){
+                inputSize.width = 400;
+                inputSize.height = 55;
+                
+                containerSize.width= 400;
+                containerSize.height= 320;
+            }
             
             return (
                 <View style={{flex:1}}>
-                    <Header title={Language.Strings.mk} onBack={()=>{this.props.onBack()}} />
+                    <View style={{height:GLOBALS.HEADER_HEIGHT, width:"100%",justifyContent:"center",alignItems:"center"}}>
+                        <Header 
+                                onBack={()=>{this.props.onBack()}} 
+                                style = {{height:GLOBALS.HEADER_HEIGHT}}
+                                left = {<Text style={[GLOBALS.TITLE]}>
+                                            {Language.Strings.mk.toUpperCase()}
+                                        </Text>}  />
+                    </View>
 
                     <View style={{ flex: 1,backgroundColor:"transparent",justifyContent:"center",alignItems:"center"}}>
-                        <Text style={[styles.title]}>{Language.Strings.nmk}</Text>
+                        <Text style={[styles.title]}>{Language.Strings.nmk.toUpperCase()}</Text>
                         <View style={inputSize}>
                             <PassInput 
                                     ref = {ref=>(this._passInput = ref)}
@@ -331,7 +353,7 @@ const styles = StyleSheet.create({
         //fontWeight: '300',
         color:"#fff",
         fontFamily:GLOBALS.FONT.BOLD,
-        marginBottom:15
+        marginBottom:10
     },
    
     error :{

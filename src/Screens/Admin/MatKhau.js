@@ -5,7 +5,6 @@ import ButtonAdmin from "./ButtonAdmin";
 import { EventRegister } from 'react-native-event-listeners'
 import Language from '../../DataManagers/Language';
 import GLOBALS from '../../DataManagers/Globals';
-import SyncStorage from 'sync-storage';
 
 export default class MatkhauScreen extends React.Component
 {
@@ -35,7 +34,7 @@ export default class MatkhauScreen extends React.Component
              return;   
         }
 
-        SyncStorage.set('pass',this._text2.getValue());
+        AsyncStorage.setItem('pass',this._text2.getValue());
         GLOBALS.PASS == this._text2.getValue();
         EventRegister.emit("ShowToast",{message:Language.Strings.admin.updateSuccess});
     }

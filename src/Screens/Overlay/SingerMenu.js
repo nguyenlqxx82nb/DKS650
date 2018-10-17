@@ -33,48 +33,74 @@ export default class SingerMenu extends React.Component {
     }
    
     render = () =>{
-        return(
-            <View style={styles.innerContainer}>
-                <View style={{height:50,width:'100%'}}>
-                    <IconRippe vector={true} name="all" size={25} 
-                        text={{content: Language.Strings.all, layout: 1}} 
-                        textStyle={[styles.textButton,styles.singerText]}
-                        onPress={this.filterSinger.bind(this,GLOBALS.SINGER_SEX.ALL)}
-                    />
+        var buttons = [
+            {
+                name : Language.Strings.all,
+                type: GLOBALS.SINGER_SEX.ALL,
+                icon : "all",
+            },
+            {
+                name : Language.Strings.male,
+                type: GLOBALS.SINGER_SEX.MALE,
+                icon : "male",
+            },
+            {
+                name : Language.Strings.female,
+                type: GLOBALS.SINGER_SEX.FEMALE,
+                icon : "famale",
+            },
+            {
+                name : Language.Strings.band,
+                type: GLOBALS.SINGER_SEX.band,
+                icon : "nhomnhac",
+            }
+        ] ;
+        if(GLOBALS.LANDSCAPE){
+            return(
+                <View style={[styles.innerContainer,{flexDirection:"row"}]}>
+                    {buttons.map((button, index) => {
+                        return(
+                            <View key={index} style={{ height:"100%", width:170,}}>
+                                <IconRippe name={button.icon} size = {90}
+                                    text={{content: button.name, layout: 2}} 
+                                    textStyle={[styles.textButton,{marginTop:5,marginLeft:0}]}
+                                    onPress={this.filterSinger.bind(this,button.type)}
+                                    />
+                            </View>
+                        );
+                    })}
                 </View>
-                <View style={{height:50,width:'100%'}}>
-                    <IconRippe vector={true} name="male" size={25} 
-                        text={{content: Language.Strings.male, layout: 1}} 
-                        textStyle={[styles.textButton,styles.singerText]}
-                        onPress={this.filterSinger.bind(this,GLOBALS.SINGER_SEX.MALE)}
-                    />
+                )
+        }
+        else{
+            return(
+                <View style={styles.innerContainer}>
+                    {buttons.map((button, index) => {
+                        return (
+                            <View key = {index} style={{height:50,width:'100%'}}>
+                                <IconRippe vector={true} name={button.icon} size={25} 
+                                    text={{content: button.name, layout: 1}} 
+                                    textStyle={[styles.textButton,styles.singerText]}
+                                    onPress={this.filterSinger.bind(this,button.type)}
+                                />
+                            </View>
+                        );
+                    })}
                 </View>
-                <View style={{height:50,width:'100%'}}>
-                    <IconRippe vector={true} name="famale" size={25} 
-                        text={{content: Language.Strings.female, layout: 1}}
-                        textStyle={[styles.textButton,styles.singerText]}
-                        onPress={this.filterSinger.bind(this,GLOBALS.SINGER_SEX.FEMALE)}
-                    />
-                </View>
-                <View style={{height:50,width:'100%'}}>
-                    <IconRippe vector={true} name="nhomnhac" size={25} 
-                        text={{content: Language.Strings.band, layout: 1}} 
-                        textStyle={[styles.textButton,styles.singerText]}
-                        onPress={this.filterSinger.bind(this,GLOBALS.SINGER_SEX.GROUP)}
-                    />
-                </View>
-                {/* <View style={{height:50,width:'100%', backgroundColor:"#444083"}}>
-                    <IconRippe vector={true} name={""}
-                        text={{content: "Hủy", layout: 1}} textStyle={styles.textButton}
-                    />
-                </View> */}
-        </View>);
+                )
+        }
     }
 }
 
 
 const styles = StyleSheet.create({
-    
+    innerContainer :{
+        marginTop:5,
+        marginBottom:5,
+        flex:1,
+        justifyContent:"center",
+        alignItems:"center",
+    },
     textButton: {
         fontFamily: GLOBALS.FONT.MEDIUM,
         fontSize: 16, 

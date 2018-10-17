@@ -32,8 +32,15 @@ export default class ChannelList extends React.Component {
         }) 
     }
     render() {
+        var _fontSize = 16;
+        if(GLOBALS.LANDSCAPE_NORMAL){
+            _fontSize = 17;
+        }
+        else if(GLOBALS.LANDSCAPE_LARGE){
+            _fontSize = 18;
+        }
         return (
-            <View style={{ height: 50, justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+            <View style={{ flex:1, justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
                 {/* <Text style={styles.titleHot}>TỪ KHÓA HOT</Text> */}
                 <ScrollView
                     horizontal={true}
@@ -49,9 +56,9 @@ export default class ChannelList extends React.Component {
                         return (
                             <View 
                                 key={index}
-                                style={styles.containerItem}>
+                                style={[styles.containerItem,{height:GLOBALS.HEADER_HEIGHT+5,borderRadius:(GLOBALS.HEADER_HEIGHT+5)/2}]}>
                                 <ListItem 
-                                    style={styles.listItem}
+                                    style={[styles.listItem,{height:GLOBALS.HEADER_HEIGHT+5}]}
                                     rippleRound = {true}
                                     onPress={() => {
                                         ///var res = item.title.replace(" ", "+");
@@ -59,11 +66,12 @@ export default class ChannelList extends React.Component {
                                             this.props.onSelectChannel(item.title);
                                     }}
                                 >
-                                <View style={{width:40,height:40, marginRight:5}}>
-                                    <Image style={{flex:1,borderRadius: 20}}  source={{ uri:item.thumb}} />    
+                                <View style={{width:(GLOBALS.HEADER_HEIGHT+5),height:(GLOBALS.HEADER_HEIGHT+5), marginRight:5}}>
+                                    <Image style={{flex:1,borderRadius: (GLOBALS.HEADER_HEIGHT+5)/2}}  
+                                           source={{ uri:item.thumb}} />    
                                 </View>
                                 
-                                <Text style={styles.title}>{item.title}</Text>
+                                <Text style={[styles.title,{fontSize:_fontSize}]}>{item.title}</Text>
                                 </ListItem>
                             </View>) ;
                     })

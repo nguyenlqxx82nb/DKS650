@@ -7,6 +7,7 @@ import GLOBALS from "../DataManagers/Globals.js";
 import DATA_INFO from '../DataManagers/DataInfo.js';
 import DatabaseManager from '../DataManagers/DatabaseManager.js';
 import { EventRegister } from 'react-native-event-listeners';
+import Language from "../DataManagers/Language.js";
 
 const arrowLeftSrc = require("../../assets/arrowLeft.png");
 const arrowRightSrc = require("../../assets/arrowRight.png");
@@ -19,10 +20,7 @@ export default class SongTextRun extends React.Component {
     constructor(props) {
         super(props);
         //this.onPlayPress = this.onPlayPress.bind(this);
-        this.state = {
-            volume : DATA_INFO.PLAYBACK_INFO.Volume,
-            text : "- Chọn bài -",
-        }
+        this._text = "- Chọn bài -";
         setTimeout(()=>{
             this._runText.stopAnimation();
         },20);
@@ -41,12 +39,15 @@ export default class SongTextRun extends React.Component {
         EventRegister.removeEventListener(this._listenerSongUpdateEvent);
     }
 
+    componentDidMount(){
+        this._updateSongText();
+    }
+
     _updateSongText = () =>{
         if(DATA_INFO.PLAY_QUEUE.length == 0){
-            // if(this._songId == -1)
-            //     return;
             this._songId == -1;
-            this.setState({text:"- Chọn bài -"});
+            this._text="- "+Language.Strings.chonbai+" -";
+            this.setState({});
             setTimeout(()=>{
                 this._runText.stopAnimation();
             },20);
@@ -58,8 +59,11 @@ export default class SongTextRun extends React.Component {
             
             DatabaseManager.getSong(songId,(song)=>{
                 this._songId == songId;
+                //console.warn("songId = "+songId);
                 if(song != null){
-                    this.setState({text:" - "+song.Song_Name+" -**- Ca sỹ : "+song.Actor+" - "});
+                    this._text = "  "+song.Song_Name+" - "+song.Actor+"  ";
+                    //console.warn("text = "+this._text);
+                    this.setState({});
                     setTimeout(()=>{
                         this._runText.startAnimation();
                     },100)
@@ -71,10 +75,9 @@ export default class SongTextRun extends React.Component {
     }
 
     render() {
-        const { text } = this.state;
         return (
             <View style={{flex:1,justifyContent:"center",alignItems:"center",flexDirection:"row"}}>
-                <Image source={arrowLeftSrc} style={{width: 13, height: 13, marginRight:10}} />
+                <Image source={arrowLeftSrc} style={{width: 12, height: 12, marginRight:10}} />
                 <View style={{flex:1, justifyContent:"center",alignItems:"center"}}>
                     <TextTicker
                         ref={ref => (this._runText = ref)}
@@ -85,10 +88,10 @@ export default class SongTextRun extends React.Component {
                         marqueeOnMount ={false}
                         repeatSpacer={20}
                         marqueeDelay={0}>
-                        {text}
+                        {this._text}
                     </TextTicker>
                 </View>
-                <Image source={arrowRightSrc} style={{ width: 13, height: 13, marginLeft:10}} />
+                <Image source={arrowRightSrc} style={{ width: 12, height: 12, marginLeft:10}} />
             </View>
         );
     }
@@ -96,7 +99,7 @@ export default class SongTextRun extends React.Component {
 
 const styles = StyleSheet.create({
     text : {
-        fontSize: 13, 
+        fontSize: 16, 
         color: 'white',
         overflow: 'hidden',
         fontFamily:GLOBALS.FONT.MEDIUM

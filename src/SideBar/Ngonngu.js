@@ -41,7 +41,7 @@ export default class Ngonngu extends React.Component {
         if(!GLOBALS.LANDSCAPE){
             return (
                 <View style={{flex:1}} >
-                    <View style={{height:45, width:"100%",justifyContent:"center",alignItems:"center"}}>
+                    <View style={{height:GLOBALS.HEADER_HEIGHT, width:"100%",justifyContent:"center",alignItems:"center"}}>
                         <Header 
                             onBack={()=>{this.props.onBack()}} 
                             style = {{height:GLOBALS.HEADER_HEIGHT}}
@@ -93,10 +93,39 @@ export default class Ngonngu extends React.Component {
                 </View>
             );
         }
-        else{
+        else
+        {
+            iconSizes = [240,115,115,115,115];
+            if(GLOBALS.LANDSCAPE_NORMAL){
+                for(var i=0; i< iconSizes.length; i++){
+                    iconSizes[i] = iconSizes[i]*1.3
+                }
+                container = {
+                    width:240*1.3,
+                    height:155*1.3,
+                }
+                textFlag = {
+                    fontSize:14
+                }
+            }
+            else if(GLOBALS.LANDSCAPE_LARGE){
+                for(var i=0; i< iconSizes.length; i++){
+                    iconSizes[i] = iconSizes[i]*1.5
+                }
+    
+                container = {
+                    width:240*1.5,
+                    height:155*1.5,
+                }
+    
+                textFlag = {
+                    fontSize:15
+                }
+            }
+
             return (
                 <View style={{flex:1,backgroundColor:"transparent"}} >
-                    <View style={{height:45, width:"100%",justifyContent:"center",alignItems:"center"}}>
+                    <View style={{height:GLOBALS.HEADER_HEIGHT, width:"100%",justifyContent:"center",alignItems:"center"}}>
                         <Header 
                                 onBack={()=>{this.props.onBack()}} 
                                 style = {{height:GLOBALS.HEADER_HEIGHT}}
@@ -105,31 +134,46 @@ export default class Ngonngu extends React.Component {
                                         </Text>}  />
                     </View>
     
-                    <View style={{ flex: 1,
-                        justifyContent:"center",alignItems:"center"}}>
-                        <View style={[styles.containerFlag,{flexDirection:"row",alignItems:"flex-start"}]}>
-                            <View style={[styles.containerFlag,{marginRight:5}]}>
+                    <View style={{ flex: 1,justifyContent:"center",alignItems:"center"}}>
+                        <View style={[styles.containerFlag,container,{flexDirection:"row",alignItems:"flex-start"}]}>
+                            <View style={[styles.containerFlag,container,{marginRight:5}]}>
                                 <IconRippe vector={false} iconSource = {GLOBALS.FLAG.VN} 
-                                        size = {240}
-                                        text={{content: Language.Strings.lan.vn.toLocaleUpperCase(), layout: 2}} textStyle={styles.textFlag} />
+                                        size = {iconSizes[0]}
+                                        text={{content: Language.Strings.lan.vn.toLocaleUpperCase(), layout: 2}} 
+                                        textStyle={[styles.textFlag,textFlag]}
+                                        onPress = {this.changeLanguage.bind(this,'vn')} />
                             </View>
-                            <View style={[styles.containerFlag,{marginLeft:5,width:115}]}>
-                                <IconRippe vector={false} iconSource = {GLOBALS.FLAG.EN} size = {115}
-                                        text={{content: Language.Strings.lan.en.toLocaleUpperCase(), layout: 2}} textStyle={styles.textFlag} />
+                            <View style={[styles.containerFlag,container,{marginLeft:5,width:iconSizes[1]}]}>
+                                <IconRippe vector={false} 
+                                        iconSource = {GLOBALS.FLAG.EN} 
+                                        size = {iconSizes[1]}
+                                        text={{content: Language.Strings.lan.en.toLocaleUpperCase(), layout: 2}}
+                                         textStyle={[styles.textFlag,textFlag]} 
+                                         onPress = {this.changeLanguage.bind(this,'en')}/>
                             </View>
                         </View>
-                        <View style={[styles.containerFlag,{flexDirection:"row",alignItems:"flex-start"}]}>
-                            <View style={[styles.containerFlag,{marginRight:5,width:115}]}>
-                                <IconRippe vector={false} iconSource = {GLOBALS.FLAG.CN} size = {115}
-                                        text={{content: Language.Strings.lan.cn.toLocaleUpperCase(), layout: 2}} textStyle={styles.textFlag} />
+                        <View style={[styles.containerFlag,container,{flexDirection:"row",alignItems:"flex-start"}]}>
+                            <View style={[styles.containerFlag,container,{marginRight:5,width:iconSizes[2]}]}>
+                                <IconRippe vector={false}
+                                        iconSource = {GLOBALS.FLAG.CN} 
+                                        size = {iconSizes[2]}
+                                        text={{content: Language.Strings.lan.cn.toLocaleUpperCase(), layout: 2}} 
+                                        textStyle={[styles.textFlag,textFlag]} 
+                                        onPress = {this.changeLanguage.bind(this,'cn')}/>
                             </View>
-                            <View style={[styles.containerFlag,{marginLeft:5,marginRight:5,width:115}]}>
-                                <IconRippe vector={false} iconSource = {GLOBALS.FLAG.JP} size = {115}
-                                                text={{content: Language.Strings.lan.jp.toLocaleUpperCase(), layout: 2}} textStyle={styles.textFlag} />
+                            <View style={[styles.containerFlag,container,{marginLeft:5,marginRight:5,width:iconSizes[3]}]}>
+                                <IconRippe vector={false} iconSource = {GLOBALS.FLAG.JP} s
+                                            size = {iconSizes[3]}
+                                                text={{content: Language.Strings.lan.jp.toLocaleUpperCase(), layout: 2}} 
+                                                textStyle={[styles.textFlag,textFlag]}
+                                                onPress = {this.changeLanguage.bind(this,'jp')} />
                             </View>
-                            <View style={[styles.containerFlag,{marginLeft:5,width:115}]}>
-                                <IconRippe vector={false} iconSource = {GLOBALS.FLAG.KR} size = {115}
-                                                text={{content: Language.Strings.lan.kr.toLocaleUpperCase(), layout: 2}} textStyle={styles.textFlag} />
+                            <View style={[styles.containerFlag,container,{marginLeft:5,width:iconSizes[4]}]}>
+                                <IconRippe vector={false} iconSource = {GLOBALS.FLAG.KR} 
+                                            size = {iconSizes[4]}
+                                                text={{content: Language.Strings.lan.kr.toLocaleUpperCase(), layout: 2}} 
+                                                textStyle={[styles.textFlag,textFlag]}
+                                                onPress = {this.changeLanguage.bind(this,'kr')} />
                             </View>
                             
                         </View>

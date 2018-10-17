@@ -23,7 +23,16 @@ export default class SingerScreen extends BaseScreen {
     constructor(props) {
         super(props);
 
-        if(!GLOBALS.LANDSCAPE)
+        if(GLOBALS.LANDSCAPE){
+            this.MAX_SCROLL_HEIGHT = 140;
+            if(GLOBALS.LANDSCAPE_NORMAL){
+                this.MAX_SCROLL_HEIGHT = 160;
+            }
+            else if(GLOBALS.LANDSCAPE_LARGE){
+                this.MAX_SCROLL_HEIGHT = 180;
+            }
+        }
+        else
             this.MAX_SCROLL_HEIGHT = 145;
     }
     componentWillMount() {
@@ -75,19 +84,35 @@ export default class SingerScreen extends BaseScreen {
         }
     }
     _showOptOverlay = () =>{
-        EventRegister.emit('ShowOptOverlay', {overlayType:GLOBALS.SING_OVERLAY.SINGER,data:{height:200}});
+        var height = 200;
+        if(GLOBALS.LANDSCAPE_NORMAL){
+            height = 185;
+        }
+        else if(GLOBALS.LANDSCAPE_LARGE){
+            height = 200;
+        }
+        else if(GLOBALS.LANDSCAPE_SMALL){
+            height = 170;
+        }
+        EventRegister.emit('ShowOptOverlay', {overlayType:GLOBALS.SING_OVERLAY.SINGER,data:{height:height}});
     }
-    
     scrollExtendComponent = (top) =>{
         this._singerTabs.setScrollTabTop(top);
         this._musicOnline.setTopValue(top);
     }
     updateHolder = (title) =>{
-        this._header.setSearchHolder(title+" ...");
+        this._header.setSearchHolder(title);
     }
     renderContent = () =>{
         if(!this.props.preLoad || this._allowLoad){
+            var mTop = 87;
             if(GLOBALS.LANDSCAPE){
+                if(GLOBALS.LANDSCAPE_NORMAL){
+                    mTop = 103;
+                }
+                else if(GLOBALS.LANDSCAPE_LARGE){
+                    mTop = 113;
+                }
                 return (
                     <View style={{flex:1}}>
                         <SingerTabsView 
@@ -95,10 +120,10 @@ export default class SingerScreen extends BaseScreen {
                             ref={ref => (this._singerTabs = ref)} 
                             onChangeTab = {this._onChangeTab}
                             onScroll = {this._handleListViewScroll} 
-                            top={this.MAX_SCROLL_HEIGHT}/>
-    
+                            top={this.MAX_SCROLL_HEIGHT}
+                            tabTop = {GLOBALS.HEADER_HEIGHT + 5} />
                         <MusicOnline 
-                            style = {{top:85}}
+                            style = {{top:mTop}}
                             ref={ref =>(this._musicOnline = ref)}
                         />
                     </View>
@@ -133,30 +158,16 @@ export default class SingerScreen extends BaseScreen {
                     <Animated.View style={[styles.headerContainer, { transform: [{ translateY: this._scrollY }]}]}>
                         <Header2
                             ref={ref=>(this._header = ref)}
-                            right={<View style={{flex:1,flexDirection:"row", justifyContent:"flex-end",alignItems:"center"}}>
-                                        <View style={{ width: 40, height: 40}}>
-                                            <IconRippe vector={true} name="all" size={20} color="#fff"
-                                                onPress={this._showOptOverlay} />
-                                        </View>
-                                        <View style={{ width: 40, height: 40}}>
-                                            <IconRippe vector={true} name="male" size={20} color="#fff"
-                                                onPress={this._showOptOverlay} />
-                                        </View>
-                                        <View style={{ width: 40, height: 40}}>
-                                            <IconRippe vector={true} name="famale" size={20} color="#fff"
-                                                onPress={this._showOptOverlay} />
-                                        </View>
-                                        <View style={{ width: 40, height: 40}}>
-                                            <IconRippe vector={true} name="nhomnhac" size={20} color="#fff"
-                                                onPress={this._showOptOverlay} />
-                                        </View>
+                            right={<View style={{ width: GLOBALS.ICON_SIZE*2.5, height: "100%"}}>
+                                        <IconRippe vector={true} name="tuychon2" size={GLOBALS.ICON_SIZE} color="#fff"
+                                            onPress={this._showOptOverlay} />
                                     </View>
-                                    }
-                            h = {40}
+                                 }
+                            h = {GLOBALS.HEADER_HEIGHT}
                             onSearch={this._onSearch}
                             onSearchChange = {this._onSearchChange}
                             onBack = {this._onBack}
-                            left={<Text style={[styles.title]}>{Language.Strings.caidat}</Text>}
+                            left={<Text style={[styles.title]}>{Language.Strings.casy.toUpperCase()}</Text>}
                         />
                     </Animated.View>
     

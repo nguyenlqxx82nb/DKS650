@@ -22,8 +22,8 @@ export default class ButtonAdmin extends React.Component
     render() {
         const {title} = this.props;
         return(
-            <View style={{marginTop:20,borderRadius:20,
-                height:50,width:"100%",backgroundColor:"#444083"}}>
+            <View style={{marginTop:20,borderRadius:GLOBALS.HEADER_HEIGHT/2,
+                height:GLOBALS.HEADER_HEIGHT,width:"100%",backgroundColor:"#444083"}}>
                       <IconRippe vector={true} name={""} fit = {true}
                               text={{content:Language.Strings.admin.save, layout: 1}} 
                               textStyle={styles.textButton}

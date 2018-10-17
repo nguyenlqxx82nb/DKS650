@@ -193,8 +193,8 @@ export default class MySQLMagager {
                     var item = {
                         id: videos[i].id,
                         name : videos[i].snippet.title,
-                        actor : "Youtube",
-                        singerName: "Youtube",
+                        actor : "YOUTUBE",
+                        singerName: "YOUTUBE",
                         status: GLOBALS.SING_STATUS.NORMAL,
                         index: ""
                     }
@@ -205,9 +205,7 @@ export default class MySQLMagager {
                     }
                     songs.push(item);
                 }
-                //console.warn("songs = "+songs.length)
                 songs = this.sortSelectSong(songs);
-                //console.warn("songs 2 = "+songs.length)
                 callback(songs);
             },
             (error)=>{
@@ -239,11 +237,27 @@ export default class MySQLMagager {
     }
 
     static getSong(songId,callback,errorCallback){
-        BTElib.fetchSong(songId,(datas)=>{
-            //console.warn("length songs = "+datas);
-            //var songs = this.covertSongDatas(datas);
-            callback(datas[0]);
-        });
+        if(isNaN(songId)){
+            var item = null;
+            YoutubeAPI.fetchOnlineSongsById(songId,(videos)=>{
+                //console.warn("videos = "+videos.length);
+                for(var i=0; i<videos.length; i++){
+                    item = {
+                        Song_Name: videos[i].snippet.title,
+                        Actor : "YOUTUBE",
+                    }
+                }
+                callback(item);
+            },
+            (error)=>{
+            });
+        }
+        else
+            BTElib.fetchSong(songId,(datas)=>{
+                //console.warn("length songs = "+datas.length);
+                //var songs = this.covertSongDatas(datas);
+                callback(datas[0]);
+            });
     }
 
     static async getDownloadQueue(callback,errorCallback){

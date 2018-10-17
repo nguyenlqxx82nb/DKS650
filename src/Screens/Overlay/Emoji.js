@@ -14,7 +14,6 @@ export default class Emoji extends React.Component {
 
     constructor(props) {
         super(props);
-        
     }
 
     effectClick = (type)=>{
@@ -91,7 +90,7 @@ export default class Emoji extends React.Component {
         }
         else{
             return(
-                <View style={{height:120,width:'100%'}}>
+                <View style={{height:"100%",width:'100%',padding:5}}>
                     <Grid>
                         <Row size={1}>
                             <Col size = {1} style={styles.inner}>

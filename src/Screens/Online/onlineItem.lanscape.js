@@ -91,9 +91,6 @@ export default class SongOnlineItem extends React.Component {
     if(GLOBALS.LANDSCAPE)
       container = {marginLeft:5, marginRight:5};
 
-    //var _isSelected = (DATA_INFO.PLAY_QUEUE.indexOf(id) > 0)?true:false;
-    //console.warn("select = "+isSelected+" , id = "+id);
-    //_isSelected = true;
     return (
       <View style={[{flex:1},container]}>
           <View style={{width:width,height:height2, position:"absolute",top:0,zIndex:1}}>
@@ -113,7 +110,7 @@ export default class SongOnlineItem extends React.Component {
                       <Row>
                           <Col size={0.8}>
                               <Text numberOfLines={2} style={styles.textTitle} >{this.props.title}</Text>
-                              <Text style={styles.textChannel} >{this.props.channel}</Text>
+                              <Text numberOfLines={1} style={styles.textChannel} >{this.props.channel}</Text>
                           </Col>
                           <Col size={0.2} style={{justifyContent:"center",alignItems:"flex-end"}}>
                               
@@ -135,7 +132,7 @@ export default class SongOnlineItem extends React.Component {
           </View>
 
           <View 
-           // onPress = {this.onPressed}
+            //onPress = {this.onPressed}
             style={{width:70,height:70, position:"absolute",borderRadius:35
                     ,bottom:30,right:0,zIndex:3}}>
                  <ListItem

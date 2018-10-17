@@ -26,7 +26,7 @@ export default class SubScreen extends BaseScreen
             return(
                 <View style={{flex:1}} >
                     <Header 
-                        style={styles.header}
+                        style={[styles.header,{height:GLOBALS.HEADER_HEIGHT}]}
                         title={this._title}
                         back = {false}
                     />
@@ -38,7 +38,7 @@ export default class SubScreen extends BaseScreen
             return(
                 <View style={{flex:1}} >
                     <Header 
-                        style={[styles.header,{height:50} ]}
+                        style={[styles.header,{height:GLOBALS.HEADER_HEIGHT}]}
                         title={this._title}
                         onBack={()=>{
                             if(this.props.onBack != null)
@@ -56,6 +56,13 @@ export default class SubScreen extends BaseScreen
         if(GLOBALS.LANDSCAPE){
             style.width = 400;
             style.height = "100%";
+
+            if(GLOBALS.LANDSCAPE_LARGE){
+                style.width = 500;     
+            }
+            else if(GLOBALS.LANDSCAPE_NORMAL){
+                style.width = 450;     
+            }
             // style.justifyContent = "center";
             // style.alignContent="center";
         }

@@ -43,6 +43,12 @@ export default class SongListScreen extends BaseScreen {
         }
 
         this.MAX_SCROLL_HEIGHT = 105;
+        if(GLOBALS.LANDSCAPE_NORMAL){
+            this.MAX_SCROLL_HEIGHT = 115;
+        }
+        else if(GLOBALS.LANDSCAPE_LARGE){
+            this.MAX_SCROLL_HEIGHT = 125;
+        }
     }
     componentWillMount() {
         // selected song changed
@@ -86,12 +92,9 @@ export default class SongListScreen extends BaseScreen {
         }
     }
     _onSearch = (value) =>{
-       // this._term = value;
-        //console.warn("_onSearch = "+value);
         this._serach(value);
     }
     _onSearchChange = (value) =>{
-       // console.warn("_onSearchChange = "+value);
         this._serach(value);
     }
     _serach = (value) => {
@@ -99,7 +102,7 @@ export default class SongListScreen extends BaseScreen {
         this._musicOnline.setTerm(value);
     }
     updateHolder = (title) =>{
-        this._searchHeader.setSearchHolder(title +" ...");
+        this._searchHeader.setSearchHolder(title);
     }
     updateSinger = (name)=>{
         if(name != this.state.title){
@@ -152,12 +155,9 @@ export default class SongListScreen extends BaseScreen {
                 return (
                     <View style={{flex:1}}>
                         <MusicOnline 
-                            style={{top:50}} 
-                            ref={ref =>(this._musicOnline = ref)}
-                            onOpenOnline = {()=>{
-                                //this._searchInput.blur();
-                            }} />
-    
+                            style={{top:GLOBALS.HEADER_HEIGHT + 8}} 
+                            ref={ref =>(this._musicOnline = ref)} />
+
                         <SongListView 
                             ref={ref=>(this._songList = ref)} 
                             listType = {this.listType} 
@@ -165,6 +165,9 @@ export default class SongListScreen extends BaseScreen {
                             songType = {songType}
                             onScroll = {this._handleListViewScroll} 
                             top={this.MAX_SCROLL_HEIGHT}
+                            onSearch = {(value)=>{
+                                this._searchHeader.showIndicator(value);
+                            }}
                         />
                     </View>
                 )
@@ -207,16 +210,18 @@ export default class SongListScreen extends BaseScreen {
                     <Animated.View style={[styles.headerContainer,{ transform: [{ translateY: this._scrollY }]}]}>
                         <Header 
                             ref = {ref=>(this._searchHeader = ref)}
-                            h={40}
+                            h={GLOBALS.HEADER_HEIGHT}
                             onBack = {this._onBack}
                             onSearch = {this._onSearch}
                             onSearchChange = {this._onSearchChange}
                             center ={
-                                <View style={{flex:1,justifyContent:"center",alignItems:"center", flexDirection:"row"}}>
+                                <View style={{flex:1,justifyContent:"center",
+                                    alignItems:"center", flexDirection:"row"}}>
                                     {this._avatar !="" && 
-                                        <Image style={{width:34,height:34,borderRadius:17}} 
+                                        <Image style={{width:GLOBALS.HEADER_HEIGHT-6,height:GLOBALS.HEADER_HEIGHT-6,
+                                                borderRadius:(GLOBALS.HEADER_HEIGHT-6)/2}} 
                                             source={{uri:this._avatar}} />}
-                                    <Text style={[styles.title]}> {title}</Text>
+                                    <Text numberOfLines={1} style={[styles.title]}> {title}</Text>
                                 </View>
                             }
                         />
@@ -236,7 +241,9 @@ export default class SongListScreen extends BaseScreen {
                             onSearchChange = {this._onSearchChange}
                             onBack = {this._onBack}
                             left={this._avatar !="" && 
-                                    <View style={{width:40,height:40, fjustifyContent:"flex-start",alignItems:"center", flexDirection:"row"}}>
+                                    <View style={{width:40,height:40, 
+                                            fjustifyContent:"flex-start",alignItems:"center", 
+                                            flexDirection:"row"}}>
                                         <Image style={{width:34,height:34,borderRadius:17}} 
                                             source={{uri:this._avatar}} />
                                     {/* <Text style={[styles.title]}> {title}</Text> */}

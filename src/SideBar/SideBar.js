@@ -77,7 +77,18 @@ export default class SideBar extends React.Component
         return datas;
     }
     renderRow =(item)=>{
+        const {size} = this.props;
         const {title,icon,color,event,screenType} =item;
+        var height = 60;
+        var fontSize = 17;
+        if(size == 2){
+            height = 70;
+            fontSize = 18;
+        }
+        else if(size == 3){
+            height = 80;
+            fontSize = 20;
+        }
         return(
             <ListItem 
                 onPress ={()=>{
@@ -89,26 +100,36 @@ export default class SideBar extends React.Component
                         EventRegister.emit(event,{type:screenType});
                     },20); 
                 }}
-                style={{height:60,width:"100%"}}>
-                <View style={{flex:1, marginLeft:10,marginRight:15,justifyContent:"center",alignItems:"center",flexDirection:"row"}}>
-                    <View style={{width:60,justifyContent:"center",alignItems:"center"}}>
-                        <CustomIcon name={icon} size ={30} style={{color:color}} />
+                style={{height:height,width:"100%"}}>
+                <View style={{flex:1, marginLeft:15,marginRight:20,justifyContent:"center",alignItems:"center",flexDirection:"row"}}>
+                    <View style={{width:height,justifyContent:"center",alignItems:"center"}}>
+                        <CustomIcon name={icon} size ={height/2} style={{color:color}} />
                     </View>
                     <View style={{flex:1,justifyContent:"center",alignItems:"flex-start"}}>
-                        <Text style={{fontSize:17,fontFamily:"SF-Pro-Text-Medium",color:"#fff",marginLeft:5}}>{title}</Text>
+                        <Text style={{fontSize:fontSize,fontFamily:"SF-Pro-Text-Medium",color:"#fff",marginLeft:7}}>{title}</Text>
                     </View>
-                    <CustomIcon name={"goPage"} size ={20} style={{color:"#fff"}} />
+                    <CustomIcon name={"goPage"} size ={25} style={{color:"#fff"}} />
                 </View>
             </ListItem>
         );
     }
 
     render(){
-        
+        const {size} = this.props;
+        var h = 90;
+        var width = 70;
+        if(size == 2){
+            h = 100;
+            width = 90;
+        }
+        else if(size == 3){
+            h = 105;
+            width = 110;
+        }
         return(
             <View style={{flex:1}}>
-                <View style={styles.headerContainer}>
-                    <AutoHeightImage source={logo} width={70} ></AutoHeightImage>
+                <View style={[styles.headerContainer,{height:h}]}>
+                    <AutoHeightImage source={logo} width={width} ></AutoHeightImage>
                 </View>
                 <LinearGradient 
                     start={{x: 0.1, y: 0.1}} end={{x: 1, y: 1}} 
@@ -122,7 +143,7 @@ export default class SideBar extends React.Component
                 </LinearGradient>   
                 <View style={{height:40,width:"100%",
                         position:"absolute",bottom:0,backgroundColor:"transparent",justifyContent:"center",alignItems:"center"}}>
-                    <Text style={{fontSize:15,color:"#fff",fontFamily:GLOBALS.FONT.BOLD}}>{"BTE copyright © 2018 "} 
+                    <Text style={{fontSize:15,color:"#fff",fontFamily:GLOBALS.FONT.BOLD}}>{"BTE copyright © 2018"} 
                     </Text>
                 </View>
             </View>

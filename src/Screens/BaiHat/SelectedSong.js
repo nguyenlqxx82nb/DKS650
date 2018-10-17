@@ -22,6 +22,12 @@ export default class SelectedSong extends BaseScreen {
 
         this.songChanged = false;
         this.MAX_SCROLL_HEIGHT = 105;
+        if(GLOBALS.LANDSCAPE_NORMAL){
+            this.MAX_SCROLL_HEIGHT = 115;
+        }
+        else if(GLOBALS.LANDSCAPE_LARGE){
+            this.MAX_SCROLL_HEIGHT = 125;
+        }
     }
     componentWillMount() {
         // selected song changed
@@ -67,12 +73,12 @@ export default class SelectedSong extends BaseScreen {
         if(!this.props.preLoad || this._allowLoad){
             return (
                 <View style={{flex:1}}>
-                    <Animated.View style={[styles.headerContainer,{ transform: [{ translateY: this._scrollY }]}]}>
+                    <Animated.View style={[styles.headerContainer,{height:GLOBALS.HEADER_HEIGHT, transform: [{ translateY: this._scrollY }]}]}>
                         <Header 
                             back={false}
                             left={<View style={{flexDirection:"row",alignItems:"center",justifyContent:"flex-start"}}>
-                                    <View style={{ width: 40, height: 40 }}>
-                                        <IconRippe vector={true} name="listClose" size={20} color="#fff"
+                                    <View style={{ width: GLOBALS.ICON_SIZE*2.5, height: "100%" }}>
+                                        <IconRippe vector={true} name="listClose" size={GLOBALS.ICON_SIZE} color="#fff"
                                             onPress={this._onBack}
                                         />
                                     </View>
@@ -83,7 +89,7 @@ export default class SelectedSong extends BaseScreen {
                         />  
                     </Animated.View>
                     <MusicOnline 
-                            style={{top:55,height:40}} 
+                            style={{top:GLOBALS.HEADER_HEIGHT + 8,height:40}} 
                             ref={ref =>(this._musicOnline = ref)}
                             onOpenOnline = {()=>{
                                 this.hide();

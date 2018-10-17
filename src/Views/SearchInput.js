@@ -15,11 +15,13 @@ export default class SearchInput extends React.Component {
         onFocus : PropTypes.func,
         onBlur : PropTypes.func,
         holder : PropTypes.string,
+        h : PropTypes.number,
         //duration : PropTypes.number
     };
     static defaultProps = {
         style : {},
-        holder :"Tìm kiếm ..."
+        holder :"Tìm kiếm ...",
+        h : 40,
     };
     _showIndicator = false;
     _holder = "";
@@ -69,8 +71,8 @@ export default class SearchInput extends React.Component {
             if(onBlur != null){
                 onBlur();
             }
-        },250);
-
+        },50);
+        
         if(onSearch != null){
             onSearch(this.getValue());
         }
@@ -109,6 +111,9 @@ export default class SearchInput extends React.Component {
         });
         //this._searchInput.clear();
         this._searchInput._lastNativeText = value;
+
+        if(value != "")
+            this.setState({showRemoveBtn:true});
     }
     showIndicator = (isShow) =>{
         if(isShow != this._showIndicator){
@@ -124,16 +129,20 @@ export default class SearchInput extends React.Component {
     }
     render = () => {
         const {showRemoveBtn} =this.state;
-        const {style,holder} = this.props;
+        const {style,holder,h} = this.props;
+        
         //console.warn("LANDSCAPE = "+GLOBALS.LANDSCAPE);
         var conteinerStyle = {},indicator={};
         if(GLOBALS.LANDSCAPE){
             conteinerStyle = {
                 marginRight:0,
                 marginLeft: 0,
+                height:h-8,
+                borderRadius:(h-8)/2
             }
         }
         var inputStyle = {};
+        var size = 15;
         if (GLOBALS.MOBILE_SMALL){
             inputStyle = {
                 fontSize : 14,
@@ -141,9 +150,22 @@ export default class SearchInput extends React.Component {
                 marginRight:5
             }
         }
+
+        if(GLOBALS.LANDSCAPE_NORMAL){
+            inputStyle = {
+                fontSize : 17,
+            }
+            size = 20;
+        }
+        else if(GLOBALS.LANDSCAPE_LARGE){
+            inputStyle = {
+                fontSize : 18,
+            }
+            size = 25;
+        }
         return (
             <View style={[styles.container,conteinerStyle,style]}>
-                <CustomIcon size={15} name="search" style={{ color: "#9197CC", marginLeft: 10 }} />
+                <CustomIcon size={size} name="search" style={{ color: "#9197CC", marginLeft: 10 }} />
                 <TextInput
                     numberOfLines={1}
                     ref = {ref => (this._searchInput = ref)}
@@ -167,8 +189,8 @@ export default class SearchInput extends React.Component {
                     size="small" />
                 }
                 {showRemoveBtn && 
-                (<View style={{ width: 30, height: 30,marginRight:5 }}>
-                    <IconRippe vector={true} size={15} name="close" color={"#fff"} 
+                (<View style={{ width: size*2, height: size*2,marginRight:5 }}>
+                    <IconRippe vector={true} size={size} name="close" color={"#fff"} 
                         onPress = {this._handleClearSearch} />
                 </View>) }
             </View>
@@ -185,8 +207,6 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         backgroundColor: "#565BAC", 
         height: 32, 
-        // paddingRight: 3,
-        //marginLeft: 5,
     },
     input: {
         flex:1, 

@@ -39,7 +39,6 @@ export default class PassInput extends React.Component {
                 }
             }
         }
-        
     }
     RemoveText = () =>{
         if(this.state.value.length == 0)
@@ -55,15 +54,17 @@ export default class PassInput extends React.Component {
         if(value.length == 5){
             if(value != this.props.pass)
                 return(
-                    <View style={{width:40,height:40, position:"absolute",
-                                    zIndex:2, top:7,right:0, justifyContent:"center",alignItems:"center"}}>
+                    <View style={{width:50,height:"100%", position:"absolute",
+                                    zIndex:5, top:2,right:0, 
+                                    justifyContent:"center",alignItems:"center"}}>
                         <CustomIcon name="mkDung" size={25} style={{color:GLOBALS.COLORS.ERROR}} />
                     </View>
                 )
             else{
                 return(
-                    <View style={{width:40,height:40, position:"absolute",
-                                    zIndex:2, top:7,right:0, justifyContent:"center",alignItems:"center"}}>
+                    <View style={{width:50,height:"100%", position:"absolute",
+                                    zIndex:5, top:2,right:0, justifyContent:"center",
+                                    alignItems:"center"}}>
                         <CustomIcon name="mkDung" size={25} style={{color:GLOBALS.COLORS.SELECTED}} />
                     </View>
                 )
@@ -88,32 +89,28 @@ export default class PassInput extends React.Component {
             }
         }
         return (
-            <View style={{flex : 1}}>
+            <View style={[styles.background,inputBorder]}>
                 <TextInput
                         secureTextEntry = {true}
                         ref = {ref => (this._passInput = ref)}
                         underlineColorAndroid={'transparent'}
-                        style={[styles.input,inputBorder]}
+                        style={styles.input}
                         textAlign={'center'}
                         editable={false} 
                         selectTextOnFocus={false}
                         onChangeText={this._handleTextChanged}
                         value={this.state.value}
                     />
-                {this._renderIcon()}
+                {this._renderIcon()}    
             </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    input: {
+    background: {
         flex:1,
-        fontSize: 32, 
-        color: "white",
-        fontFamily:GLOBALS.FONT.MEDIUM,
         borderRadius:25,
-        backgroundColor:GLOBALS.COLORS.MAIN,
         textAlign:"center",
         alignItems:"center",
         justifyContent:"center",
@@ -122,6 +119,17 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         elevation: 2,
         zIndex:0,
-        padding:0
+        backgroundColor:GLOBALS.COLORS.MAIN
     },
+
+    input : {
+        fontSize: 32, 
+        color: "white",
+        fontFamily:GLOBALS.FONT.BOLD,
+        flex:1,
+        backgroundColor:"transparent",
+        padding:0,
+        width:"100%",
+        height:"100%"
+    }
 })

@@ -342,6 +342,9 @@ export default {
     ORIENTATION : 2,
     
     LANDSCAPE : false,
+    LANDSCAPE_SMALL : false,
+    LANDSCAPE_NORMAL : false,
+    LANDSCAPE_LARGE : false,
 
     SONG_TAB:{
         LANGUAGE : 1,
@@ -388,6 +391,9 @@ export default {
         ERROR :3
     },
 
-    SCREENS: []
+    SCREENS: [],
+    ICON_SIZE : 20,
+
+    IS_DATABASE_CONNECTED : false
 
 };

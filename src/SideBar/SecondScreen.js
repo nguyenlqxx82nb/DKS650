@@ -85,7 +85,7 @@ export default class SecondScreen extends BaseScreen {
                     preLoad = {false}
                     searchHolder = {Language.Strings.baichuatai}
                     //onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
-                    //bottom={60}
+                    bottom={0}
                 />);
         }
         else if(this._type == GLOBALS.SECOND_SCREEN.NGONNGU){
@@ -112,7 +112,7 @@ export default class SecondScreen extends BaseScreen {
                     preLoad = {false}
                     searchHolder = {Language.Strings.baichuatai}
                     //onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
-                    //bottom={60}
+                    bottom={0}
                 />);
         }
         else if(this._type == GLOBALS.SECOND_SCREEN.USB){
@@ -131,7 +131,7 @@ export default class SecondScreen extends BaseScreen {
                     preLoad = {false}
                     searchHolder = {Language.Strings.usb}
                     //onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
-                    //bottom={60}
+                    bottom={0}
                 />);
         }
         else{

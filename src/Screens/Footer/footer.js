@@ -8,7 +8,7 @@ import DATA_INFO from '../../DataManagers/DataInfo.js';
 import BoxControl from '../../DataManagers/BoxControl.js';
 import { EventRegister } from 'react-native-event-listeners';
 import Slider from 'react-native-slider';
-import SongTextRun from '../../Views/SongTextRun.js';
+//import SongTextRun from '../../Views/SongTextRun.js';
 import Utils from '../../Utils/Utils';
 
 
@@ -51,7 +51,6 @@ export default class FooterHome extends React.Component {
 
         this._listenerSongUpdateEvent = EventRegister.addEventListener('SongUpdate', (data) => {
             if(GLOBALS.IS_BOX_CONNECTED){
-
                 this._listBtn.updateBagde(this._getSelectNumber());
             }
                 

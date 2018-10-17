@@ -158,8 +158,8 @@ export default class Header extends React.Component {
                 <Animated.View  
                         style={[{opacity:this._opacity,flex:1,justifyContent:"flex-start",alignItems:"center",flexDirection:"row"}]}
                         >
-                    {back && <View style={{ width: 40, height: 40, marginLeft: 0 }}>
-                        <IconRippe vector={true} name="back" size={20} color="#fff"
+                    {back && <View style={{ width: GLOBALS.ICON_SIZE*2.5, height: "100%", marginLeft: 0 }}>
+                        <IconRippe vector={true} name="back" size={GLOBALS.ICON_SIZE} color="#fff"
                             onPress={()=>{
                                 if(this.props.onBack != null){
                                     //this._searchInput.blur();
@@ -180,15 +180,15 @@ export default class Header extends React.Component {
                             }}
                         />
                     </View> */}
-                    <View style={{ width: 40, height: 40}}>
-                        <IconRippe vector={true} name="emoji" size={20} color="#fff"
+                    <View style={{ width: GLOBALS.ICON_SIZE*2.5, height: "100%"}}>
+                        <IconRippe vector={true} name="emoji" size={GLOBALS.ICON_SIZE} color="#fff"
                             onPress={()=>{
                                 this._onEmojiPress();
                             }}
                         />
                     </View>   
-                    <View style={{ width: 40, height: 40}}>
-                        <IconRippe vector={true} name="volumnOn" size={20} color="#fff"
+                    <View style={{ width: GLOBALS.ICON_SIZE*2.5, height: "100%"}}>
+                        <IconRippe vector={true} name="volumnOn" size={GLOBALS.ICON_SIZE} color="#fff"
                             onPress={()=>{
                                 this._onVolume();
                             }}

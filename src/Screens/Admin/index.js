@@ -131,6 +131,16 @@ export default class AdminScreen extends BaseScreen
     }
     renderRow =(item)=>{
         const {title,icon,color,event,screenType} =item;
+        var height = 55;
+        var fontSize = 16;
+        if(GLOBALS.LANDSCAPE_NORMAL){
+            height = 65;
+            fontSize = 17;
+        }
+        else if(GLOBALS.LANDSCAPE_LARGE){
+            height = 75;
+            fontSize = 18;
+        }
         return(
             <ListItem 
                 onPress ={()=>{
@@ -240,15 +250,15 @@ export default class AdminScreen extends BaseScreen
                     }
                     
                 }}
-                style={{height:55,width:"100%"}}>
+                style={{height:height,width:"100%"}}>
                 <View style={styles.listItem}>
-                    <View style={{width:50,justifyContent:"center",alignItems:"center",height:"100%"}}>
-                        <CustomIcon name={icon} size ={25} style={{color:color}} />
+                    <View style={{width:GLOBALS.ICON_SIZE*2,justifyContent:"center",alignItems:"center",height:"100%"}}>
+                        <CustomIcon name={icon} size ={GLOBALS.ICON_SIZE} style={{color:color}} />
                     </View>
                     <View style={{flex:1,justifyContent:"center",alignItems:"flex-start"}}>
-                        <Text style={styles.title}>{title}</Text>
+                        <Text style={[styles.title,{fontSize:fontSize}]}>{title}</Text>
                     </View>
-                    <CustomIcon name={"goPage"} size ={15} style={{color:"#fff",marginRight:5}} />
+                    <CustomIcon name={"goPage"} size ={GLOBALS.ICON_SIZE} style={{color:"#fff",marginRight:10}} />
                 </View>
             </ListItem>
         );
@@ -260,7 +270,7 @@ export default class AdminScreen extends BaseScreen
                 <View style={{flex:1,flexDirection:"row"}} >
                     <View style={styles.leftContainer}>
                         <Header 
-                            style={styles.header}
+                            style={[styles.header ,{height:GLOBALS.HEADER_HEIGHT}]}
                             title={Language.Strings.caidat} onBack={()=>{
                             this.hide();
                         }} />

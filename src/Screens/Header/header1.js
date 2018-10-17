@@ -21,8 +21,8 @@ export default class Header extends React.Component {
         const {title,back} = this.props;
         return (
             <View style={[styles.container,this.props.style]}>
-                {back && <View style={{ width: 40, height: 40, marginLeft: 0 }}>
-                    <IconRippe vector={true} name="back" size={20} color="#fff"
+                {back && <View style={{ width: GLOBALS.ICON_SIZE*2.5, height: "100%", marginLeft: 0 }}>
+                    <IconRippe vector={true} name="back" size={GLOBALS.ICON_SIZE} color="#fff"
                         onPress={()=>{
                             if(this.props.onBack != null){
                                 //this._searchInput.blur();

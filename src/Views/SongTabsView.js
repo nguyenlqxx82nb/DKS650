@@ -128,7 +128,7 @@ export default class SongTabsView extends React.Component {
         GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.taiwan] = Language.Strings.lanTab.tw;
         GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.tl] = Language.Strings.lanTab.lao;
         GLOBALS.LANGUAGE_NAME[GLOBALS.LANGUAGE_KEY.ca] = Language.Strings.lanTab.ca;
-        
+
         const {tabTop}= this.props;
         var tabContent = {};
         if(GLOBALS.LANDSCAPE){
@@ -136,7 +136,19 @@ export default class SongTabsView extends React.Component {
                 borderTopWidth: 0
             }
         }
-
+        var height = 40;
+        var tabWidth = (GLOBALS.MOBILE_SMALL)?80:100;
+        var fontSize = (GLOBALS.MOBILE_SMALL)?12:14;
+        if(GLOBALS.LANDSCAPE_NORMAL){
+            height = 45;
+            tabWidth = 120;
+            fontSize = 15;
+        }
+        else if(GLOBALS.LANDSCAPE_LARGE){
+            height = 50;
+            tabWidth = 145;
+            fontSize = 15;
+        }
         return (
             <ScrollableTabView
                         style={{ marginTop: 0, }}
@@ -145,15 +157,15 @@ export default class SongTabsView extends React.Component {
                         renderTabBar={() => 
                         <CustomScrollableTabBar
                             ref = {ref=>{this._scrollTab = ref}}
-                            underlineStyle={{ backgroundColor: "#0ECAB1", height:30,bottom:5, borderRadius:15 }}
+                            underlineStyle={{ backgroundColor: "#0ECAB1", height:height-10,bottom:5, borderRadius:(height-10)/2 }}
                             activeTextColor={"#0ECAB1"}
                             inactiveTextColor={"#fff"}
-                            textStyle={{ fontSize: (GLOBALS.MOBILE_SMALL)?12:14, color: "#fff", fontFamily:GLOBALS.FONT.BOLD }}
+                            textStyle={{ fontSize: fontSize, color: "#fff", fontFamily:GLOBALS.FONT.BOLD }}
                             style={{ borderWidth: 0, }}
                             isTabRound = {true}
-                            tabContainerStyle = {{height:30,borderRadius:15, marginLeft:5}}
-                            style ={{height:40,top:tabTop}}
-                            tabWidth={(GLOBALS.MOBILE_SMALL)?80:100}
+                            tabContainerStyle = {{height:height-10,borderRadius:(height-10)/2, marginLeft:5}}
+                            style ={{height:height,top:tabTop}}
+                            tabWidth={tabWidth}
                         />}
                     >
                     {(this.props.tabType == GLOBALS.SONG_TAB.LANGUAGE) && this.props.tabs.map((lan, index) => {
